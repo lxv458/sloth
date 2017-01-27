@@ -18,12 +18,13 @@
     </prerequisites>
 
     <properties>
+        <akka.actor.version>2.4.16</akka.actor.version>
         <!-- Karaf -->
         <karaf.branding.version>1.3.0-Boron</karaf.branding.version>
         <karaf.resources.version>1.7.0-Boron</karaf.resources.version>
 
         <!-- Local project version, needed for import -->
-        <!--<aaa.version>${project.version}</aaa.version>-->
+        <sloth.version>${project.version}</sloth.version>
         <parent-path>${basedir}</parent-path>
 
         <!-- AuthZ -->
@@ -66,48 +67,48 @@
     <dependencyManagement>
         <dependencies>
             <!-- ODL -->
+            <dependency>
+                <groupId>org.opendaylight.sloth</groupId>
+                <artifactId>sloth-artifacts</artifactId>
+                <version>${sloth.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!--<dependency>-->
-                <!--<groupId>org.opendaylight.aaa</groupId>-->
-                <!--<artifactId>aaa-artifacts</artifactId>-->
-                <!--<version>${aaa.version}</version>-->
+                <!--<groupId>org.opendaylight.yangtools</groupId>-->
+                <!--<artifactId>yangtools-artifacts</artifactId>-->
+                <!--<version>${yangtools.version}</version>-->
                 <!--<type>pom</type>-->
                 <!--<scope>import</scope>-->
             <!--</dependency>-->
-            <dependency>
-                <groupId>org.opendaylight.yangtools</groupId>
-                <artifactId>yangtools-artifacts</artifactId>
-                <version>${yangtools.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.opendaylight.mdsal</groupId>
-                <artifactId>mdsal-artifacts</artifactId>
-                <version>${mdsal.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.opendaylight.mdsal.model</groupId>
-                <artifactId>mdsal-model-artifacts</artifactId>
-                <version>${mdsal.model.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.opendaylight.controller</groupId>
-                <artifactId>mdsal-artifacts</artifactId>
-                <version>${controller.mdsal.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.opendaylight.controller</groupId>
-                <artifactId>config-artifacts</artifactId>
-                <version>${config.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.opendaylight.mdsal</groupId>-->
+                <!--<artifactId>mdsal-artifacts</artifactId>-->
+                <!--<version>${mdsal.version}</version>-->
+                <!--<scope>import</scope>-->
+                <!--<type>pom</type>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.opendaylight.mdsal.model</groupId>-->
+                <!--<artifactId>mdsal-model-artifacts</artifactId>-->
+                <!--<version>${mdsal.model.version}</version>-->
+                <!--<scope>import</scope>-->
+                <!--<type>pom</type>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.opendaylight.controller</groupId>-->
+                <!--<artifactId>mdsal-artifacts</artifactId>-->
+                <!--<version>${controller.mdsal.version}</version>-->
+                <!--<scope>import</scope>-->
+                <!--<type>pom</type>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.opendaylight.controller</groupId>-->
+                <!--<artifactId>config-artifacts</artifactId>-->
+                <!--<version>${config.version}</version>-->
+                <!--<type>pom</type>-->
+                <!--<scope>import</scope>-->
+            <!--</dependency>-->
 
             <!-- Third-party -->
             <dependency>

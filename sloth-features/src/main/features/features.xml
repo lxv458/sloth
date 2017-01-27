@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="odl-sloth-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
+    <repository>mvn:org.opendaylight.sloth/sloth-features/{{VERSION}}/xml/features</repository>
+    <feature name='odl-sloth-all' description='OpenDaylight :: Sloth' version='${project.version}'>
+        <bundle>mvn:org.opendaylight.sloth.permission/{{VERSION}}</bundle>
+        <bundle>mvn:org.opendaylight.sloth.filter/{{VERSION}}</bundle>
+        <bundle>mvn:org.opendaylight.sloth.web/{{VERSION}}</bundle>
+    </feature>
+</features>
