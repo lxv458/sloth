@@ -52,13 +52,14 @@
             <!--<type>xml</type>-->
             <!--<scope>runtime</scope>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.opendaylight.aaa</groupId>-->
-            <!--<artifactId>features-aaa</artifactId>-->
-            <!--<classifier>features</classifier>-->
-            <!--<type>xml</type>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sloth-features</artifactId>
+            <version>${project.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+            <scope>runtime</scope>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>org.opendaylight.aaa</groupId>-->
             <!--<artifactId>features-aaa-authz</artifactId>-->

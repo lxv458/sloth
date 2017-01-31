@@ -49,12 +49,16 @@
                     <instructions>
                         <Import-Package>
                             com.sun.jersey.spi.container.servlet,
-                            com.sun.jersey.api.core,
+                            org.eclipse.jetty.servlets,
+                            !org.codehaus.enunciate.jaxrs,
+                            javax.validation,
                             javax.ws.rs.ext,
                             javax.xml.bind,
+                            *
                         </Import-Package>
                         <Web-ContextPath>/</Web-ContextPath>
                     </instructions>
+                    <!--<manifestLocation>${project.basedir}/src/main/resources/META-INF</manifestLocation>-->
                 </configuration>
             </plugin>
             <plugin>
