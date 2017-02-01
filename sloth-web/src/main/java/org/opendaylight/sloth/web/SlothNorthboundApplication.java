@@ -8,8 +8,12 @@
 
 package org.opendaylight.sloth.web;
 
+import org.eclipse.persistence.jaxb.rs.MOXyJsonProvider;
+
 import javax.ws.rs.core.Application;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,6 +26,28 @@ public class SlothNorthboundApplication extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> set = new HashSet<>();
         set.add(SlothNorthbound.class);
+        return set;
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+        MOXyJsonProvider moxyJsonProvider = new MOXyJsonProvider();
+        moxyJsonProvider.setAttributePrefix("@");
+        moxyJsonProvider.setFormattedOutput(true);
+        moxyJsonProvider.setIncludeRoot(false);
+        moxyJsonProvider.setMarshalEmptyCollections(true);
+        moxyJsonProvider.setValueWrapper("$");
+
+        Map<String, String> namespacePrefixMapper = new HashMap<String, String>();
+        // FIXME: fill in next two with XSD
+        namespacePrefixMapper.put("router", "router");
+        namespacePrefixMapper.put("provider", "provider");
+        namespacePrefixMapper.put("binding", "binding");
+        moxyJsonProvider.setNamespacePrefixMapper(namespacePrefixMapper);
+        moxyJsonProvider.setNamespaceSeparator(':');
+
+        Set<Object> set = new HashSet<Object>();
+        set.add(moxyJsonProvider);
         return set;
     }
 }

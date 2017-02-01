@@ -50,7 +50,6 @@
                         <Import-Package>
                             com.sun.jersey.spi.container.servlet,
                             org.eclipse.jetty.servlets,
-                            !org.codehaus.enunciate.jaxrs,
                             javax.validation,
                             javax.ws.rs.ext,
                             javax.xml.bind,
