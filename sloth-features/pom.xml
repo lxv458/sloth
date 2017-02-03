@@ -20,7 +20,14 @@
         <!--<restconf.version>1.4.0-Boron</restconf.version>-->
     <!--</properties>-->
     <dependencyManagement>
-        <!--<dependencies>-->
+        <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sloth-parent</artifactId>
+                <version>${project.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <!--&lt;!&ndash; project specific dependencies &ndash;&gt;-->
             <!--<dependency>-->
                 <!--<groupId>org.opendaylight.yangtools</groupId>-->
@@ -43,7 +50,7 @@
                 <!--<type>pom</type>-->
                 <!--<scope>import</scope>-->
             <!--</dependency>-->
-        <!--</dependencies>-->
+        </dependencies>
     </dependencyManagement>
     <dependencies>
         <!--<dependency>-->

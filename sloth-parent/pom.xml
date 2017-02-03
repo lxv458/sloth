@@ -74,41 +74,41 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.opendaylight.yangtools</groupId>-->
-                <!--<artifactId>yangtools-artifacts</artifactId>-->
-                <!--<version>${yangtools.version}</version>-->
-                <!--<type>pom</type>-->
-                <!--<scope>import</scope>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.opendaylight.mdsal</groupId>-->
-                <!--<artifactId>mdsal-artifacts</artifactId>-->
-                <!--<version>${mdsal.version}</version>-->
-                <!--<scope>import</scope>-->
-                <!--<type>pom</type>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.opendaylight.mdsal.model</groupId>-->
-                <!--<artifactId>mdsal-model-artifacts</artifactId>-->
-                <!--<version>${mdsal.model.version}</version>-->
-                <!--<scope>import</scope>-->
-                <!--<type>pom</type>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.opendaylight.controller</groupId>-->
-                <!--<artifactId>mdsal-artifacts</artifactId>-->
-                <!--<version>${controller.mdsal.version}</version>-->
-                <!--<scope>import</scope>-->
-                <!--<type>pom</type>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.opendaylight.controller</groupId>-->
-                <!--<artifactId>config-artifacts</artifactId>-->
-                <!--<version>${config.version}</version>-->
-                <!--<type>pom</type>-->
-                <!--<scope>import</scope>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>org.opendaylight.yangtools</groupId>
+                <artifactId>yangtools-artifacts</artifactId>
+                <version>${yangtools.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.opendaylight.mdsal</groupId>
+                <artifactId>mdsal-artifacts</artifactId>
+                <version>${mdsal.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.opendaylight.mdsal.model</groupId>
+                <artifactId>mdsal-model-artifacts</artifactId>
+                <version>${mdsal.model.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.opendaylight.controller</groupId>
+                <artifactId>mdsal-artifacts</artifactId>
+                <version>${controller.mdsal.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.opendaylight.controller</groupId>
+                <artifactId>config-artifacts</artifactId>
+                <version>${config.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <!-- Third-party -->
             <dependency>
