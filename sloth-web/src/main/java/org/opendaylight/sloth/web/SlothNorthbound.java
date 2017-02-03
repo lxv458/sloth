@@ -33,13 +33,7 @@ public class SlothNorthbound {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getData(@PathParam("network_id") String networkId) {
-        return Response.status(HttpURLConnection.HTTP_OK).entity(SlothNetwork.getSampleSlothNetwork()).build();
-    }
-    @Path("/string/{network_id}")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response getStringData(@PathParam("network_id") String networkId) {
-        return Response.status(HttpURLConnection.HTTP_OK).entity("{\"network\":\"1234\"}").build();
+        return Response.status(HttpURLConnection.HTTP_OK).entity(new SlothNetworkRequest(SlothNetwork.getSampleSlothNetwork())).build();
     }
 
     @Path("{network_id}")

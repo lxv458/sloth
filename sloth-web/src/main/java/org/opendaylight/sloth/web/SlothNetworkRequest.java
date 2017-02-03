@@ -19,6 +19,8 @@ public class SlothNetworkRequest {
     @XmlElement(name = "network")
     SlothNetwork network;
 
+    SlothNetworkRequest() {}
+
     public SlothNetworkRequest(SlothNetwork network) {
         this.network = network;
     }

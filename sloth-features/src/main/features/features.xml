@@ -4,8 +4,8 @@
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
     <!--<repository>mvn:org.opendaylight.sloth/sloth-features/{{VERSION}}/xml/resources</repository>-->
     <feature name='odl-sloth-all' description='OpenDaylight :: Sloth' version='${project.version}'>
-        <bundle>mvn:commons-net/commons-net/{{VERSION}}</bundle>
-        <bundle>mvn:com.fasterxml.jackson.core/jackson-annotations/{{VERSION}}</bundle>
+        <!--<bundle>mvn:commons-net/commons-net/{{VERSION}}</bundle>-->
+        <!--<bundle>mvn:com.fasterxml.jackson.core/jackson-annotations/{{VERSION}}</bundle>-->
         <feature>war</feature>
         <bundle>mvn:org.opendaylight.sloth/sloth-web/{{VERSION}}</bundle>
         <bundle>mvn:com.sun.jersey/jersey-core/{{VERSION}}</bundle>

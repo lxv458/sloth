@@ -23,7 +23,7 @@ import java.util.UUID;
  * Northwestern University LIST Lab 2017.
  * Created by libin on 17-1-31.
  */
-@XmlRootElement(name = "network")
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class SlothNetwork implements Serializable {
     @XmlElement(name = "status")
@@ -70,6 +70,8 @@ public class SlothNetwork implements Serializable {
 
     @XmlElement(name = "id")
     String id;
+
+    SlothNetwork() {}
 
     public String getStatus() {
         return status;
