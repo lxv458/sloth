@@ -1,59 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright (c) 2016 Brocade Communications Systems, Inc. and others. All rights reserved.
-
- This program and the accompanying materials are made available under the
- terms of the Eclipse Public License v1.0 which accompanies this distribution,
- and is available at http://www.eclipse.org/legal/epl-v10.html
+Copyright © 2016 Northwestern University LIST Lab, Libin Song and others. All rights reserved.
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v1.0 which accompanies this distribution,
+and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
 -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.opendaylight.odlparent</groupId>
-        <artifactId>odlparent-lite</artifactId>
-        <version>1.7.0-Boron</version>
-        <relativePath/>
-    </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.opendaylight.sloth</groupId>
-    <artifactId>sloth-project</artifactId>
-    <version>0.4.0-Boron</version>
-    <packaging>pom</packaging>
-    <name>sloth</name>
+  <parent>
+    <groupId>org.opendaylight.odlparent</groupId>
+    <artifactId>odlparent</artifactId>
+    <version>1.7.0-Boron</version>
+    <relativePath/>
+  </parent>
 
-    <prerequisites>
-        <maven>3.1.1</maven>
-    </prerequisites>
+  <groupId>org.opendaylight.sloth</groupId>
+  <artifactId>sloth-aggregator</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <name>sloth</name>
+  <packaging>pom</packaging>
 
-    <modules>
-        <module>sloth-artifacts</module>
-        <module>sloth-features</module>
-        <module>sloth-filter</module>
-        <module>sloth-karaf</module>
-        <module>sloth-model</module>
-        <module>sloth-parent</module>
-        <module>sloth-permission</module>
-        <module>sloth-web</module>
-    </modules>
+  <prerequisites>
+    <maven>3.1.1</maven>
+  </prerequisites>
 
-    <build>
+  <scm>
+    <connection>scm:git:ssh://git.opendaylight.org:29418/sloth.git</connection>
+    <developerConnection>scm:git:ssh://git.opendaylight.org:29418/sloth.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://wiki.opendaylight.org/view/sloth:Main</url>
+  </scm>
+
+  <modules>
+    <module>sloth-northbound</module>
+    <module>sloth-api</module>
+    <module>sloth-impl</module>
+    <module>sloth-karaf</module>
+    <module>sloth-features</module>
+    <module>sloth-artifacts</module>
+  </modules>
+
+  <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <!--
+          This profile is to ensure we only build javadocs reports
+          when we plan to deploy Maven site for our project.
+      -->
+      <id>maven-site</id>
+      <activation>
+        <file>
+          <exists>${user.dir}/deploy-site.xml</exists>
+        </file>
+      </activation>
+
+      <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>aggregate</id>
+                <goals>
+                  <goal>aggregate</goal>
+                </goals>
+                <phase>package</phase>
+            </execution>
+            </executions>
+          </plugin>
         </plugins>
-    </build>
+      </build>
+    </profile>
+  </profiles>
 
+  <!--
+      Maven Site Configuration
+
+      The following configuration is necessary for maven-site-plugin to
+      correctly identify the correct deployment path for OpenDaylight Maven
+      sites.
+  -->
+  <url>${odl.site.url}/${project.groupId}/${stream}/</url>
+
+  <distributionManagement>
+    <site>
+      <id>opendaylight-site</id>
+      <url>${nexus.site.url}/</url>
+    </site>
+  </distributionManagement>
 </project>

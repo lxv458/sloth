@@ -1,0 +1,28 @@
+module sloth-permission {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:sloth";
+    prefix "sloth";
+
+    revision "2015-01-05" {
+        description "Initial revision of sloth model";
+    }
+
+    rpc check-permission {
+        input {
+            leaf request-url {
+                type string;
+            }
+            leaf query-string {
+                type string;
+            }
+            leaf json-body {
+                type string;
+            }
+        }
+        output {
+            leaf permission {
+                type string;
+            }
+        }
+    }
+}
