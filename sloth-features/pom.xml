@@ -26,6 +26,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   </prerequisites>
 
   <properties>
+    <aaa.version>0.4.0-Boron</aaa.version>
     <mdsal.model.version>0.9.0-Boron</mdsal.model.version>
     <mdsal.version>1.4.0-Boron</mdsal.version>
     <restconf.version>1.4.0-Boron</restconf.version>
@@ -130,6 +131,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       <version>${dlux.version}</version>
       <type>xml</type>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.opendaylight.aaa</groupId>
+      <artifactId>features-aaa-shiro</artifactId>
+      <version>${aaa.version}</version>
+      <classifier>features</classifier>
+      <type>xml</type>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

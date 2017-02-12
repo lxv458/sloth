@@ -10,6 +10,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
 <features name="odl-sloth-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
+  <repository>mvn:org.opendaylight.aaa/features-aaa-shiro/{{VERSION}}/xml/features</repository>
   <repository>mvn:org.opendaylight.yangtools/features-yangtools/{{VERSION}}/xml/features</repository>
   <repository>mvn:org.opendaylight.controller/features-mdsal/{{VERSION}}/xml/features</repository>
   <repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/{{VERSION}}/xml/features</repository>
@@ -35,6 +36,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <feature version="${dlux.version}">odl-dlux-yangui</feature>
   </feature>
   <feature name="odl-sloth-northbound" version="${project.version}" description="OpenDaylight :: sloth :: northbound">
+    <feature version='${aaa.version}'>odl-aaa-shiro</feature>
     <feature version="${project.version}">odl-sloth-ui</feature>
     <feature>war</feature>
     <bundle>mvn:org.opendaylight.sloth/sloth-northbound/{{VERSION}}</bundle>

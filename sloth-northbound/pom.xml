@@ -56,6 +56,10 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
           <instructions>
             <Import-Package>
               org.opendaylight.sloth.service,
+              org.opendaylight.aaa.shiro.filters,
+              org.opendaylight.aaa.shiro.realm,
+              org.opendaylight.aaa.shiro.web.env,
+              org.apache.shiro.web.env,
               com.sun.jersey.spi.container.servlet,
               javax.validation,
               javax.ws.rs.ext,
