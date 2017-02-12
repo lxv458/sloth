@@ -31,9 +31,9 @@ public class SlothPermissionEngine implements SlothPermissionService {
 
     @Override
     public Future<RpcResult<CheckPermissionOutput>> checkPermission(CheckPermissionInput input) {
-        String requestUrl = input.getRequestUrl();
-        String queryString = input.getQueryString();
-        String jsonBody = input.getJsonBody();
+        String requestUrl = input.getPermissionRequest().getRequestUrl();
+        String queryString = input.getPermissionRequest().getQueryString();
+        String jsonBody = input.getPermissionRequest().getJsonBody();
         LOG.info(requestUrl + queryString + jsonBody);
         CheckPermissionOutputBuilder checkPermissionOutputBuilder = new CheckPermissionOutputBuilder();
         checkPermissionOutputBuilder.setPermission("RequestUrl[" + requestUrl + "], QueryString[" + queryString + "], JSONBody[" + jsonBody + "]");

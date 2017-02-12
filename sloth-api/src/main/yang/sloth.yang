@@ -9,14 +9,47 @@ module sloth-permission {
 
     rpc check-permission {
         input {
-            leaf request-url {
-                type string;
+            container permission-user {
+                leaf user-name {
+                    type string;
+                }
+                leaf user-id {
+                    type string;
+                }
+                leaf domain {
+                    type string;
+                }
+                list roles {
+                    key "role";
+                    leaf role {
+                        type string;
+                    }
+                }
             }
-            leaf query-string {
-                type string;
-            }
-            leaf json-body {
-                type string;
+            container permission-request {
+                leaf method {
+                    type string;
+                /*
+                    type enumeration {
+                        enum GET;
+                        enum PUT;
+                        enum POST;
+                        enum DELETE;
+                        enum HEAD;
+                        enum OPTIONS;
+                        enum CONNECT;
+                    }
+                */
+                }
+                leaf request-url {
+                    type string;
+                }
+                leaf query-string {
+                    type string;
+                }
+                leaf json-body {
+                    type string;
+                }
             }
         }
         output {

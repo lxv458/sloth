@@ -24,6 +24,8 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
     <feature version='${project.version}'>odl-sloth-api</feature>
     <bundle>mvn:org.opendaylight.sloth/sloth-impl/{{VERSION}}</bundle>
+    <bundle>mvn:org.apache.shiro/shiro-web/{{VERSION}}</bundle>
+    <bundle>mvn:org.apache.shiro/shiro-core/{{VERSION}}</bundle>
   </feature>
   <feature name='odl-sloth-rest' version='${project.version}' description='OpenDaylight :: sloth :: REST'>
     <feature version="${project.version}">odl-sloth</feature>
