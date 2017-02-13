@@ -36,17 +36,17 @@ import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SlothFilter implements Filter{
-    private static final Logger LOG = LoggerFactory.getLogger(SlothFilter.class);
+public class SlothSecurityFilter implements Filter{
+    private static final Logger LOG = LoggerFactory.getLogger(SlothSecurityFilter.class);
     private final SlothPermissionService slothPermissionService;
 
-    public SlothFilter() throws ServiceUnavailableException {
+    public SlothSecurityFilter() throws ServiceUnavailableException {
         slothPermissionService = SlothServiceLocator.getInstance().getPermissionService();
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        LOG.info("SlothFilter initialized");
+        LOG.info("SlothSecurityFilter initialized");
     }
 
     @Override
@@ -66,14 +66,14 @@ public class SlothFilter implements Filter{
             try {
                 RpcResult<CheckPermissionOutput> rpcResult = rpcResultFuture.get();
                 if (rpcResult.isSuccessful()) {
-                    LOG.info("SlothFilter permission result: " + rpcResult.getResult().getPermission());
-                    LOG.info("SlothFilter, check permission successful");
+                    LOG.info("SlothSecurityFilter permission result: " + rpcResult.getResult().getPermission());
+                    LOG.info("SlothSecurityFilter, check permission successful");
                 } else {
-                    LOG.warn("SlothFilter, check permission unsuccessful");
+                    LOG.warn("SlothSecurityFilter, check permission unsuccessful");
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
-                LOG.error("SlothFilter, check permission exception");
+                LOG.error("SlothSecurityFilter, check permission exception");
             }
             chain.doFilter(request, response);
         } else {
@@ -83,7 +83,7 @@ public class SlothFilter implements Filter{
 
     @Override
     public void destroy() {
-        LOG.info("SlothFilter destroyed");
+        LOG.info("SlothSecurityFilter destroyed");
     }
 
     private static CheckPermissionInput httpRequestToPermissionInput(Object principal, HttpServletRequest request) {
