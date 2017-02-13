@@ -6,7 +6,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.opendaylight.sloth;
+package org.opendaylight.sloth.filter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

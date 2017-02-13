@@ -24,10 +24,12 @@ public class SlothReadCacheImpl implements SlothReadCache {
         Preconditions.checkNotNull(dataBroker, "SlothReadCacheImpl initialization failure: empty data broker");
         this.dataBroker = dataBroker;
         slothPermissionCache = new SlothPermissionCache(dataBroker);
+        LOG.info("SlothReadCacheImpl initialized");
     }
 
     @Override
     public void close() throws Exception {
         slothPermissionCache.close();
+        LOG.info("SlothReadCacheImpl closed");
     }
 }

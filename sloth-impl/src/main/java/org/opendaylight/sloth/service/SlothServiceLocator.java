@@ -9,6 +9,7 @@
 package org.opendaylight.sloth.service;
 
 
+import org.opendaylight.sloth.cache.SlothReadCache;
 import org.opendaylight.sloth.exception.ServiceUnavailableException;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.SlothPermissionService;
 import org.osgi.framework.BundleContext;
@@ -29,6 +30,10 @@ public final class SlothServiceLocator {
 
     public SlothPermissionService getPermissionService() throws ServiceUnavailableException {
         return getSlothServiceFactory().getSlothPermissionService();
+    }
+
+    public SlothReadCache getSlothReadCache() throws ServiceUnavailableException {
+        return getSlothServiceFactory().getSlothReadCache();
     }
 
     private Object getServiceInstance(Class<?> clazz, Object bundle) {

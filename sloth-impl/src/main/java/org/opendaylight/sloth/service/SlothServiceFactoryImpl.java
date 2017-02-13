@@ -55,9 +55,14 @@ public class SlothServiceFactoryImpl implements SlothServiceFactory {
     }
 
     @Override
+    public SlothReadCache getSlothReadCache() {
+        return slothReadCache;
+    }
+
+    @Override
     public void close() throws Exception {
-        slothReadCache.close();
         slothPermissionServiceRpcRegistration.close();
         serviceRegistration.unregister();
+        slothReadCache.close();
     }
 }

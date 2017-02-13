@@ -35,11 +35,11 @@ public abstract class FilteredClusteredDTCListener<T extends DataObject> impleme
         this.dataBroker = dataBroker;
     }
 
-    protected abstract void created(InstanceIdentifier<T> id, T after);
+    protected abstract void created(T after);
 
-    protected abstract void updated(InstanceIdentifier<T> id, T before, T after);
+    protected abstract void updated(T before, T after);
 
-    protected abstract void deleted(InstanceIdentifier<T> id, T before);
+    protected abstract void deleted(T before);
 
     protected void registerListener(LogicalDatastoreType storeType, InstanceIdentifier<T> id) {
         listenerRegistration = dataBroker.registerDataTreeChangeListener(new DataTreeIdentifier<>(storeType, id), this);
@@ -51,12 +51,12 @@ public abstract class FilteredClusteredDTCListener<T extends DataObject> impleme
             if (change.getRootNode().getModificationType() == DataObjectModification.ModificationType.WRITE ||
                     change.getRootNode().getModificationType() == DataObjectModification.ModificationType.SUBTREE_MODIFIED) {
                 if (change.getRootNode().getDataBefore() == null) {
-                    created(change.getRootPath().getRootIdentifier(), change.getRootNode().getDataAfter());
+                    created(change.getRootNode().getDataAfter());
                 } else {
-                    updated(change.getRootPath().getRootIdentifier(), change.getRootNode().getDataBefore(), change.getRootNode().getDataAfter());
+                    updated(change.getRootNode().getDataBefore(), change.getRootNode().getDataAfter());
                 }
             } else {
-                deleted(change.getRootPath().getRootIdentifier(), change.getRootNode().getDataAfter());
+                deleted(change.getRootNode().getDataAfter());
             }
         }
     }

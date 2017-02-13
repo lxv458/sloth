@@ -8,8 +8,10 @@
 package org.opendaylight.sloth.service;
 
 
+import org.opendaylight.sloth.cache.SlothReadCache;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.SlothPermissionService;
 
 public interface SlothServiceFactory extends AutoCloseable {
     SlothPermissionService getSlothPermissionService();
+    SlothReadCache getSlothReadCache();
 }

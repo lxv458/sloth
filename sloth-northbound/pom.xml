@@ -55,7 +55,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <configuration>
           <instructions>
             <Import-Package>
-              org.opendaylight.sloth.service,
+              org.opendaylight.sloth.filter,
               org.opendaylight.aaa.shiro.filters,
               org.opendaylight.aaa.shiro.realm,
               org.opendaylight.aaa.shiro.web.env,
