@@ -1,0 +1,18 @@
+module sloth-model {
+    yang-version 1;
+    namespace "urn:opendaylight:sloth:model";
+    prefix "sloth-model";
+
+    revision "2015-01-05" {
+        description "Initial revision of sloth-model model";
+    }
+
+    container sloth-permissions {
+        list sloth-permission {
+            key "uuid";
+            leaf uuid {
+                type string;
+            }
+        }
+    }
+}

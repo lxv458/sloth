@@ -1,10 +1,10 @@
 module sloth-permission {
     yang-version 1;
-    namespace "urn:opendaylight:params:xml:ns:yang:sloth";
-    prefix "sloth";
+    namespace "urn:opendaylight:sloth:permission";
+    prefix "sloth-permission";
 
     revision "2015-01-05" {
-        description "Initial revision of sloth model";
+        description "Initial revision of sloth permission model";
     }
 
     rpc check-permission {
