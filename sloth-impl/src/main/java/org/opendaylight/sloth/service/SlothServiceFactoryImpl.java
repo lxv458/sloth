@@ -13,6 +13,8 @@ import com.google.common.base.Preconditions;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker;
 import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
+import org.opendaylight.sloth.cache.SlothReadCache;
+import org.opendaylight.sloth.cache.SlothReadCacheImpl;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.SlothPermissionService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -26,8 +28,11 @@ public class SlothServiceFactoryImpl implements SlothServiceFactory {
     private final BindingAwareBroker.RpcRegistration<SlothPermissionService> slothPermissionServiceRpcRegistration;
     private ServiceRegistration serviceRegistration;
 
+    private final SlothReadCache slothReadCache;
+
     public SlothServiceFactoryImpl(final DataBroker dataBroker, final RpcProviderRegistry rpcProviderRegistry,
                                    final BundleContext bundleContext, final int numOfRoutees) {
+        slothReadCache = new SlothReadCacheImpl(dataBroker);
         slothPermissionService = new SlothPermissionEngine(dataBroker, bundleContext, numOfRoutees);
         slothPermissionServiceRpcRegistration = rpcProviderRegistry.addRpcImplementation(SlothPermissionService.class, slothPermissionService);
         registerService(bundleContext);
@@ -51,6 +56,7 @@ public class SlothServiceFactoryImpl implements SlothServiceFactory {
 
     @Override
     public void close() throws Exception {
+        slothReadCache.close();
         slothPermissionServiceRpcRegistration.close();
         serviceRegistration.unregister();
     }
