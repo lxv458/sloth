@@ -39,7 +39,7 @@ public class SlothServiceProvider {
      * Method called when the blueprint container is created.
      */
     public void init() {
-        slothServiceFactory = new SlothServiceFactoryImpl(dataBroker, rpcProviderRegistry, bundleContext);
+        slothServiceFactory = new SlothServiceFactoryImpl(dataBroker, rpcProviderRegistry, bundleContext, 10);
         LOG.info("SlothServiceProvider Session Initiated");
     }
 

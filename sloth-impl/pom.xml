@@ -50,6 +50,14 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-web</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-actor_2.11</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-osgi_2.11</artifactId>
+    </dependency>
 
     <!-- Testing Dependencies -->
     <dependency>

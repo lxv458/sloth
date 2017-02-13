@@ -27,8 +27,8 @@ public class SlothServiceFactoryImpl implements SlothServiceFactory {
     private ServiceRegistration serviceRegistration;
 
     public SlothServiceFactoryImpl(final DataBroker dataBroker, final RpcProviderRegistry rpcProviderRegistry,
-                                   final BundleContext bundleContext) {
-        slothPermissionService = new SlothPermissionEngine(dataBroker);
+                                   final BundleContext bundleContext, final int numOfRoutees) {
+        slothPermissionService = new SlothPermissionEngine(dataBroker, bundleContext, numOfRoutees);
         slothPermissionServiceRpcRegistration = rpcProviderRegistry.addRpcImplementation(SlothPermissionService.class, slothPermissionService);
         registerService(bundleContext);
         LOG.info("SlothServiceFactoryImpl created");
