@@ -38,7 +38,7 @@
 
     <filter>
         <filter-name>SlothFilter</filter-name>
-        <filter-class>org.opendaylight.sloth.service.SlothSecurityFilter</filter-class>
+        <filter-class>org.opendaylight.sloth.SlothSecurityFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>SlothFilter</filter-name>

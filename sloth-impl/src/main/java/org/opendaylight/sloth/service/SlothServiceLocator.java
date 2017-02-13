@@ -9,7 +9,7 @@
 package org.opendaylight.sloth.service;
 
 
-import org.opendaylight.sloth.service.exception.ServiceUnavailableException;
+import org.opendaylight.sloth.exception.ServiceUnavailableException;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sloth.rev150105.SlothPermissionService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;

@@ -9,11 +9,10 @@ package org.opendaylight.sloth.service;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import akka.actor.Props;
 import akka.pattern.Patterns;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
-import org.opendaylight.sloth.service.akka.SlothActorSystem;
-import org.opendaylight.sloth.service.akka.SlothPermissionRouter;
+import org.opendaylight.sloth.akka.SlothPermissionRouter;
+import org.opendaylight.sloth.akka.SlothActorSystem;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sloth.rev150105.CheckPermissionInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sloth.rev150105.CheckPermissionOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sloth.rev150105.CheckPermissionOutputBuilder;

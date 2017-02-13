@@ -22,7 +22,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <!--interface="org.osgi.framework.BundleContext" />-->
 
   <bean id="provider"
-    class="org.opendaylight.sloth.service.SlothServiceProvider"
+    class="org.opendaylight.sloth.SlothServiceProvider"
     init-method="init" destroy-method="close">
     <argument ref="dataBroker" />
     <argument ref="rpcRegistry" />

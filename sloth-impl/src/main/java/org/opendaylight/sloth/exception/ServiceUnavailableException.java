@@ -7,7 +7,7 @@
  */
 
 
-package org.opendaylight.sloth.service.exception;
+package org.opendaylight.sloth.exception;
 
 public class ServiceUnavailableException extends Exception {
     public ServiceUnavailableException(String message) {

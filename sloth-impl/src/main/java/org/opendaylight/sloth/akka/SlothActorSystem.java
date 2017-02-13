@@ -6,7 +6,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.opendaylight.sloth.service.akka;
+package org.opendaylight.sloth.akka;
 
 
 import akka.actor.ActorSystem;

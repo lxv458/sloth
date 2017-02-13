@@ -6,7 +6,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.opendaylight.sloth.service;
+package org.opendaylight.sloth;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -23,7 +23,8 @@ import java.util.concurrent.Future;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.opendaylight.sloth.service.exception.ServiceUnavailableException;
+import org.opendaylight.sloth.exception.ServiceUnavailableException;
+import org.opendaylight.sloth.service.SlothServiceLocator;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sloth.rev150105.CheckPermissionInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sloth.rev150105.CheckPermissionInputBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.sloth.rev150105.CheckPermissionOutput;
