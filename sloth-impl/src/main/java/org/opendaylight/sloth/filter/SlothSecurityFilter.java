@@ -16,8 +16,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -29,10 +28,8 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInputBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.SlothPermissionService;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.PermissionRequestBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.PermissionUserBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.permission.user.Roles;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.permission.user.RolesBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.PrincipalBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.RequestBuilder;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +64,7 @@ public class SlothSecurityFilter implements Filter{
             try {
                 RpcResult<CheckPermissionOutput> rpcResult = rpcResultFuture.get();
                 if (rpcResult.isSuccessful()) {
-                    LOG.info("SlothSecurityFilter permission result: " + rpcResult.getResult().getPermission());
+                    LOG.info("SlothSecurityFilter permission result: " + rpcResult.getResult().getResponse());
                     LOG.info("SlothSecurityFilter, check permission successful");
                 } else {
                     LOG.warn("SlothSecurityFilter, check permission unsuccessful");
@@ -88,18 +85,15 @@ public class SlothSecurityFilter implements Filter{
     }
 
     private static CheckPermissionInput httpRequestToPermissionInput(Object principal, HttpServletRequest request) {
-        PermissionUserBuilder userBuilder = new PermissionUserBuilder();
-        PermissionRequestBuilder requestBuilder = new PermissionRequestBuilder();
+        PrincipalBuilder principalBuilder = new PrincipalBuilder();
+        RequestBuilder requestBuilder = new RequestBuilder();
         CheckPermissionInputBuilder inputBuilder = new CheckPermissionInputBuilder();
 
-        List<Roles> roles = new ArrayList<>();
-        roles.add(new RolesBuilder().setRole("admin").build());
-        roles.add(new RolesBuilder().setRole("user").build());
-        userBuilder.setUserName("Libin").setUserId("HelloBinge").setDomain("SDN").setRoles(roles);
+        principalBuilder.setUserName("Libin").setUserId("HelloBinge").setDomain("SDN").setRoles(Collections.singletonList("admin"));
 
         // TODO: read json data without altering BufferedReader
         requestBuilder.setMethod(request.getMethod()).setRequestUrl(request.getRequestURI())
                 .setQueryString(request.getQueryString());
-        return inputBuilder.setPermissionUser(userBuilder.build()).setPermissionRequest(requestBuilder.build()).build();
+        return inputBuilder.setPrincipal(principalBuilder.build()).setRequest(requestBuilder.build()).build();
     }
 }

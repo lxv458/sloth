@@ -48,13 +48,15 @@ public class SlothPermissionEngine implements SlothPermissionService, AutoClosea
         CheckPermissionOutputBuilder checkPermissionOutputBuilder = new CheckPermissionOutputBuilder();
         RpcResultBuilder<CheckPermissionOutput> resultBuilder;
         try {
-            String r = (String) Await.result(result, Duration.create(5, TimeUnit.SECONDS));
-            checkPermissionOutputBuilder.setPermission("got SlothPermissionEngine result: " + r);
+            if ((boolean) Await.result(result, Duration.create(5, TimeUnit.SECONDS))) {
+                checkPermissionOutputBuilder.setStatusCode(200).setResponse("SlothPermissionEngine: pass");
+            } else {
+                checkPermissionOutputBuilder.setStatusCode(400).setResponse("SlothPermissionEngine: failure");
+            }
             resultBuilder = RpcResultBuilder.success(checkPermissionOutputBuilder.build());
             LOG.info("SlothPermissionEngine success process permission check");
         } catch (Exception e) {
             e.printStackTrace();
-            checkPermissionOutputBuilder.setPermission("failed to get result from SlothPermissionEngine result: " + e);
             resultBuilder = RpcResultBuilder.failed();
             LOG.warn("SlothPermissionEngine permission check failure");
         }

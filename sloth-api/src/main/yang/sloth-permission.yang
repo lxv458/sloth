@@ -9,7 +9,7 @@ module sloth-permission {
 
     rpc check-permission {
         input {
-            container permission-user {
+            container principal {
                 leaf user-name {
                     type string;
                 }
@@ -19,14 +19,11 @@ module sloth-permission {
                 leaf domain {
                     type string;
                 }
-                list roles {
-                    key "role";
-                    leaf role {
-                        type string;
-                    }
+                leaf-list roles {
+                    type string;
                 }
             }
-            container permission-request {
+            container request {
                 leaf method {
                     type string;
                 /*
@@ -53,7 +50,10 @@ module sloth-permission {
             }
         }
         output {
-            leaf permission {
+            leaf status-code {
+                type uint16;
+            }
+            leaf response {
                 type string;
             }
         }

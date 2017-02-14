@@ -28,7 +28,7 @@ public class SlothPermissionActor extends UntypedActor {
         if (o instanceof CheckPermissionInput && slothReadCache != null) {
             LOG.info("SlothPermissionActor receives CheckPermissionInput");
             CheckPermissionInput input = (CheckPermissionInput) o;
-            getSender().tell("Got your message: " + this.getSelf(), getSelf());
+            getSender().tell(slothReadCache.checkPermission(input), getSelf());
         } else {
             LOG.warn("SlothPermissionActor receives unknown type message: " + o);
         }

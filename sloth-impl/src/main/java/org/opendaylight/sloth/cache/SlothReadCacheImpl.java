@@ -11,6 +11,7 @@ package org.opendaylight.sloth.cache;
 
 import com.google.common.base.Preconditions;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,11 +20,13 @@ public class SlothReadCacheImpl implements SlothReadCache {
 
     private final DataBroker dataBroker;
     private final SlothPermissionCache slothPermissionCache;
+    private final SlothDomainCache slothDomainCache;
 
     public SlothReadCacheImpl(DataBroker dataBroker) {
         Preconditions.checkNotNull(dataBroker, "SlothReadCacheImpl initialization failure: empty data broker");
         this.dataBroker = dataBroker;
         slothPermissionCache = new SlothPermissionCache(dataBroker);
+        slothDomainCache = new SlothDomainCache(dataBroker);
         LOG.info("SlothReadCacheImpl initialized");
     }
 
@@ -31,5 +34,10 @@ public class SlothReadCacheImpl implements SlothReadCache {
     public void close() throws Exception {
         slothPermissionCache.close();
         LOG.info("SlothReadCacheImpl closed");
+    }
+
+    @Override
+    public boolean checkPermission(CheckPermissionInput input) {
+        return false;
     }
 }

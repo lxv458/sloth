@@ -7,11 +7,72 @@ module sloth-model {
         description "Initial revision of sloth-model model";
     }
 
-    container sloth-permissions {
-        list sloth-permission {
-            key "uuid";
-            leaf uuid {
+    container domains {
+        list domain {
+            leaf id {
                 type string;
+            }
+            leaf name {
+                type string;
+            }
+            list role {
+                leaf id {
+                    type string;
+                }
+                leaf name {
+                    type string;
+                }
+                leaf-list permission-id {
+                    type string;
+                }
+                leaf disabled {
+                    type boolean;
+                    default false;
+                }
+            }
+            leaf disabled {
+                type boolean;
+                default false;
+            }
+        }
+    }
+
+    container permissions {
+        list permission {
+            leaf id {
+                type string;
+            }
+            leaf-list resource {
+                type string;
+            }
+            leaf-list action {
+                type string;
+            }
+            list param-query {
+                leaf path {
+                    type string;
+                }
+                leaf operand {
+                    type string;
+                }
+                leaf value {
+                    type string;
+                }
+            }
+            list param-json {
+                leaf path {
+                    type string;
+                }
+                leaf operand {
+                    type string;
+                }
+                leaf value {
+                    type string;
+                }
+            }
+            leaf disabled {
+                type boolean;
+                default false;
             }
         }
     }
