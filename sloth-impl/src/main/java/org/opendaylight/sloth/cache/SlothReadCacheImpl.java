@@ -33,11 +33,12 @@ public class SlothReadCacheImpl implements SlothReadCache {
     @Override
     public void close() throws Exception {
         slothPermissionCache.close();
+        slothDomainCache.close();
         LOG.info("SlothReadCacheImpl closed");
     }
 
     @Override
     public boolean checkPermission(CheckPermissionInput input) {
-        return false;
+        return true;
     }
 }

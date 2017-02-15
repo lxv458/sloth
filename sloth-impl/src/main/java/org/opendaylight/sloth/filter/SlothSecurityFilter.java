@@ -20,10 +20,12 @@ import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.opendaylight.sloth.exception.ServiceUnavailableException;
 import org.opendaylight.sloth.service.SlothServiceLocator;
+import org.opendaylight.sloth.utils.MultiReadHttpServletRequest;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInputBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionOutput;
@@ -59,22 +61,30 @@ public class SlothSecurityFilter implements Filter{
              */
             Subject subject = SecurityUtils.getSubject();
             //ODLPrincipal odlPrincipal = (ODLPrincipal) subject.getPrincipal();
-            CheckPermissionInput checkPermissionInput = httpRequestToPermissionInput(subject, httpServletRequest);
+            HttpServletRequest multiReadHttpServletRequest = new MultiReadHttpServletRequest(httpServletRequest);
+            CheckPermissionInput checkPermissionInput = httpRequestToPermissionInput(subject, multiReadHttpServletRequest);
             final Future<RpcResult<CheckPermissionOutput>> rpcResultFuture = slothPermissionService.checkPermission(checkPermissionInput);
             try {
                 RpcResult<CheckPermissionOutput> rpcResult = rpcResultFuture.get();
                 if (rpcResult.isSuccessful()) {
-                    LOG.info("SlothSecurityFilter permission result: " + rpcResult.getResult().getResponse());
                     LOG.info("SlothSecurityFilter, check permission successful");
+                    if (rpcResult.getResult().getStatusCode() / 100 == 2) {
+                        chain.doFilter(multiReadHttpServletRequest, response);
+                    } else {
+                        response.getWriter().write("status code: " + rpcResult.getResult().getStatusCode() +
+                                ", response: " + rpcResult.getResult().getResponse());
+                    }
                 } else {
                     LOG.warn("SlothSecurityFilter, check permission unsuccessful");
+                    response.getWriter().write("failed to check permission");
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 LOG.error("SlothSecurityFilter, check permission exception");
+                response.getWriter().write("exception during check permission: " + e.toString());
             }
-            chain.doFilter(request, response);
         } else {
+            LOG.warn("not http request, no permission check");
             chain.doFilter(request, response);
         }
     }
@@ -91,9 +101,14 @@ public class SlothSecurityFilter implements Filter{
 
         principalBuilder.setUserName("Libin").setUserId("HelloBinge").setDomain("SDN").setRoles(Collections.singletonList("admin"));
 
-        // TODO: read json data without altering BufferedReader
         requestBuilder.setMethod(request.getMethod()).setRequestUrl(request.getRequestURI())
                 .setQueryString(request.getQueryString());
+        try {
+            requestBuilder.setJsonBody(IOUtils.toString(request.getReader()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOG.error("failed to get json body from http servlet request");
+        }
         return inputBuilder.setPrincipal(principalBuilder.build()).setRequest(requestBuilder.build()).build();
     }
 }
