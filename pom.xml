@@ -33,12 +33,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
   </scm>
 
   <modules>
-    <module>sloth-northbound</module>
     <module>sloth-api</module>
+    <module>sloth-artifacts</module>
+    <module>sloth-cli</module>
+    <module>sloth-features</module>
     <module>sloth-impl</module>
     <module>sloth-karaf</module>
-    <module>sloth-features</module>
-    <module>sloth-artifacts</module>
+    <module>sloth-northbound</module>
   </modules>
 
   <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->

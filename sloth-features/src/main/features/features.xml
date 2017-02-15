@@ -38,9 +38,14 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <feature version="${mdsal.version}">odl-mdsal-xsql</feature>
     <feature version="${dlux.version}">odl-dlux-yangui</feature>
   </feature>
+  <feature name='odl-sloth-cli' version='${project.version}' description='OpenDaylight :: sloth :: CLI'>
+    <feature version="${project.version}">odl-sloth</feature>
+    <bundle>mvn:org.opendaylight.sloth/sloth-cli/{{VERSION}}</bundle>
+  </feature>
   <feature name="odl-sloth-northbound" version="${project.version}" description="OpenDaylight :: sloth :: northbound">
     <feature version='${aaa.version}'>odl-aaa-shiro</feature>
     <feature version="${project.version}">odl-sloth-ui</feature>
+    <feature version="${project.version}">odl-sloth-cli</feature>
     <feature>war</feature>
     <bundle>mvn:org.opendaylight.sloth/sloth-northbound/{{VERSION}}</bundle>
     <bundle>mvn:com.sun.jersey/jersey-core/{{VERSION}}</bundle>
