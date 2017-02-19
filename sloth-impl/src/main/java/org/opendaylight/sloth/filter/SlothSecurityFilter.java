@@ -8,18 +8,7 @@
 
 package org.opendaylight.sloth.filter;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
+import com.google.common.net.MediaType;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -36,7 +25,19 @@ import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SlothSecurityFilter implements Filter{
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+public class SlothSecurityFilter implements Filter {
     private static final Logger LOG = LoggerFactory.getLogger(SlothSecurityFilter.class);
     private final SlothPermissionService slothPermissionService;
 
@@ -61,7 +62,8 @@ public class SlothSecurityFilter implements Filter{
              */
             Subject subject = SecurityUtils.getSubject();
             //ODLPrincipal odlPrincipal = (ODLPrincipal) subject.getPrincipal();
-            HttpServletRequest multiReadHttpServletRequest = new MultiReadHttpServletRequest(httpServletRequest);
+            HttpServletRequest multiReadHttpServletRequest = httpServletRequest.getContentType().equals(MediaType.JSON_UTF_8.type()) ?
+                    new MultiReadHttpServletRequest(httpServletRequest) : httpServletRequest;
             CheckPermissionInput checkPermissionInput = httpRequestToPermissionInput(subject, multiReadHttpServletRequest);
             final Future<RpcResult<CheckPermissionOutput>> rpcResultFuture = slothPermissionService.checkPermission(checkPermissionInput);
             try {
@@ -104,7 +106,9 @@ public class SlothSecurityFilter implements Filter{
         requestBuilder.setMethod(request.getMethod()).setRequestUrl(request.getRequestURI())
                 .setQueryString(request.getQueryString());
         try {
-            requestBuilder.setJsonBody(IOUtils.toString(request.getReader()));
+            if (request.getContentType().equals(MediaType.JSON_UTF_8.type())) {
+                requestBuilder.setJsonBody(IOUtils.toString(request.getReader()));
+            }
         } catch (IOException e) {
             e.printStackTrace();
             LOG.error("failed to get json body from http servlet request");
