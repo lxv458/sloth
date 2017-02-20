@@ -62,8 +62,9 @@ public class SlothSecurityFilter implements Filter {
              */
             Subject subject = SecurityUtils.getSubject();
             //ODLPrincipal odlPrincipal = (ODLPrincipal) subject.getPrincipal();
-            HttpServletRequest multiReadHttpServletRequest = httpServletRequest.getContentType().equals(MediaType.JSON_UTF_8.type()) ?
-                    new MultiReadHttpServletRequest(httpServletRequest) : httpServletRequest;
+            HttpServletRequest multiReadHttpServletRequest =
+                    httpServletRequest.getContentType() != null && httpServletRequest.getContentType().equals(MediaType.JSON_UTF_8.toString()) ?
+                            new MultiReadHttpServletRequest(httpServletRequest) : httpServletRequest;
             CheckPermissionInput checkPermissionInput = httpRequestToPermissionInput(subject, multiReadHttpServletRequest);
             final Future<RpcResult<CheckPermissionOutput>> rpcResultFuture = slothPermissionService.checkPermission(checkPermissionInput);
             try {
@@ -106,7 +107,7 @@ public class SlothSecurityFilter implements Filter {
         requestBuilder.setMethod(request.getMethod()).setRequestUrl(request.getRequestURI())
                 .setQueryString(request.getQueryString());
         try {
-            if (request.getContentType().equals(MediaType.JSON_UTF_8.type())) {
+            if (request.getContentType() != null && request.getContentType().equals(MediaType.JSON_UTF_8.toString())) {
                 requestBuilder.setJsonBody(IOUtils.toString(request.getReader()));
             }
         } catch (IOException e) {

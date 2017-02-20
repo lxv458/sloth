@@ -15,6 +15,7 @@ import org.opendaylight.controller.sal.binding.api.BindingAwareBroker;
 import org.opendaylight.controller.sal.binding.api.RpcProviderRegistry;
 import org.opendaylight.sloth.cache.SlothReadCache;
 import org.opendaylight.sloth.cache.SlothReadCacheImpl;
+import org.opendaylight.sloth.permission.SlothPermissionEngine;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.SlothPermissionService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
