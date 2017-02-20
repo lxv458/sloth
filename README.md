@@ -21,14 +21,14 @@ Author: Libin Song, Northwestern University
 
 `Sloth` has a Json based configuration file, which is extremely for programmers or administrators to write fine grained access control for generic RESTful API. The configuration file is located at `/etc/sloth-permission.conf`. `sloth-permission.conf` file can be imported via karaf command line `sloth:reload` or you can reload from other configuration files, e.g. `sloth:reload /etc/sloth-permission.conf` which is saying `Sloth` is able to reload configuration at any time from any where. The following is an example configuration file.
 
-```json
-## comment is supported
-## only '##' is supported as comment
+```bash
+# comment is supported
+# only '#' is supported as comment
 {
-  ## "marcos" is a predefined field, which is used for
-  ## alias definition. Configuration interpretor will
-  ## replace those marcos during interpretation.
-  ## of course, marcos can be empty
+  # "marcos" is a predefined field, which is used for
+  # alias definition. Configuration interpretor will
+  # replace those marcos during interpretation.
+  # of course, marcos can be empty
   "marcos" : {
     "api_v2": "/v2.0/",
     "extensions": "${api_v2}/extensions/",
@@ -41,41 +41,41 @@ Author: Libin Song, Northwestern University
     "subnetpools": "${api_v2}/subnetpools/",
     "subnets": "${api_v2}/subnets/"
   },
-  ## domain in RBAC (role based access control)
+  # domain in RBAC (role based access control)
   "domains": [
     {
-      ## "id" optional. If not provide, interpretor
-      ## will generate "id" with Java UUID
+      # "id" optional. If not provide, interpretor
+      # will generate "id" with Java UUID
       "id": "2ac336d2-1ebc-4dc7-af68-2789e6c9b7c0",
-      ## "name", name of domain in in RBAC
+      # "name", name of domain in in RBAC
       "name": "engineering",
-      ## if domain is disabled, default false
+      # if domain is disabled, default false
       "disabled": false,
-      ## "roles", exactly the same as that in RBAC
+      # "roles", exactly the same as that in RBAC
       "roles": [
         {
-          ## "id" oprional.
+          # "id" oprional.
           "id": "29d953f7-e1a8-4251-bfc5-006b799d5d34",
-          ## "name", name of role in RBAC
+          # "name", name of role in RBAC
           "name": "administrator",
-          ## if role is disabled, default false
+          # if role is disabled, default false
           "disabled": false,
-          ## "permissions" required.
+          # "permissions" required.
           "permissions": [
             {
-              ## "id" optional
+              # "id" optional
               "id": "ea945536-df20-4e0d-840a-cc1a757c2e72",
-              ## if permission is disabled
+              # if permission is disabled
               "disabled": false,
-              ## "resources", will be matched by regular expression.
-              ## Only resources listed here are valid for further
-              ## checking.
+              # "resources", will be matched by regular expression.
+              # Only resources listed here are valid for further
+              # checking.
               "resources": ["${network}", "${ports}", "${segments}"],
               # "actions" HTTP Method. Only Method listed
               # here are valid for further checking.
               "actions": ["POST", "GET", "PUT", "DELETE"],
               # "param_query", restrictions on the query parameters
-              ## after the "?" mark in URL
+              # after the "?" mark in URL
               "param_query": [],
               # "param_json", restrictions on the json data
               "param_json": []
@@ -98,13 +98,13 @@ Author: Libin Song, Northwestern University
               "param_query": [],
               "param_json": [
                 {
-                  ## URL pattern param, specifying parameter in Json
+                  # URL pattern param, specifying parameter in Json
                   "param": "/network/provider:network_type",
-                  ## oerator can be "ENUM", "REGEX", "RANGE"
+                  # oerator can be "ENUM", "REGEX", "RANGE"
                   "operator": "ENUM",
                   "value": ["vlan"]
                 }, {
-                  ## double slash "//" means list in Json
+                  # double slash "//" means list in Json
                   "param": "/network/segments//provider:network_type",
                   "operator": "ENUM",
                   "value": ["stt"]
