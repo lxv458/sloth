@@ -193,6 +193,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
                     permissionList.add(permissionBuilder.build());
                 }
                 roleBuilder.setPermissionId(permissionIdList);
+                roleList.add(roleBuilder.build());
             }
             domainBuilder.setRole(roleList);
             domainList.add(domainBuilder.build());
