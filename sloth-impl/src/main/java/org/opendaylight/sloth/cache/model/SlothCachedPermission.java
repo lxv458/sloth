@@ -9,6 +9,7 @@
 package org.opendaylight.sloth.cache.model;
 
 
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.ParamCheck;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.Permission;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamJson;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamQuery;
@@ -41,18 +42,18 @@ public class SlothCachedPermission {
 
     private class SlothCachedParam {
         public SlothCachedParam(ParamQuery paramQuery) {
-            new SlothCachedParam(paramQuery.getPath(), paramQuery.getOperand(), paramQuery.getValue());
+            new SlothCachedParam(paramQuery.getParam(), paramQuery.getOperator(), paramQuery.getValue());
         }
         public SlothCachedParam(ParamJson paramJson) {
-            new SlothCachedParam(paramJson.getPath(), paramJson.getOperand(), paramJson.getValue());
+            new SlothCachedParam(paramJson.getParam(), paramJson.getOperator(), paramJson.getValue());
         }
-        public SlothCachedParam(String path, String operand, String value) {
-            this.path = path;
-            this.operand = operand;
-            this.value = value;
+        public SlothCachedParam(String param, ParamCheck.Operator operator, List<String> value) {
+            this.param = param;
+            this.operator = operator;
+            this.value = new ArrayList<>(value);
         }
-        private String path;
-        private String operand;
-        private String value;
+        private String param;
+        private ParamCheck.Operator operator;
+        private List<String> value;
     }
 }

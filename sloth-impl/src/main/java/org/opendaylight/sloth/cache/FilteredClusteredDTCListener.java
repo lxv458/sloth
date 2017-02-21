@@ -43,6 +43,7 @@ public abstract class FilteredClusteredDTCListener<T extends DataObject> impleme
 
     protected void registerListener(LogicalDatastoreType storeType, InstanceIdentifier<T> id) {
         listenerRegistration = dataBroker.registerDataTreeChangeListener(new DataTreeIdentifier<>(storeType, id), this);
+        LOG.info("FilteredClusteredDTCListener registered success");
     }
 
     @Override

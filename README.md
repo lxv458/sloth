@@ -24,22 +24,26 @@ Author: Libin Song, Northwestern University
 ```bash
 # comment is supported
 # only '#' is supported as comment
+# '#' should be at the begining of comment line
 {
   # "marcos" is a predefined field, which is used for
   # alias definition. Configuration interpretor will
   # replace those marcos during interpretation.
-  # of course, marcos can be empty
-  "marcos" : {
-    "api_v2": "/v2.0/",
-    "extensions": "${api_v2}/extensions/",
-    "networks": "${api_v2}/",
-    "ports": "${api_v2}/ports/",
-    "segments": "${api_v2}/segments/",
-    "trunks": "${api_v2}/trucks/",
-    "floatingips": "${api_v2}/floatingips/",
-    "routers": "${api_v2}/routers/",
-    "subnetpools": "${api_v2}/subnetpools/",
-    "subnets": "${api_v2}/subnets/"
+  # left side is the name of variables that will be
+  # replaced, and right side is the value. Left side
+  # replacement is prohibited, since name should be
+  # neat and clean. Of course, marcos can be empty.
+  "marcos": {
+    "api_v2": "/v2.0",
+    "extensions": "${api_v2}/extensions",
+    "networks": "${api_v2}",
+    "ports": "${api_v2}/ports",
+    "segments": "${api_v2}/segments",
+    "trunks": "${api_v2}/trucks",
+    "floatingips": "${api_v2}/floatingips",
+    "routers": "${api_v2}/routers",
+    "subnetpools": "${api_v2}/subnetpools",
+    "subnets": "${api_v2}/subnets"
   },
   # domain in RBAC (role based access control)
   "domains": [
@@ -70,7 +74,7 @@ Author: Libin Song, Northwestern University
               # "resources", will be matched by regular expression.
               # Only resources listed here are valid for further
               # checking.
-              "resources": ["${network}", "${ports}", "${segments}"],
+              "resources": ["${networks}", "${ports}", "${segments}"],
               # "actions" HTTP Method. Only Method listed
               # here are valid for further checking.
               "actions": ["POST", "GET", "PUT", "DELETE"],
@@ -88,12 +92,11 @@ Author: Libin Song, Northwestern University
           "permissions": [
             {
               "id": "2df79cf9-226a-4858-9fe0-b5319094a121",
-              "resources": ["${network}"],
+              "resources": ["${networks}"],
               "actions": ["POST", "GET", "PUT", "DELETE"]
-            }
-            {
+            }, {
               "id": "93d581ed-55bc-49b2-a0ff-230ce5573993",
-              "resources": ["${network}"],
+              "resources": ["${networks}"],
               "actions": ["POST"],
               "param_query": [],
               "param_json": [

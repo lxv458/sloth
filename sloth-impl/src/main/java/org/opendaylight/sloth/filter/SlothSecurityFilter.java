@@ -20,6 +20,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.SlothPermissionService;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.PrincipalBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.Request;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.RequestBuilder;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
@@ -104,7 +105,7 @@ public class SlothSecurityFilter implements Filter {
 
         principalBuilder.setUserName("Libin").setUserId("HelloBinge").setDomain("SDN").setRoles(Collections.singletonList("admin"));
 
-        requestBuilder.setMethod(request.getMethod()).setRequestUrl(request.getRequestURI())
+        requestBuilder.setMethod(Request.Method.valueOf(request.getMethod())).setRequestUrl(request.getRequestURI())
                 .setQueryString(request.getQueryString());
         try {
             if (request.getContentType() != null && request.getContentType().equals(MediaType.JSON_UTF_8.toString())) {

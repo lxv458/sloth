@@ -25,18 +25,12 @@ module sloth-permission {
             }
             container request {
                 leaf method {
-                    type string;
-                /*
                     type enumeration {
                         enum GET;
                         enum PUT;
                         enum POST;
                         enum DELETE;
-                        enum HEAD;
-                        enum OPTIONS;
-                        enum CONNECT;
                     }
-                */
                 }
                 leaf request-url {
                     type string;

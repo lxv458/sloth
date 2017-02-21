@@ -9,6 +9,7 @@ module sloth-model {
 
     container domains {
         list domain {
+            key "id";
             leaf id {
                 type string;
             }
@@ -16,6 +17,7 @@ module sloth-model {
                 type string;
             }
             list role {
+                key "id";
                 leaf id {
                     type string;
                 }
@@ -37,8 +39,25 @@ module sloth-model {
         }
     }
 
+    grouping param-check {
+        leaf param {
+            type string;
+        }
+        leaf operator {
+            type enumeration {
+                enum ENUM;
+                enum RANGE;
+                enum REGEX;
+            }
+        }
+        leaf-list value {
+            type string;
+        }
+    }
+
     container permissions {
         list permission {
+            key "id";
             leaf id {
                 type string;
             }
@@ -49,26 +68,10 @@ module sloth-model {
                 type string;
             }
             list param-query {
-                leaf path {
-                    type string;
-                }
-                leaf operand {
-                    type string;
-                }
-                leaf value {
-                    type string;
-                }
+                uses param-check;
             }
             list param-json {
-                leaf path {
-                    type string;
-                }
-                leaf operand {
-                    type string;
-                }
-                leaf value {
-                    type string;
-                }
+                uses param-check;
             }
             leaf disabled {
                 type boolean;
