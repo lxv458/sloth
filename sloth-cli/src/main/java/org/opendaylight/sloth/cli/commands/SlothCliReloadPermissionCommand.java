@@ -19,7 +19,7 @@ import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFaile
 import org.opendaylight.sloth.cli.api.SlothCliCommands;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Domains;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.DomainsBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.ParamCheck;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.OperatorType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Permissions;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.PermissionsBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.Domain;
@@ -32,6 +32,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permi
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamJsonBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamQuery;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamQueryBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.HttpType;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +54,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
     private static final Logger LOG = LoggerFactory.getLogger(SlothCliReloadPermissionCommand.class);
     private static final String PERMISSION_CONFIG_PATH = "./etc/sloth-permission.conf";
     private static final InstanceIdentifier<Domains> SLOTH_DOMAINS_ID = InstanceIdentifier.create(Domains.class);
-    private static final InstanceIdentifier<Domain> SLOTH_DOMAIN_ID = SLOTH_DOMAINS_ID.child(Domain.class);
     private static final InstanceIdentifier<Permissions> SLOTH_PERMISSIONS_ID = InstanceIdentifier.create(Permissions.class);
-    private static final InstanceIdentifier<Permission> SLOTH_PERMISSION_ID = SLOTH_PERMISSIONS_ID.child(Permission.class);
 
     private final SlothCliCommands service;
     private DataBroker dataBroker;
@@ -185,7 +184,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
                     PermissionBuilder permissionBuilder = new PermissionBuilder();
                     permissionBuilder.setId(permission.optString("id").isEmpty() ? UUID.randomUUID().toString() : permission.getString("id"))
                             .setResource(jsonArrayToStringList(permission.getJSONArray("resources")))
-                            .setAction(jsonArrayToStringList(permission.getJSONArray("actions")))
+                            .setAction(jsonArrayToHttpTypeList(permission.getJSONArray("actions")))
                             .setDisabled(permission.optBoolean("disabled"))
                             .setParamQuery(jsonArrayToParamQueryList(permission.optJSONArray("param_query")))
                             .setParamJson(jsonArrayToParamJsonList(permission.optJSONArray("param_json")));
@@ -198,6 +197,14 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
             domainBuilder.setRole(roleList);
             domainList.add(domainBuilder.build());
         }
+    }
+
+    private static List<HttpType> jsonArrayToHttpTypeList(JSONArray jsonArray) {
+        List<HttpType> result = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            result.add(HttpType.valueOf(jsonArray.getString(i)));
+        }
+        return result;
     }
 
     private static List<String> jsonArrayToStringList(JSONArray jsonArray) {
@@ -215,7 +222,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
                 ParamQueryBuilder paramQueryBuilder = new ParamQueryBuilder();
                 JSONObject paramQuery = jsonArray.getJSONObject(i);
                 paramQueryBuilder.setParam(paramQuery.getString("param"))
-                        .setOperator(ParamCheck.Operator.valueOf(paramQuery.getString("operator")))
+                        .setOperator(OperatorType.valueOf(paramQuery.getString("operator")))
                         .setValue(jsonArrayToStringList(paramQuery.getJSONArray("value")));
                 paramQueryList.add(paramQueryBuilder.build());
             }
@@ -230,7 +237,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
                 ParamJsonBuilder paramJsonBuilder = new ParamJsonBuilder();
                 JSONObject paramJson = jsonArray.getJSONObject(i);
                 paramJsonBuilder.setParam(paramJson.getString("param"))
-                        .setOperator(ParamCheck.Operator.valueOf(paramJson.getString("operator")))
+                        .setOperator(OperatorType.valueOf(paramJson.getString("operator")))
                         .setValue(jsonArrayToStringList(paramJson.getJSONArray("value")));
                 paramJsonList.add(paramJsonBuilder.build());
             }

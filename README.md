@@ -121,3 +121,8 @@ Author: Libin Song, Northwestern University
   ]
 }
 ```
+
+## Note
+
+1. Currently, ODLPrincipal is not exposed. ODLPrincipal is a private class inside TokenAuthRealm. ODLPrincipal is exposed in 0.5.0-SNAPSHOT, which can be used to get `username`, `userid`, `domain`, `roles`.
+2. Configuration file format will be changed to support permission reuse. A Role can have multiple Permissions, and a Permission can be used by multiple Roles. We will support this feature later.

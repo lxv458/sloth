@@ -3,8 +3,20 @@ module sloth-model {
     namespace "urn:opendaylight:sloth:model";
     prefix "sloth-model";
 
+    import "sloth-permission" {
+        prefix "spermission";
+    }
+
     revision "2015-01-05" {
         description "Initial revision of sloth-model model";
+    }
+
+    typedef operator-type {
+        type enumeration {
+            enum ENUM;
+            enum RANGE;
+            enum REGEX;
+        }
     }
 
     container domains {
@@ -44,11 +56,7 @@ module sloth-model {
             type string;
         }
         leaf operator {
-            type enumeration {
-                enum ENUM;
-                enum RANGE;
-                enum REGEX;
-            }
+            type operator-type;
         }
         leaf-list value {
             type string;
@@ -65,7 +73,7 @@ module sloth-model {
                 type string;
             }
             leaf-list action {
-                type string;
+                type spermission:http-type;
             }
             list param-query {
                 uses param-check;

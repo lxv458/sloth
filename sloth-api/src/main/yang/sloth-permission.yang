@@ -7,6 +7,15 @@ module sloth-permission {
         description "Initial revision of sloth permission model";
     }
 
+    typedef http-type {
+        type enumeration {
+            enum GET;
+            enum PUT;
+            enum POST;
+            enum DELETE;
+        }
+    }
+
     rpc check-permission {
         input {
             container principal {
@@ -25,12 +34,7 @@ module sloth-permission {
             }
             container request {
                 leaf method {
-                    type enumeration {
-                        enum GET;
-                        enum PUT;
-                        enum POST;
-                        enum DELETE;
-                    }
+                    type http-type;
                 }
                 leaf request-url {
                     type string;

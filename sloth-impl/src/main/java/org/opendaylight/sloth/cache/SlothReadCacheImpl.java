@@ -39,6 +39,24 @@ public class SlothReadCacheImpl implements SlothReadCache {
 
     @Override
     public boolean checkPermission(CheckPermissionInput input) {
+        String roles = "[";
+        for (String role : input.getPrincipal().getRoles()) {
+            if (roles == "[") {
+                roles += role;
+            } else {
+                roles += ", " + role;
+            }
+        }
+        roles += "]";
+        String content = "user-name: " + input.getPrincipal().getUserName() +
+                ", user-id: " + input.getPrincipal().getUserId() +
+                ", domain: " + input.getPrincipal().getDomain() +
+                ", roles: " + roles +
+                ", method: " + input.getRequest().getMethod() +
+                ", query-string: " + input.getRequest().getQueryString() +
+                ", request-url: " + input.getRequest().getRequestUrl() +
+                ", json-body: " + input.getRequest().getJsonBody();
+        LOG.info(content);
         return true;
     }
 }
