@@ -13,6 +13,7 @@ import akka.pattern.Patterns;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.sloth.akka.SlothPermissionRouter;
 import org.opendaylight.sloth.akka.SlothActorSystem;
+import org.opendaylight.sloth.cache.model.SlothPermissionCheckResult;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionOutputBuilder;
@@ -48,10 +49,11 @@ public class SlothPermissionEngine implements SlothPermissionService, AutoClosea
         CheckPermissionOutputBuilder checkPermissionOutputBuilder = new CheckPermissionOutputBuilder();
         RpcResultBuilder<CheckPermissionOutput> resultBuilder;
         try {
-            if ((boolean) Await.result(result, Duration.create(5, TimeUnit.SECONDS))) {
-                checkPermissionOutputBuilder.setStatusCode(200).setResponse("SlothPermissionEngine: pass");
+            SlothPermissionCheckResult slothPermissionCheckResult = (SlothPermissionCheckResult) Await.result(result, Duration.create(5, TimeUnit.SECONDS));
+            if (slothPermissionCheckResult.isSuccess()) {
+                checkPermissionOutputBuilder.setStatusCode(200).setResponse(slothPermissionCheckResult.getMessage());
             } else {
-                checkPermissionOutputBuilder.setStatusCode(400).setResponse("SlothPermissionEngine: failure");
+                checkPermissionOutputBuilder.setStatusCode(401).setResponse(slothPermissionCheckResult.getMessage());
             }
             resultBuilder = RpcResultBuilder.success(checkPermissionOutputBuilder.build());
             LOG.info("SlothPermissionEngine success process permission check");

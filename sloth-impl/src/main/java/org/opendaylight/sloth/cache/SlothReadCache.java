@@ -9,8 +9,9 @@
 package org.opendaylight.sloth.cache;
 
 
+import org.opendaylight.sloth.cache.model.SlothPermissionCheckResult;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 
 public interface SlothReadCache extends AutoCloseable {
-    boolean checkPermission(CheckPermissionInput input);
+    SlothPermissionCheckResult checkPermission(CheckPermissionInput input);
 }

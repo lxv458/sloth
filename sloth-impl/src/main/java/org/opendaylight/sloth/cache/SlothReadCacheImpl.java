@@ -11,9 +11,13 @@ package org.opendaylight.sloth.cache;
 
 import com.google.common.base.Preconditions;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.sloth.cache.model.SlothCachedRole;
+import org.opendaylight.sloth.cache.model.SlothPermissionCheckResult;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class SlothReadCacheImpl implements SlothReadCache {
     private static final Logger LOG = LoggerFactory.getLogger(SlothReadCacheImpl.class);
@@ -38,25 +42,25 @@ public class SlothReadCacheImpl implements SlothReadCache {
     }
 
     @Override
-    public boolean checkPermission(CheckPermissionInput input) {
-        String roles = "[";
-        for (String role : input.getPrincipal().getRoles()) {
-            if (roles == "[") {
-                roles += role;
-            } else {
-                roles += ", " + role;
+    public SlothPermissionCheckResult checkPermission(CheckPermissionInput input) {
+        List<SlothCachedRole> slothCachedRoleList = slothDomainCache.getRelatedSlothCachedRole(input.getPrincipal().getDomain(), input.getPrincipal().getRoles());
+        if (slothCachedRoleList != null && slothCachedRoleList.isEmpty()) {
+            for (SlothCachedRole role : slothCachedRoleList) {
+                List<String> permissionIdList = role.getPermissionId();
+                if (permissionIdList != null && permissionIdList.isEmpty()) {
+                    for (String permissionId : role.getPermissionId()) {
+                        SlothPermissionCheckResult result = slothPermissionCache.getSlothCachedPermission(permissionId).isContradictory(input.getRequest());
+                        if (!result.isSuccess()) {
+                            return result;
+                        }
+                    }
+                } else {
+                    return new SlothPermissionCheckResult(false, "no related permissions for role: " + role.getName());
+                }
             }
+        } else {
+            return new SlothPermissionCheckResult(false, "no related domain/roles in data store");
         }
-        roles += "]";
-        String content = "user-name: " + input.getPrincipal().getUserName() +
-                ", user-id: " + input.getPrincipal().getUserId() +
-                ", domain: " + input.getPrincipal().getDomain() +
-                ", roles: " + roles +
-                ", method: " + input.getRequest().getMethod() +
-                ", query-string: " + input.getRequest().getQueryString() +
-                ", request-url: " + input.getRequest().getRequestUrl() +
-                ", json-body: " + input.getRequest().getJsonBody();
-        LOG.info(content);
-        return true;
+        return new SlothPermissionCheckResult(true, "");
     }
 }

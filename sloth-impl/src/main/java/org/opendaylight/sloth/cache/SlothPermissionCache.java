@@ -37,16 +37,27 @@ public class SlothPermissionCache extends FilteredClusteredDTCListener<Permissio
 
     @Override
     protected void created(Permission after) {
+        LOG.info("permission created: " + after.getId());
         permissionCache.put(after.getId(), new SlothCachedPermission(after));
     }
 
     @Override
     protected void updated(Permission before, Permission after) {
-        permissionCache.put(after.getId(), new SlothCachedPermission(after));
+        LOG.info("permission updated: " + after.getId());
+        if (permissionCache.getIfPresent(after.getId()) != null) {
+            permissionCache.put(after.getId(), new SlothCachedPermission(after));
+        } else {
+            LOG.error("permission cache update error: before id = " + before.getId() + ", after id = " + after.getId());
+        }
     }
 
     @Override
     protected void deleted(Permission before) {
+        LOG.info("permission deleted: " + before.getId());
         permissionCache.invalidate(before.getId());
+    }
+
+    public SlothCachedPermission getSlothCachedPermission(String permissionId) {
+        return permissionCache.getIfPresent(permissionId);
     }
 }

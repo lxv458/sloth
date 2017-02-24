@@ -9,24 +9,23 @@
 package org.opendaylight.sloth.cache.model;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.OperatorType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.ParamCheck;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.Permission;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamJson;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamQuery;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.HttpType;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.Request;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SlothCachedPermission {
-    private String id;
-    private String name;
-    private List<String> resource;
-    private List<HttpType> action;
-    private List<SlothCachedParam> paramQuery;
-    private List<SlothCachedParam> paramJson;
-    private boolean disabled;
+    private final String id;
+    private final String name;
+    private final List<String> resource;
+    private final List<HttpType> action;
+    private final List<SlothCachedParam> paramQuery;
+    private final List<SlothCachedParam> paramJson;
+    private final boolean disabled;
 
     public SlothCachedPermission(Permission permission) {
         id = permission.getId();
@@ -44,20 +43,7 @@ public class SlothCachedPermission {
         disabled = permission.isDisabled();
     }
 
-    private class SlothCachedParam {
-        public SlothCachedParam(ParamQuery paramQuery) {
-            new SlothCachedParam(paramQuery.getParam(), paramQuery.getOperator(), paramQuery.getValue());
-        }
-        public SlothCachedParam(ParamJson paramJson) {
-            new SlothCachedParam(paramJson.getParam(), paramJson.getOperator(), paramJson.getValue());
-        }
-        public SlothCachedParam(String param, OperatorType operator, List<String> value) {
-            this.param = param;
-            this.operator = operator;
-            this.value = new ArrayList<>(value);
-        }
-        private String param;
-        private OperatorType operator;
-        private List<String> value;
+    public SlothPermissionCheckResult isContradictory(Request request) {
+        return new SlothPermissionCheckResult(true, "");
     }
 }

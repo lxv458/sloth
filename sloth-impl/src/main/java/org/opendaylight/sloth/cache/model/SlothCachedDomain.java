@@ -13,39 +13,32 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domai
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.domain.Role;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SlothCachedDomain {
-    private String id;
-    private String name;
-    private Map<String, SlothCachedRole> role;
-    private boolean disabled;
+    private final String id;
+    private final String name;
+    private final Map<String, SlothCachedRole> role;
+    private final boolean disabled;
 
     public SlothCachedDomain(Domain domain) {
         id = domain.getId();
         name = domain.getName();
         role = new HashMap<>();
         for (Role r : domain.getRole()) {
-            role.put(r.getId(), new SlothCachedRole(r));
+            role.put(r.getName(), new SlothCachedRole(r));
         }
         disabled = domain.isDisabled();
     }
 
-    private class SlothCachedRole {
-        private String id;
-        private String name;
-        private Integer priority;
-        private List<String> permissionId;
-        private boolean disabled;
-
-        public SlothCachedRole(Role role) {
-            id = role.getId();
-            name = role.getName();
-            priority = role.getPriority();
-            permissionId = role.getPermissionId();
-            disabled = role.isDisabled();
+    public List<SlothCachedRole> getRelatedSlothCachedRole(List<String> roleNames) {
+        List<SlothCachedRole> result = new ArrayList<>();
+        for (String roleName : roleNames) {
+            result.add(role.get(roleName));
         }
+        result.sort((r1, r2) -> r2.getPriority() - r1.getPriority());
+        return result;
     }
 }
