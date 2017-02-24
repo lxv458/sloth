@@ -164,32 +164,41 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
     }
 
     private static void extractDomainAndPermission(JSONObject jsonObject, List<Domain> domainList, List<Permission> permissionList) {
+        Map<String, String> permissionNameToId = new HashMap<>();
+        JSONArray permissions = jsonObject.getJSONArray("permissions");
+        for (int k = 0; k < permissions.length(); k++) {
+            JSONObject permission = permissions.getJSONObject(k);
+            PermissionBuilder permissionBuilder = new PermissionBuilder();
+            permissionBuilder.setId(permission.optString("id").isEmpty() ? UUID.randomUUID().toString() : permission.getString("id"))
+                    .setName(permission.getString("name"))
+                    .setResource(jsonArrayToStringList(permission.getJSONArray("resources")))
+                    .setAction(jsonArrayToHttpTypeList(permission.getJSONArray("actions")))
+                    .setDisabled(permission.optBoolean("disabled"))
+                    .setParamQuery(jsonArrayToParamQueryList(permission.optJSONArray("param_query")))
+                    .setParamJson(jsonArrayToParamJsonList(permission.optJSONArray("param_json")));
+            permissionList.add(permissionBuilder.build());
+            permissionNameToId.put(permissionBuilder.getName(), permissionBuilder.getId());
+        }
+
         JSONArray domains = jsonObject.getJSONArray("domains");
         for (int i = 0; i < domains.length(); i++) {
             JSONObject domain = domains.getJSONObject(i);
             DomainBuilder domainBuilder = new DomainBuilder();
             domainBuilder.setId(domain.optString("id").isEmpty() ? UUID.randomUUID().toString() : domain.getString("id"))
-                    .setName(domain.getString("name")).setDisabled(domain.optBoolean("disabled"));
+                    .setName(domain.getString("name"))
+                    .setDisabled(domain.optBoolean("disabled"));
             List<Role> roleList = new ArrayList<>();
             JSONArray roles = domain.getJSONArray("roles");
             for (int j = 0; j < roles.length(); j++) {
                 JSONObject role = roles.getJSONObject(j);
                 RoleBuilder roleBuilder = new RoleBuilder();
                 roleBuilder.setId(role.optString("id").isEmpty() ? UUID.randomUUID().toString() : role.getString("id"))
-                        .setName(role.getString("name")).setDisabled(role.optBoolean("disabled"));
+                        .setName(role.getString("name"))
+                        .setPriority(role.getInt("priority"))
+                        .setDisabled(role.optBoolean("disabled"));
                 List<String> permissionIdList = new ArrayList<>();
-                JSONArray permissions = role.getJSONArray("permissions");
-                for (int k = 0; k < permissions.length(); k++) {
-                    JSONObject permission = permissions.getJSONObject(k);
-                    PermissionBuilder permissionBuilder = new PermissionBuilder();
-                    permissionBuilder.setId(permission.optString("id").isEmpty() ? UUID.randomUUID().toString() : permission.getString("id"))
-                            .setResource(jsonArrayToStringList(permission.getJSONArray("resources")))
-                            .setAction(jsonArrayToHttpTypeList(permission.getJSONArray("actions")))
-                            .setDisabled(permission.optBoolean("disabled"))
-                            .setParamQuery(jsonArrayToParamQueryList(permission.optJSONArray("param_query")))
-                            .setParamJson(jsonArrayToParamJsonList(permission.optJSONArray("param_json")));
-                    permissionIdList.add(permissionBuilder.getId());
-                    permissionList.add(permissionBuilder.build());
+                for (String name : jsonArrayToStringList(role.getJSONArray("permissions"))) {
+                    permissionIdList.add(permissionNameToId.get(name));
                 }
                 roleBuilder.setPermissionId(permissionIdList);
                 roleList.add(roleBuilder.build());

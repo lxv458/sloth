@@ -33,10 +33,11 @@ Author: Libin Song, Northwestern University
   # replaced, and right side is the value. Left side
   # replacement is prohibited, since name should be
   # neat and clean. Of course, marcos can be empty.
+  # of course, marcos can be empty
   "marcos": {
     "api_v2": "/v2.0",
     "extensions": "${api_v2}/extensions",
-    "networks": "${api_v2}",
+    "networks": "${api_v2}/networks",
     "ports": "${api_v2}/ports",
     "segments": "${api_v2}/segments",
     "trunks": "${api_v2}/trucks",
@@ -62,59 +63,65 @@ Author: Libin Song, Northwestern University
           "id": "29d953f7-e1a8-4251-bfc5-006b799d5d34",
           # "name", name of role in RBAC
           "name": "administrator",
+          # priority of role, in permission check
+          # permission will check roles in descending order
+          "priority": 0,
           # if role is disabled, default false
           "disabled": false,
           # "permissions" required.
-          "permissions": [
-            {
-              # "id" optional
-              "id": "ea945536-df20-4e0d-840a-cc1a757c2e72",
-              # if permission is disabled
-              "disabled": false,
-              # "resources", will be matched by regular expression.
-              # Only resources listed here are valid for further
-              # checking.
-              "resources": ["${networks}", "${ports}", "${segments}"],
-              # "actions" HTTP Method. Only Method listed
-              # here are valid for further checking.
-              "actions": ["POST", "GET", "PUT", "DELETE"],
-              # "param_query", restrictions on the query parameters
-              # after the "?" mark in URL
-              "param_query": [],
-              # "param_json", restrictions on the json data
-              "param_json": []
-            }
-          ]
+          "permissions": ["p1"]
         }, {
           "id": "5a9a123d-ea53-484b-8529-877fc8156908",
           "name": "visitor",
+          "priority": 1,
           "disabled": false,
-          "permissions": [
-            {
-              "id": "2df79cf9-226a-4858-9fe0-b5319094a121",
-              "resources": ["${networks}"],
-              "actions": ["POST", "GET", "PUT", "DELETE"]
-            }, {
-              "id": "93d581ed-55bc-49b2-a0ff-230ce5573993",
-              "resources": ["${networks}"],
-              "actions": ["POST"],
-              "param_query": [],
-              "param_json": [
-                {
-                  # URL pattern param, specifying parameter in Json
-                  "param": "/network/provider:network_type",
-                  # oerator can be "ENUM", "REGEX", "RANGE"
-                  "operator": "ENUM",
-                  "value": ["vlan"]
-                }, {
-                  # double slash "//" means list in Json
-                  "param": "/network/segments//provider:network_type",
-                  "operator": "ENUM",
-                  "value": ["stt"]
-                }
-              ]
-            }
-          ]
+          "permissions": ["p2", "p3"]
+        }
+      ]
+    }
+  ],
+  "permissions": [
+    {
+      "name": "p1",
+      # "id" optional
+      "id": "ea945536-df20-4e0d-840a-cc1a757c2e72",
+      # if permission is disabled
+      "disabled": false,
+      # "resources", will be matched by regular expression.
+      # Only resources listed here are valid for further
+      # checking.
+      "resources": ["${networks}", "${ports}", "${segments}"],
+      # "actions" HTTP Method. Only Method listed
+      # here are valid for further checking.
+      "actions": ["POST", "GET", "PUT", "DELETE"],
+      # "param_query", restrictions on the query parameters
+      # after the "?" mark in URL
+      "param_query": [],
+      # "param_json", restrictions on the json data
+      "param_json": []
+    }, {
+      "name": "p2",
+      "id": "2df79cf9-226a-4858-9fe0-b5319094a121",
+      "resources": ["${networks}"],
+      "actions": ["POST", "GET", "PUT", "DELETE"]
+    }, {
+      "name": "p3",
+      "id": "93d581ed-55bc-49b2-a0ff-230ce5573993",
+      "resources": ["${networks}"],
+      "actions": ["POST"],
+      "param_query": [],
+      "param_json": [
+        {
+          # URL pattern param, specifying parameter in Json
+          "param": "/network/provider:network_type",
+          # oerator can be "ENUM", "REGEX", "RANGE"
+          "operator": "ENUM",
+          "value": ["vlan"]
+        }, {
+          # double slash "//" means list in Json
+          "param": "/network/segments//provider:network_type",
+          "operator": "ENUM",
+          "value": ["stt"]
         }
       ]
     }
@@ -125,4 +132,3 @@ Author: Libin Song, Northwestern University
 ## Note
 
 1. Currently, ODLPrincipal is not exposed. ODLPrincipal is a private class inside TokenAuthRealm. ODLPrincipal is exposed in 0.5.0-SNAPSHOT, which can be used to get `username`, `userid`, `domain`, `roles`.
-2. Configuration file format will be changed to support permission reuse. A Role can have multiple Permissions, and a Permission can be used by multiple Roles. We will support this feature later.

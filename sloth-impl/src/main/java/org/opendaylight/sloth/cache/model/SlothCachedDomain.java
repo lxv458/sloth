@@ -36,12 +36,14 @@ public class SlothCachedDomain {
     private class SlothCachedRole {
         private String id;
         private String name;
+        private Integer priority;
         private List<String> permissionId;
         private boolean disabled;
 
         public SlothCachedRole(Role role) {
             id = role.getId();
             name = role.getName();
+            priority = role.getPriority();
             permissionId = role.getPermissionId();
             disabled = role.isDisabled();
         }

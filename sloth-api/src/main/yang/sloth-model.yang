@@ -36,6 +36,9 @@ module sloth-model {
                 leaf name {
                     type string;
                 }
+                leaf priority {
+                    type uint16;
+                }
                 leaf-list permission-id {
                     type string;
                 }
@@ -67,6 +70,9 @@ module sloth-model {
         list permission {
             key "id";
             leaf id {
+                type string;
+            }
+            leaf name {
                 type string;
             }
             leaf-list resource {
