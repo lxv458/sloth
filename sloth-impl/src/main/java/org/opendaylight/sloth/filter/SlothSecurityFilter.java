@@ -12,6 +12,7 @@ import com.google.common.net.MediaType;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.opendaylight.aaa.api.shiro.principal.ODLPrincipal;
 import org.opendaylight.sloth.exception.ServiceUnavailableException;
 import org.opendaylight.sloth.service.SlothServiceLocator;
 import org.opendaylight.sloth.utils.MultiReadHttpServletRequest;
@@ -34,6 +35,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -55,18 +58,12 @@ public class SlothSecurityFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-            // TODO: use ODLPrincipal to get username, domain, user id, roles
-            /*
-             * ODLPrincipal in 0.4.0-Boron is private static class inside TokenAuthRealm
-             * ODLPrincipal will be exported as dependency in 0.5.0-Carbon
-             * in Carbon version, we can get username, domain, userid, roles
-             */
             Subject subject = SecurityUtils.getSubject();
-            //ODLPrincipal odlPrincipal = (ODLPrincipal) subject.getPrincipal();
+            ODLPrincipal odlPrincipal = (ODLPrincipal) subject.getPrincipal();
             HttpServletRequest multiReadHttpServletRequest =
                     httpServletRequest.getContentType() != null && httpServletRequest.getContentType().equals(MediaType.JSON_UTF_8.toString()) ?
                             new MultiReadHttpServletRequest(httpServletRequest) : httpServletRequest;
-            CheckPermissionInput checkPermissionInput = httpRequestToPermissionInput(subject, multiReadHttpServletRequest);
+            CheckPermissionInput checkPermissionInput = httpRequestToPermissionInput(odlPrincipal, multiReadHttpServletRequest);
             final Future<RpcResult<CheckPermissionOutput>> rpcResultFuture = slothPermissionService.checkPermission(checkPermissionInput);
             try {
                 RpcResult<CheckPermissionOutput> rpcResult = rpcResultFuture.get();
@@ -98,12 +95,16 @@ public class SlothSecurityFilter implements Filter {
         LOG.info("SlothSecurityFilter destroyed");
     }
 
-    private static CheckPermissionInput httpRequestToPermissionInput(Object principal, HttpServletRequest request) {
+    private static CheckPermissionInput httpRequestToPermissionInput(ODLPrincipal odlPrincipal, HttpServletRequest request) {
         PrincipalBuilder principalBuilder = new PrincipalBuilder();
         RequestBuilder requestBuilder = new RequestBuilder();
         CheckPermissionInputBuilder inputBuilder = new CheckPermissionInputBuilder();
 
-        principalBuilder.setUserName("Libin").setUserId("HelloBinge").setDomain("SDN").setRoles(Collections.singletonList("admin"));
+        LOG.info("user-id: " + odlPrincipal.getUserId() + ", user-name: " + odlPrincipal.getUserId() +
+                ", domain: " + odlPrincipal.getDomain() + ", roles: " + String.join(", ", odlPrincipal.getRoles()));
+
+        principalBuilder.setUserName(odlPrincipal.getUsername()).setUserId(odlPrincipal.getUserId())
+                .setDomain(odlPrincipal.getDomain()).setRoles(new ArrayList<>(odlPrincipal.getRoles()));
 
         requestBuilder.setMethod(HttpType.valueOf(request.getMethod())).setRequestUrl(request.getRequestURI())
                 .setQueryString(request.getQueryString());

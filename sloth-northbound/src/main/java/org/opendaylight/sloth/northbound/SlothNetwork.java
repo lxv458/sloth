@@ -218,7 +218,7 @@ public class SlothNetwork implements Serializable {
         slothNetwork.setRouterExternal(false);
         slothNetwork.setAvailabilityZoneHints(new ArrayList<>());
         slothNetwork.setAvailabilityZones(new ArrayList<>());
-        slothNetwork.setName("sloth-sample-network-0.4.0-Boron");
+        slothNetwork.setName("sloth-sample-network-0.5.0-SNAPSHOT");
         slothNetwork.setAdminStateUp(true);
         slothNetwork.setTenantId(UUID.randomUUID().toString());
         slothNetwork.setProjectId(UUID.randomUUID().toString());

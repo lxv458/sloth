@@ -131,4 +131,4 @@ Author: Libin Song, Northwestern University
 
 ## Note
 
-1. Currently, ODLPrincipal is not exposed. ODLPrincipal is a private class inside TokenAuthRealm. ODLPrincipal is exposed in 0.5.0-SNAPSHOT, which can be used to get `username`, `userid`, `domain`, `roles`.
+1. Currently, we are using 1.3.0-SNAPSHOT opendaylight-startup-archetype.
