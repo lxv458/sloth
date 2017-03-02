@@ -58,9 +58,6 @@ module sloth-model {
         leaf param {
             type string;
         }
-        leaf operator {
-            type operator-type;
-        }
         leaf-list value {
             type string;
         }

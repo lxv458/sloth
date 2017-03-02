@@ -20,7 +20,7 @@ import java.util.Map;
 public class SlothCachedDomain {
     private final String id;
     private final String name;
-    private final Map<String, SlothCachedRole> role;
+    private final Map<String, Role> role;
     private final boolean disabled;
 
     public SlothCachedDomain(Domain domain) {
@@ -28,17 +28,23 @@ public class SlothCachedDomain {
         name = domain.getName();
         role = new HashMap<>();
         for (Role r : domain.getRole()) {
-            role.put(r.getName(), new SlothCachedRole(r));
+            role.put(r.getName(), r);
         }
         disabled = domain.isDisabled();
     }
 
-    public List<SlothCachedRole> getRelatedSlothCachedRole(List<String> roleNames) {
-        List<SlothCachedRole> result = new ArrayList<>();
+    public List<Role> getRelatedRoleList(List<String> roleNames) {
+        List<Role> result = new ArrayList<>();
         for (String roleName : roleNames) {
-            result.add(role.get(roleName));
+            if (!role.get(roleName).isDisabled()) {
+                result.add(role.get(roleName));
+            }
         }
         result.sort((r1, r2) -> r2.getPriority() - r1.getPriority());
         return result;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
     }
 }

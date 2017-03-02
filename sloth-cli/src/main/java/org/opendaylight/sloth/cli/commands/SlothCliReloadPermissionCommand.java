@@ -231,7 +231,6 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
                 ParamQueryBuilder paramQueryBuilder = new ParamQueryBuilder();
                 JSONObject paramQuery = jsonArray.getJSONObject(i);
                 paramQueryBuilder.setParam(paramQuery.getString("param"))
-                        .setOperator(OperatorType.valueOf(paramQuery.getString("operator")))
                         .setValue(jsonArrayToStringList(paramQuery.getJSONArray("value")));
                 paramQueryList.add(paramQueryBuilder.build());
             }
@@ -246,7 +245,6 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
                 ParamJsonBuilder paramJsonBuilder = new ParamJsonBuilder();
                 JSONObject paramJson = jsonArray.getJSONObject(i);
                 paramJsonBuilder.setParam(paramJson.getString("param"))
-                        .setOperator(OperatorType.valueOf(paramJson.getString("operator")))
                         .setValue(jsonArrayToStringList(paramJson.getJSONArray("value")));
                 paramJsonList.add(paramJsonBuilder.build());
             }

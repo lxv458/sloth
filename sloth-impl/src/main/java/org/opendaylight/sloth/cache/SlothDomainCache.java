@@ -14,13 +14,14 @@ import com.google.common.cache.CacheBuilder;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.sloth.cache.model.SlothCachedDomain;
-import org.opendaylight.sloth.cache.model.SlothCachedRole;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Domains;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.Domain;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.domain.Role;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SlothDomainCache extends FilteredClusteredDTCListener<Domain>{
@@ -60,11 +61,16 @@ public class SlothDomainCache extends FilteredClusteredDTCListener<Domain>{
         domainCache.invalidate(before.getName());
     }
 
-    public List<SlothCachedRole> getRelatedSlothCachedRole(String domainName, List<String> roleNames) {
-        List<SlothCachedRole> result = null;
+    public List<Role> getRelatedRoleList(String domainName, List<String> roleNames) {
+        List<Role> result = null;
         SlothCachedDomain domain = domainCache.getIfPresent(domainName);
         if (domain != null) {
-            result = domain.getRelatedSlothCachedRole(roleNames);
+            if (!domain.isDisabled()) {
+                result = domain.getRelatedRoleList(roleNames);
+            } else {
+                result = new ArrayList<>();
+                LOG.error("domain is disabled: " + domainName);
+            }
         } else {
             LOG.error("domain cache can not find domain: " + domainName);
         }
