@@ -26,7 +26,8 @@ public class SlothRequest {
         requestUrl = request.getRequestUrl();
         method = request.getMethod();
         queryString = splitQuery(request.getQueryString());
-        document = Configuration.defaultConfiguration().jsonProvider().parse(request.getJsonBody());
+        document = request.getJsonBody() != null && !request.getJsonBody().isEmpty() ?
+                Configuration.defaultConfiguration().jsonProvider().parse(request.getJsonBody()) : null;
     }
 
     private static Map<String, String> splitQuery(String queryString) {

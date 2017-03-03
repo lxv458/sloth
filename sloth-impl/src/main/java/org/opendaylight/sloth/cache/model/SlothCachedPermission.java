@@ -58,7 +58,7 @@ public class SlothCachedPermission {
     public SlothPermissionCheckResult isContradictory(SlothRequest request) {
         for (Pattern resource : resourceList) {
             if (actionList.contains(request.getMethod()) && resource.matcher(request.getRequestUrl()).matches()) {
-                if (paramQueryList != null && paramQueryList.isEmpty()) {
+                if (paramQueryList != null && paramQueryList.isEmpty() && !request.getQueryString().isEmpty()) {
                     for (SlothParamCheck paramQuery : paramQueryList) {
                         if (request.getQueryString().containsKey(paramQuery.getParam())) {
                             boolean flag = false;
@@ -69,12 +69,12 @@ public class SlothCachedPermission {
                                 }
                             }
                             if (!flag) {
-                                return new SlothPermissionCheckResult(false, "query string check failure");
+                                return new SlothPermissionCheckResult(false, "query string check failure: " + request.getQueryString());
                             }
                         }
                     }
                 }
-                if (paramJsonList != null && paramJsonList.isEmpty()) {
+                if (paramJsonList != null && paramJsonList.isEmpty() && request.getDocument() != null) {
                     for (SlothParamCheck paramJson : paramJsonList) {
                         boolean flag = false;
                         String v = JsonPath.read(request.getDocument(), paramJson.getParam());
@@ -85,7 +85,7 @@ public class SlothCachedPermission {
                             }
                         }
                         if (!flag) {
-                            return new SlothPermissionCheckResult(false, "json data check failure");
+                            return new SlothPermissionCheckResult(false, "json data check failure: " + paramJson.getParam());
                         }
                     }
                 }
