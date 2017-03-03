@@ -39,8 +39,7 @@ public class SlothPermissionActor extends UntypedActor {
             try {
                 slothReadCache = SlothServiceLocator.getInstance().getSlothReadCache();
             } catch (ServiceUnavailableException e) {
-                e.printStackTrace();
-                LOG.error("SlothPermissionActor unable to get SlothReadCache");
+                LOG.error("SlothPermissionActor unable to get SlothReadCache: " + e.getMessage());
             }
         }
     }

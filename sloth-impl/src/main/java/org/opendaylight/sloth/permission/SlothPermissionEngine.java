@@ -58,9 +58,8 @@ public class SlothPermissionEngine implements SlothPermissionService, AutoClosea
             resultBuilder = RpcResultBuilder.success(checkPermissionOutputBuilder.build());
             LOG.info("SlothPermissionEngine success process permission check");
         } catch (Exception e) {
-            e.printStackTrace();
             resultBuilder = RpcResultBuilder.failed();
-            LOG.warn("SlothPermissionEngine permission check failure");
+            LOG.warn("SlothPermissionEngine permission check failure: " + e.getMessage());
         }
         return resultBuilder.buildFuture();
     }

@@ -45,12 +45,13 @@ public class SlothReadCacheImpl implements SlothReadCache {
 
     @Override
     public SlothPermissionCheckResult checkPermission(CheckPermissionInput input) {
+        LOG.info("Check permission for input: " + input.getRequest().getRequestUrl());
         SlothRequest slothRequest = new SlothRequest(input.getRequest());
         List<Role> roleList = slothDomainCache.getRelatedRoleList(input.getPrincipal().getDomain(), input.getPrincipal().getRoles());
-        if (roleList != null && roleList.isEmpty()) {
+        if (roleList != null && !roleList.isEmpty()) {
             for (Role role : roleList) {
                 List<String> permissionIdList = role.getPermissionId();
-                if (permissionIdList != null && permissionIdList.isEmpty()) {
+                if (permissionIdList != null && !permissionIdList.isEmpty()) {
                     for (String permissionId : role.getPermissionId()) {
                         SlothCachedPermission slothCachedPermission = slothPermissionCache.getSlothCachedPermission(permissionId);
                         if (!slothCachedPermission.isDisabled()) {
@@ -66,7 +67,8 @@ public class SlothReadCacheImpl implements SlothReadCache {
             }
             return new SlothPermissionCheckResult(true, null);
         } else {
-            return new SlothPermissionCheckResult(false, "no related domain/roles in data store");
+            return new SlothPermissionCheckResult(false, "no related domain/roles. domain: " +
+                    input.getPrincipal().getDomain() + "roles: " + String.join(", ", input.getPrincipal().getRoles()));
         }
     }
 }

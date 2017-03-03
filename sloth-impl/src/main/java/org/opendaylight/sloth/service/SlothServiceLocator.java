@@ -46,8 +46,7 @@ public final class SlothServiceLocator {
                 LOG.error("failed to get ServiceReferences");
             }
         } catch (InvalidSyntaxException e) {
-            e.printStackTrace();
-            LOG.error("can not get bundle service instance in OSGi framework");
+            LOG.error("can not get bundle service instance in OSGi framework: " + e.getMessage());
         }
         return null;
     }

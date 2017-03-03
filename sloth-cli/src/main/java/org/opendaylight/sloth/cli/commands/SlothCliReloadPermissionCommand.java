@@ -100,17 +100,14 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             LOG.error("failed to open file: " + path);
         } catch (IOException e) {
-            e.printStackTrace();
             LOG.error("failed to read file: " + path);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                     LOG.error("failed to close file: " + path);
                 }
             }
@@ -259,8 +256,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
             wtx.delete(LogicalDatastoreType.CONFIGURATION, SLOTH_PERMISSIONS_ID);
             wtx.submit().checkedGet();
         } catch (TransactionCommitFailedException e) {
-            e.printStackTrace();
-            LOG.error("failed to delete permissions and domains from data store");
+            LOG.error("failed to delete permissions and domains from data store: " + e.getMessage());
             return false;
         }
         return true;
@@ -277,8 +273,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
             wtx.put(LogicalDatastoreType.CONFIGURATION, SLOTH_PERMISSIONS_ID, permissionsBuilder.build(), true);
             wtx.submit().checkedGet();
         } catch (TransactionCommitFailedException e) {
-            e.printStackTrace();
-            LOG.error("failed to write permissions and domains into data store");
+            LOG.error("failed to write permissions and domains into data store: " + e.getMessage());
             return false;
         }
         return true;

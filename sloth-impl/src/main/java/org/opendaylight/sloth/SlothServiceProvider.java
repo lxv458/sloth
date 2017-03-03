@@ -52,8 +52,7 @@ public class SlothServiceProvider {
         try {
             slothServiceFactory.close();
         } catch (Exception e) {
-            e.printStackTrace();
-            LOG.info("failed to close SlothServiceFactory");
+            LOG.info("failed to close SlothServiceFactory: " + e.getMessage());
         }
         LOG.info("SlothServiceFactory Closed");
     }

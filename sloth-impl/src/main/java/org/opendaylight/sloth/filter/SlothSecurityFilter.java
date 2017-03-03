@@ -79,9 +79,8 @@ public class SlothSecurityFilter implements Filter {
                     response.getWriter().write("failed to check permission");
                 }
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                LOG.error("SlothSecurityFilter, check permission exception");
-                response.getWriter().write("exception during check permission: " + e.toString());
+                LOG.error("SlothSecurityFilter, check permission exception: " + e.getMessage());
+                response.getWriter().write("exception during check permission: " + e.getMessage());
             }
         } else {
             LOG.warn("not http request, no permission check");
@@ -112,8 +111,7 @@ public class SlothSecurityFilter implements Filter {
                 requestBuilder.setJsonBody(IOUtils.toString(request.getReader()));
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            LOG.error("failed to get json body from http servlet request");
+            LOG.error("failed to get json body from http servlet request: " + e.getMessage());
         }
         return inputBuilder.setPrincipal(principalBuilder.build()).setRequest(requestBuilder.build()).build();
     }

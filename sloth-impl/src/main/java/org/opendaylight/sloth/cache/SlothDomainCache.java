@@ -57,8 +57,10 @@ public class SlothDomainCache extends FilteredClusteredDTCListener<Domain>{
 
     @Override
     protected void deleted(Domain before) {
-        LOG.info("domain deleted: " + before.getName());
-        domainCache.invalidate(before.getName());
+        if (before != null) {
+            LOG.info("domain deleted: " + before.getName());
+            domainCache.invalidate(before.getName());
+        }
     }
 
     public List<Role> getRelatedRoleList(String domainName, List<String> roleNames) {
@@ -73,6 +75,7 @@ public class SlothDomainCache extends FilteredClusteredDTCListener<Domain>{
             }
         } else {
             LOG.error("domain cache can not find domain: " + domainName);
+            LOG.error("available domain: " + String.join(", ", domainCache.asMap().keySet()));
         }
         return result;
     }

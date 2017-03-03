@@ -42,8 +42,7 @@ public class SlothActorSystem {
                 actorSystem.terminate();
                 Await.ready(actorSystem.whenTerminated(), Duration.create(10, TimeUnit.SECONDS));
             } catch (TimeoutException | InterruptedException e) {
-                e.printStackTrace();
-                LOG.warn("fail to terminate actor system in 10 seconds");
+                LOG.warn("fail to terminate actor system in 10 seconds: " + e.getMessage());
             }
             actorSystem = null;
             LOG.info("Sloth Actor System terminated");

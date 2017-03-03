@@ -14,6 +14,8 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permi
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamJson;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamQuery;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.HttpType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +24,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class SlothCachedPermission {
+    private static final Logger LOG = LoggerFactory.getLogger(SlothCachedPermission.class);
+
+    private final String id;
+    private final String name;
     private final List<Pattern> resourceList;
     private final Set<HttpType> actionList;
     private final List<SlothParamCheck> paramQueryList;
@@ -29,6 +35,8 @@ public class SlothCachedPermission {
     private final boolean disabled;
 
     public SlothCachedPermission(Permission permission) {
+        id = permission.getId();
+        name = permission.getName();
         resourceList = permission.getResource().stream().map(Pattern::compile).collect(Collectors.toList());
         actionList = new HashSet<>(permission.getAction());
         paramQueryList = permission.getParamQuery().stream().map(SlothParamCheck::new).collect(Collectors.toList());
@@ -56,6 +64,7 @@ public class SlothCachedPermission {
     }
 
     public SlothPermissionCheckResult isContradictory(SlothRequest request) {
+        LOG.info("checking with permission: " + id + ", " + name);
         for (Pattern resource : resourceList) {
             if (actionList.contains(request.getMethod()) && resource.matcher(request.getRequestUrl()).matches()) {
                 if (paramQueryList != null && paramQueryList.isEmpty() && !request.getQueryString().isEmpty()) {
