@@ -18,14 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 public class SlothCachedDomain {
-    private final String id;
-    private final String name;
     private final Map<String, Role> role;
     private final boolean disabled;
 
     public SlothCachedDomain(Domain domain) {
-        id = domain.getId();
-        name = domain.getName();
         role = new HashMap<>();
         for (Role r : domain.getRole()) {
             role.put(r.getName(), r);

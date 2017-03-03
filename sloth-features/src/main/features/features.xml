@@ -21,12 +21,14 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <bundle>mvn:org.opendaylight.sloth/sloth-api/{{VERSION}}</bundle>
   </feature>
   <feature name='odl-sloth' version='${project.version}' description='OpenDaylight :: sloth'>
+    <feature version='${aaa.version}'>odl-aaa-shiro</feature>
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
     <feature version='${project.version}'>odl-sloth-api</feature>
     <bundle>mvn:org.opendaylight.sloth/sloth-impl/{{VERSION}}</bundle>
     <bundle>mvn:org.apache.shiro/shiro-web/{{VERSION}}</bundle>
     <bundle>mvn:org.apache.shiro/shiro-core/{{VERSION}}</bundle>
     <configfile finalname="/etc/sloth-permission.conf">mvn:org.opendaylight.sloth/sloth-impl/{{VERSION}}/xml/slothpermissionconf</configfile>
+    <bundle>mvn:com.jayway.jsonpath/json-path/{{VERSION}}</bundle>
   </feature>
   <feature name='odl-sloth-rest' version='${project.version}' description='OpenDaylight :: sloth :: REST'>
     <feature version="${project.version}">odl-sloth</feature>

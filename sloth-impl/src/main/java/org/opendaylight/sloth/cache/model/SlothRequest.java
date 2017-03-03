@@ -8,7 +8,8 @@
 
 package org.opendaylight.sloth.cache.model;
 
-import io.restassured.path.json.JsonPath;
+
+import com.jayway.jsonpath.Configuration;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.HttpType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.Request;
 
@@ -19,13 +20,13 @@ public class SlothRequest {
     private final String requestUrl;
     private final HttpType method;
     private final Map<String, String> queryString;
-    private final JsonPath jsonPath;
+    private final Object document;
 
     public SlothRequest(Request request) {
         requestUrl = request.getRequestUrl();
         method = request.getMethod();
         queryString = splitQuery(request.getQueryString());
-        jsonPath = JsonPath.from(request.getJsonBody());
+        document = Configuration.defaultConfiguration().jsonProvider().parse(request.getJsonBody());
     }
 
     private static Map<String, String> splitQuery(String queryString) {
@@ -50,7 +51,7 @@ public class SlothRequest {
         return queryString;
     }
 
-    public JsonPath getJsonPath() {
-        return jsonPath;
+    public Object getDocument() {
+        return document;
     }
 }

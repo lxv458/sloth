@@ -9,6 +9,7 @@
 package org.opendaylight.sloth.cache.model;
 
 
+import com.jayway.jsonpath.JsonPath;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.Permission;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamJson;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamQuery;
@@ -18,35 +19,51 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SlothCachedPermission {
-    private final String id;
-    private final String name;
-    private final List<String> resourceList;
+    private final List<Pattern> resourceList;
     private final Set<HttpType> actionList;
-    private final List<ParamQuery> paramQueryList;
-    private final List<ParamJson> paramJsonList;
+    private final List<SlothParamCheck> paramQueryList;
+    private final List<SlothParamCheck> paramJsonList;
     private final boolean disabled;
 
     public SlothCachedPermission(Permission permission) {
-        id = permission.getId();
-        name = permission.getName();
-        resourceList = permission.getResource();
+        resourceList = permission.getResource().stream().map(Pattern::compile).collect(Collectors.toList());
         actionList = new HashSet<>(permission.getAction());
-        paramQueryList = permission.getParamQuery();
-        paramJsonList = permission.getParamJson();
+        paramQueryList = permission.getParamQuery().stream().map(SlothParamCheck::new).collect(Collectors.toList());
+        paramJsonList = permission.getParamJson().stream().map(SlothParamCheck::new).collect(Collectors.toList());
         disabled = permission.isDisabled();
     }
 
+    private class SlothParamCheck {
+        private String param;
+        private List<Pattern> value;
+        private SlothParamCheck(ParamQuery paramQuery) {
+            param = paramQuery.getParam();
+            value = paramQuery.getValue().stream().map(Pattern::compile).collect(Collectors.toList());
+        }
+        private SlothParamCheck(ParamJson paramJson) {
+            param = paramJson.getParam();
+            value = paramJson.getValue().stream().map(Pattern::compile).collect(Collectors.toList());
+        }
+        private String getParam() {
+            return param;
+        }
+        private List<Pattern> getValue() {
+            return value;
+        }
+    }
+
     public SlothPermissionCheckResult isContradictory(SlothRequest request) {
-        for (String resource : resourceList) {
-            if (actionList.contains(request.getMethod()) && Pattern.matches(resource, request.getRequestUrl())) {
+        for (Pattern resource : resourceList) {
+            if (actionList.contains(request.getMethod()) && resource.matcher(request.getRequestUrl()).matches()) {
                 if (paramQueryList != null && paramQueryList.isEmpty()) {
-                    for (ParamQuery paramQuery : paramQueryList) {
+                    for (SlothParamCheck paramQuery : paramQueryList) {
                         if (request.getQueryString().containsKey(paramQuery.getParam())) {
                             boolean flag = false;
-                            for (String value : paramQuery.getValue()) {
-                                if (Pattern.matches(value, request.getQueryString().get(paramQuery.getParam()))) {
+                            for (Pattern value : paramQuery.getValue()) {
+                                if (value.matcher(request.getQueryString().get(paramQuery.getParam())).matches()) {
                                     flag = true;
                                     break;
                                 }
@@ -58,11 +75,11 @@ public class SlothCachedPermission {
                     }
                 }
                 if (paramJsonList != null && paramJsonList.isEmpty()) {
-                    for (ParamJson paramJson : paramJsonList) {
+                    for (SlothParamCheck paramJson : paramJsonList) {
                         boolean flag = false;
-                        String v = request.getJsonPath().get(paramJson.getParam());
-                        for (String value : paramJson.getValue()) {
-                            if (Pattern.matches(value, v)) {
+                        String v = JsonPath.read(request.getDocument(), paramJson.getParam());
+                        for (Pattern value : paramJson.getValue()) {
+                            if (value.matcher(v).matches()) {
                                 flag = true;
                                 break;
                             }
