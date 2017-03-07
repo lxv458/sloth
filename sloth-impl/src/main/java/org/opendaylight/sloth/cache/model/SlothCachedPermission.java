@@ -67,7 +67,7 @@ public class SlothCachedPermission {
         LOG.info("checking with permission: " + id + ", " + name);
         for (Pattern resource : resourceList) {
             if (actionList.contains(request.getMethod()) && resource.matcher(request.getRequestUrl()).matches()) {
-                if (paramQueryList != null && paramQueryList.isEmpty() && !request.getQueryString().isEmpty()) {
+                if (paramQueryList != null && !paramQueryList.isEmpty() && !request.getQueryString().isEmpty()) {
                     for (SlothParamCheck paramQuery : paramQueryList) {
                         if (request.getQueryString().containsKey(paramQuery.getParam())) {
                             boolean flag = false;
