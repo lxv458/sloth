@@ -32,10 +32,11 @@ public class SlothRequest {
 
     private static Map<String, String> splitQuery(String queryString) {
         Map<String, String> queryPairs = new LinkedHashMap<>();
-        String[] pairs = queryString.split("&");
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            queryPairs.put(pair.substring(0, idx), pair.substring(idx + 1));
+        if (queryString != null && !queryString.isEmpty()) {
+            for (String pair : queryString.split("&")) {
+                int idx = pair.indexOf("=");
+                queryPairs.put(pair.substring(0, idx), pair.substring(idx + 1));
+            }
         }
         return queryPairs;
     }
