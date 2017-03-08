@@ -56,6 +56,7 @@ public class SlothSecurityFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // TODO: need to check permission both before and after process
         if (request instanceof HttpServletRequest) {
+            long startTime = System.nanoTime();
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             Subject subject = SecurityUtils.getSubject();
             ODLPrincipal odlPrincipal = (ODLPrincipal) subject.getPrincipal();
@@ -67,6 +68,8 @@ public class SlothSecurityFilter implements Filter {
             try {
                 RpcResult<CheckPermissionOutput> rpcResult = rpcResultFuture.get();
                 if (rpcResult.isSuccessful()) {
+                    long endTime = System.nanoTime();
+                    LOG.info("Permission Checking Time: " + (endTime - startTime) + "nano seconds");
                     LOG.info("SlothSecurityFilter, check permission successful");
                     if (rpcResult.getResult().getStatusCode() / 100 == 2) {
                         chain.doFilter(multiReadHttpServletRequest, response);

@@ -83,7 +83,7 @@ public class SlothCachedPermission {
                         }
                     }
                 }
-                if (paramJsonList != null && paramJsonList.isEmpty() && request.getDocument() != null) {
+                if (paramJsonList != null && !paramJsonList.isEmpty() && request.getDocument() != null) {
                     for (SlothParamCheck paramJson : paramJsonList) {
                         boolean flag = false;
                         String v = JsonPath.read(request.getDocument(), paramJson.getParam());
