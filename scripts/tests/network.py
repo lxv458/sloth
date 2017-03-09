@@ -100,4 +100,30 @@ NETWORKS = [
     }
 ]
 
+import json
 
+from scripts import config
+from scripts.httpapi import HttpAPI
+
+
+class Network(HttpAPI):
+    def __init__(self, servername, username):
+        HttpAPI.__init__(self, servername, username)
+
+    def get_networks(self):
+        return self.get(config.NEUTRON_NETWORKS)
+
+    def create_network(self, payload):
+        return self.post(config.NEUTRON_NETWORKS, payload)
+
+    def delete_network(self, networkid):
+        return self.delete(config.NEUTRON_NETWORKS + '/' + networkid)
+
+
+if __name__ == '__main__':
+    test = Network('server', 'admin')
+    print test.get_networks().text
+    network = json.loads(test.create_network(NETWORKS[0]).text)
+    print test.get_networks().text
+    test.delete_network(network['network']['id'])
+    print test.get_networks().text
