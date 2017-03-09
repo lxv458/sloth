@@ -17,3 +17,5 @@ classes
 .DS_Store
 .metadata
 *.iml
+*.pyc
+
