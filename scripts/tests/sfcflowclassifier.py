@@ -1,6 +1,6 @@
 SFC_FLOW_CLASSIFIERS = [
     {
-        "flowclassifier" : {
+        "flowclassifier": {
             "name": "flowclassifier1",
             "ethertype": "IPv4",
             "protocol": "udp",
@@ -22,7 +22,7 @@ SFC_FLOW_CLASSIFIERS = [
         }
     },
     {
-        "flowclassifier" : {
+        "flowclassifier": {
             "name": "flowclassifier1",
             "ethertype": "IPv4",
             "protocol": "udp",
@@ -44,7 +44,7 @@ SFC_FLOW_CLASSIFIERS = [
         }
     },
     {
-        "flowclassifier" : {
+        "flowclassifier": {
             "name": "flowclassifier-bug-6865",
             "ethertype": "IPv4",
             "protocol": "TCP",

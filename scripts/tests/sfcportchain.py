@@ -1,6 +1,6 @@
 SFC_PORT_CHAINS = [
     {
-        "portchain" : {
+        "portchain": {
             "name": "portchain1",
             "port_pair_groups": [
                 "4512d643-24fc-4fae-af4b-321c5e2eb3d1",
@@ -20,7 +20,7 @@ SFC_PORT_CHAINS = [
         }
     },
     {
-        "portchain" : {
+        "portchain": {
             "name": "portchain1",
             "port_pair_groups": [
                 "4512d643-24fc-4fae-af4b-321c5e2eb3d1",

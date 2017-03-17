@@ -1,4 +1,3 @@
-
 # Neutron API
 NEUTRON = '/controller/nb/v2/neutron'
 
@@ -32,14 +31,12 @@ NEUTRON_VPN_IP_SEC_POLICIES = NEUTRON + '/vpn/ipsecpolicies'
 NEUTRON_VPN_IP_SEC_SITE_CONNECTIONS = NEUTRON + '/vpn/ipsecsiteconnections'
 NEUTRON_VPN_SERVICES = NEUTRON + '/vpn/vpnservices'
 
-
 # ODL Auth API
 AUTH = '/auth/v1'
 
 AUTH_USERS = AUTH + '/users'
 AUTH_ROLES = AUTH + '/roles'
 AUTH_DOMAINS = AUTH + '/domains'
-
 
 # OAUTH2
 OAUTH2 = '/oauth2'

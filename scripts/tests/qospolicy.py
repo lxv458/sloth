@@ -31,6 +31,3 @@ QOS_POLICIES = [
         }
     }
 ]
-
-
-

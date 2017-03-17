@@ -56,7 +56,7 @@ SECURITY_GROUP_RULES = [
         }
     },
     {
-        "security_group_rule":{
+        "security_group_rule": {
             "remote_group_id": None,
             "direction": "ingress",
             "remote_ip_prefix": None,

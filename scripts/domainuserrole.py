@@ -61,5 +61,3 @@ class DomainUserRole(HttpAPI):
 
     def delete_user(self, userid):
         return self.delete(config.AUTH_USERS + '/' + userid)
-
-

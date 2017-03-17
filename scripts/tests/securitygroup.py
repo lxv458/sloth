@@ -2,7 +2,7 @@ SECURITY_GROUPS = [
     {
         "security_group": {
             "tenant_id": "1dfe7dffa0624ae882cdbda397d1d276",
-            "description": "", 
+            "description": "",
             "id": "521e29d6-67b8-4b3c-8633-027d21195333",
             "security_group_rules": [
                 {

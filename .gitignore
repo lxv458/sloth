@@ -1,10 +1,7 @@
-*.class
 **/target
-bin/
 dist
 **/logs
 *~
-target
 target-ide
 .classpath
 .project
@@ -13,9 +10,9 @@ target-ide
 xtend-gen
 yang-gen-config
 yang-gen-sal
-classes
 .DS_Store
 .metadata
 *.iml
 *.pyc
+*.log
 

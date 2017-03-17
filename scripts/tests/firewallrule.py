@@ -61,6 +61,3 @@ FIREWALL_RULES = [
     }
 
 ]
-
-
-

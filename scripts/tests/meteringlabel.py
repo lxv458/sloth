@@ -8,6 +8,3 @@ METERING_LABEL = [
         }
     }
 ]
-
-
-

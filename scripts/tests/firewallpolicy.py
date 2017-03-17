@@ -27,5 +27,3 @@ FIREWALL_POLICIES = [
         }
     }
 ]
-
-

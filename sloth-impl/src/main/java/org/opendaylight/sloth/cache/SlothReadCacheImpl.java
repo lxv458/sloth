@@ -45,7 +45,7 @@ public class SlothReadCacheImpl implements SlothReadCache {
 
     @Override
     public SlothPermissionCheckResult checkPermission(CheckPermissionInput input) {
-        LOG.info("Check permission for input: " + input.getRequest().getRequestUrl());
+        LOG.info("Check permission for input: " + input.getRequest().getRequestUrl() + ", Method: " + input.getRequest().getMethod().getName());
         SlothRequest slothRequest = new SlothRequest(input.getRequest());
         List<Role> roleList = slothDomainCache.getRelatedRoleList(input.getPrincipal().getDomain(), input.getPrincipal().getRoles());
         if (roleList != null && !roleList.isEmpty()) {

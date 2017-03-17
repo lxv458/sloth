@@ -24,7 +24,7 @@ LOAD_BALANCER_LISTENERS = [
             "default_pool_id": None,
             "description": "listener two",
             "id": "39de4d56-d663-46e5-85a1-5b9d5fa17829",
-            "loadbalancers":[
+            "loadbalancers": [
                 {
                     "id": "a36c20d0-18e9-42ce-88fd-82a35977ee8c"
                 }

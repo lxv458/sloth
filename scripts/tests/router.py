@@ -36,6 +36,3 @@ ROUTERS = [
         "id": "8604a0de-7f6b-409a-a47c-a1cc7bc77b2f"
     }
 ]
-
-
-
