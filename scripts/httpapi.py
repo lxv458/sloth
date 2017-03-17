@@ -3,7 +3,7 @@ import requests
 import utils
 
 
-class HttpAPI:
+class HttpAPI(object):
     def __init__(self, servername, username):
         server = utils.get_server(servername)
         self.__server = 'http://%s:%d' % (server['ip'], server['port'])
@@ -35,3 +35,7 @@ class HttpAPI:
 
     def delete(self, path):
         return self.__session.delete(self.__server + path, auth=self.__auth)
+
+    @staticmethod
+    def perform_tests(servername, username):
+        raise Exception('perform tests not implemented')
