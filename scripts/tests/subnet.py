@@ -205,5 +205,5 @@ class Subnet(HttpAPI):
 
         subnets = tester.get_subnets()
 
-        for net in json.loads(subnets.text)['subnets']:
-            utils.assert_status(tester.delete_subnet(net['id']), 204)
+        for sub in json.loads(subnets.text)['subnets']:
+            utils.assert_status(tester.delete_subnet(sub['id']), 204)
