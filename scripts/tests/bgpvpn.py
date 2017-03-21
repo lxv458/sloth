@@ -45,7 +45,7 @@ BGPVPNS_BULK = {
 }
 
 BGPVPN_UPDATE = {
-    "id": "bc1a76cb-8767-4c3a-bb95-018b822f2130",
+    "id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c",
     "bgpvpn": {
         "status": "ACTIVE",
         "name": "sample_bgpvpn_updated",

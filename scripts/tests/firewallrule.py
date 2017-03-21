@@ -56,8 +56,8 @@ class Firewall_Rule(HttpAPI):
         logging.info('get firewall_rule: ' + firewall_ruleid)
         return self.get(config.NEUTRON_FIREWALL_RULES + '/' + firewall_ruleid)
 
-    def get_firewall_policies(self):
-        logging.info('get all firewall_policies')
+    def get_firewall_rules(self):
+        logging.info('get all firewall_rules')
         return self.get(config.NEUTRON_FIREWALL_RULES)
 
     def create_firewall_rule(self, payload):
