@@ -10,6 +10,7 @@ from scripts.tests.bgpvpn import Bgpvpn
 from scripts.tests.firewall import Firewall
 from scripts.tests.firewallpolicy import Firewall_Policy
 from scripts.tests.firewallrule import Firewall_Rule
+from scripts.tests.floatingip import FloatingIP
 
 if __name__ == '__main__':
     logging_config = utils.get_logging_config('logging')
@@ -23,3 +24,4 @@ if __name__ == '__main__':
     Firewall.perform_tests('server', 'admin')
     Firewall_Policy.perform_tests('server', 'admin')
     Firewall_Rule.perform_tests('server', 'admin')
+    FloatingIP.perform_tests('server', 'admin')
