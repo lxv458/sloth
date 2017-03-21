@@ -156,6 +156,7 @@ PORTS_BULK = {
 }
 
 PORT_UPDATE = {
+    "id": "43c831e0-19ce-4a76-9a49-57b57e69428b",
     "port": {
         "status": "DOWN",
         "binding:host_id": "00000000-1111-2222-3333-444444444444",

@@ -123,6 +123,7 @@ SUBNETS_BULK = {
 }
 
 SUBNET_UPDATE = {
+    "id": "b0e7435c-1512-45fb-aa9e-9a7c5932fb30",
     "subnet": {
         "name": "my_subnet",
         "enable_dhcp": True,
