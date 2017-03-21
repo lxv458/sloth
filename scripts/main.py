@@ -6,6 +6,7 @@ from scripts.tests.router import Router
 from scripts.tests.subnet import Subnet
 from scripts.tests.port import Port
 from scripts.tests.trunk import Trunk
+from scripts.tests.bgpvpn import Bgpvpn
 
 if __name__ == '__main__':
     logging_config = utils.get_logging_config('logging')
@@ -15,3 +16,4 @@ if __name__ == '__main__':
     Subnet.perform_tests('server', 'admin')
     Port.perform_tests('server', 'admin')
     Trunk.perform_tests('server', 'admin')
+    Bgpvpn.perform_tests('server', 'admin')

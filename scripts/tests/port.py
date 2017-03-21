@@ -205,7 +205,7 @@ class Port(HttpAPI):
         if 'port' in payload:
             logging.info('create port: ' + payload['port']['id'])
         else:
-            logging.info('bulk create ports: ' + ', '.join([net['id'] for net in payload['ports']]))
+            logging.info('bulk create ports: ' + ', '.join([port['id'] for port in payload['ports']]))
         return self.post(config.NEUTRON_PORTS, payload)
 
     def update_port(self, portid, payload):

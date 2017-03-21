@@ -132,7 +132,7 @@ class Trunk(HttpAPI):
         if 'trunk' in payload:
             logging.info('create trunk: ' + payload['trunk']['id'])
         else:
-            logging.info('bulk create trunks: ' + ', '.join([net['id'] for net in payload['trunks']]))
+            logging.info('bulk create trunks: ' + ', '.join([trunk['id'] for trunk in payload['trunks']]))
         return self.post(config.NEUTRON_TRUNKS, payload)
 
     def update_trunk(self, trunkid, payload):

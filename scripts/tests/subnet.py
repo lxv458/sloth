@@ -167,7 +167,7 @@ class Subnet(HttpAPI):
         if 'subnet' in payload:
             logging.info('create subnet: ' + payload['subnet']['id'])
         else:
-            logging.info('bulk create subnets: ' + ', '.join([net['id'] for net in payload['subnets']]))
+            logging.info('bulk create subnets: ' + ', '.join([sub['id'] for sub in payload['subnets']]))
         return self.post(config.NEUTRON_SUBNETS, payload)
 
     def update_subnet(self, subnetid, payload):
