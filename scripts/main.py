@@ -8,6 +8,8 @@ from scripts.tests.port import Port
 from scripts.tests.trunk import Trunk
 from scripts.tests.bgpvpn import Bgpvpn
 from scripts.tests.firewall import Firewall
+from scripts.tests.firewallpolicy import Firewall_Policy
+from scripts.tests.firewallrule import Firewall_Rule
 
 if __name__ == '__main__':
     logging_config = utils.get_logging_config('logging')
@@ -19,3 +21,5 @@ if __name__ == '__main__':
     Trunk.perform_tests('server', 'admin')
     Bgpvpn.perform_tests('server', 'admin')
     Firewall.perform_tests('server', 'admin')
+    Firewall_Policy.perform_tests('server', 'admin')
+    Firewall_Rule.perform_tests('server', 'admin')
