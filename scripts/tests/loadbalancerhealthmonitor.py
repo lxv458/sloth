@@ -26,6 +26,7 @@ LOAD_BALANCER_HEALTH_MONITOR_ONE = {
 }
 
 LOAD_BALANCER_HEALTH_MONITOR_UPDATE = {
+    "id": "0a9ac99d-0a09-4b18-8499-a0796850279a",
     "healthmonitor": {
         "admin_state_up": False,
         "delay": 2,

@@ -21,6 +21,7 @@ LOAD_BALANCER_ONE = {
 }
 
 LOAD_BALANCER_UPDATE = {
+    "id": "a36c20d0-18e9-42ce-88fd-82a35977ee8c",
     "loadbalancer": {
         "description": "simple lb2",
         "admin_state_up": False,
