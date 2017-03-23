@@ -89,7 +89,7 @@ class Security_group(HttpAPI):
         return self.get(config.NEUTRON_SECURITY_GROUPS)
 
     def create_security_group(self, payload):
-        logging.info('create security_group: ' + payload['security_group"']['id'])
+        logging.info('create security_group: ' + payload['security_group']['id'])
         return self.post(config.NEUTRON_SECURITY_GROUPS, payload)
 
     def update_security_group(self, security_groupid, payload):
