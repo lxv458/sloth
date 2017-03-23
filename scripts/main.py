@@ -15,6 +15,8 @@ from scripts.tests.gateway import Gateway
 from scripts.tests.gatewayconnection import Gateway_Connection
 from scripts.tests.loadbalancer import Loadbalancer
 from scripts.tests.loadbalancerhealthmonitor import Loadbalancer_health_monitor
+from scripts.tests.loadbalancerlistener import Loadbalancer_listener
+from scripts.tests.loadbalancerpool import Loadbalancer_pool
 
 if __name__ == '__main__':
     logging_config = utils.get_logging_config('logging')
@@ -33,3 +35,5 @@ if __name__ == '__main__':
     Gateway_Connection.perform_tests('server', 'admin')
     Loadbalancer.perform_tests('server', 'admin')
     Loadbalancer_health_monitor.perform_tests('server', 'admin')
+    Loadbalancer_listener.perform_tests('server', 'admin')
+    Loadbalancer_pool.perform_tests('server', 'admin')
