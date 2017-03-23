@@ -21,6 +21,12 @@ from scripts.tests.meteringlabel import Metering_label
 from scripts.tests.meteringrule import Metering_label_rule
 from scripts.tests.qospolicy import Qos_policy
 from scripts.tests.vpnservice import Vpn_service
+from scripts.tests.securitygroup import Security_group
+from scripts.tests.securitygrouprule import Security_group_rule
+from scripts.tests.sfcflowclassifier import SFC_flow_classifier
+from scripts.tests.sfcportchain import SFC_port_chain
+from scripts.tests.sfcportpair import SFC_port_pair
+from scripts.tests.sfcportpairgroup import SFC_port_pair_group
 
 if __name__ == '__main__':
     logging_config = utils.get_logging_config('logging')
@@ -45,3 +51,9 @@ if __name__ == '__main__':
     Metering_label_rule.perform_tests('server', 'admin')
     Qos_policy.perform_tests('server', 'admin')
     Vpn_service.perform_tests('server', 'admin')
+    Security_group.perform_tests('server', 'admin')
+    Security_group_rule.perform_tests('server', 'admin')
+    SFC_flow_classifier.perform_tests('server', 'admin')
+    SFC_port_chain.perform_tests('server', 'admin')
+    SFC_port_pair.perform_tests('server', 'admin')
+    SFC_port_pair_group.perform_tests('server', 'admin')
