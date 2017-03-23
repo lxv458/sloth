@@ -111,12 +111,12 @@ class Security_group(HttpAPI):
         security_group_one = tester.create_security_group(SECURITY_GROUP_ONE)
         utils.assert_status(security_group_one, 201)
 
-        security_group_one_id = json.loads(security_group_one.text)['security_group"']['id']
+        security_group_one_id = json.loads(security_group_one.text)['security_group']['id']
 
         utils.assert_status(tester.get_security_group(security_group_one_id), 200)
 
         utils.assert_status(tester.update_security_group(SECURITY_GROUP_UPDATE['id'],
-                                                         SECURITY_GROUP_UPDATE['security_group"']), 200)
+                                                         SECURITY_GROUP_UPDATE['security_group']), 200)
 
         utils.assert_status(tester.delete_security_group(security_group_one_id), 204)
 
