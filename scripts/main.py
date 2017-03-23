@@ -17,6 +17,10 @@ from scripts.tests.loadbalancer import Loadbalancer
 from scripts.tests.loadbalancerhealthmonitor import Loadbalancer_health_monitor
 from scripts.tests.loadbalancerlistener import Loadbalancer_listener
 from scripts.tests.loadbalancerpool import Loadbalancer_pool
+from scripts.tests.meteringlabel import Metering_label
+from scripts.tests.meteringrule import Metering_label_rule
+from scripts.tests.qospolicy import Qos_policy
+from scripts.tests.vpnservice import Vpn_service
 
 if __name__ == '__main__':
     logging_config = utils.get_logging_config('logging')
@@ -37,3 +41,7 @@ if __name__ == '__main__':
     Loadbalancer_health_monitor.perform_tests('server', 'admin')
     Loadbalancer_listener.perform_tests('server', 'admin')
     Loadbalancer_pool.perform_tests('server', 'admin')
+    Metering_label.perform_tests('server', 'admin')
+    Metering_label_rule.perform_tests('server', 'admin')
+    Qos_policy.perform_tests('server', 'admin')
+    Vpn_service.perform_tests('server', 'admin')
