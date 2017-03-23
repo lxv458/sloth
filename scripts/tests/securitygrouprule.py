@@ -60,6 +60,7 @@ SECURITY_GROUP_RULES_BULK = {
 }
 
 SECURITY_GROUP_RULE_UPDATE = {
+    "id": "9b4be7fa-e56e-40fb-9516-1f0fa9185669",
     "security_group_rule": {
         "remote_group_id": None,
         "direction": "egress",
