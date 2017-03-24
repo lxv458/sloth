@@ -40,7 +40,7 @@ if __name__ == '__main__':
     Firewall.perform_tests('server', 'admin')
     FirewallPolicy.perform_tests('server', 'admin')
     FirewallRule.perform_tests('server', 'admin')
-    #FloatingIP.perform_tests('server', 'admin')
+    FloatingIP.perform_tests('server', 'admin')
     Gateway.perform_tests('server', 'admin')
     GatewayConnection.perform_tests('server', 'admin')
     Loadbalancer.perform_tests('server', 'admin')
