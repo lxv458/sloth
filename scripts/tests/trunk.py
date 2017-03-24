@@ -101,21 +101,24 @@ TRUNKS_BULK = {
 TRUNK_UPDATE = {
     "id": "c935240e-4aa6-496a-841c-d113c54499b9",
     "trunk": {
-        "status": "DOWN",
-        "name": "trunk0",
-        "admin_state_up": True,
-        "port_id": "60aac28d-1d3a-48d9-99bc-dd4bd62e50f2",
-        "sub_ports": [
-            {
-                "segmentation_type": "vlan",
-                "port_id": "dca33436-2a7c-415b-aa35-14769e7834e3",
-                "segmentation_id": 101
-            }
-        ],
-        "id": "c935240e-4aa6-496a-841c-d113c54499b9",
-        "description": "test trunk0 updated"
+        "trunk": {
+            "status": "DOWN",
+            "name": "trunk0",
+            "admin_state_up": True,
+            "port_id": "60aac28d-1d3a-48d9-99bc-dd4bd62e50f2",
+            "sub_ports": [
+                {
+                    "segmentation_type": "vlan",
+                    "port_id": "dca33436-2a7c-415b-aa35-14769e7834e3",
+                    "segmentation_id": 101
+                }
+            ],
+            "id": "c935240e-4aa6-496a-841c-d113c54499b9",
+            "description": "test trunk0 updated"
+        }
     }
 }
+
 
 class Trunk(HttpAPI):
     def __init__(self, servername, username):

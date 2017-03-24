@@ -17,29 +17,32 @@ QOS_POLICY_ONE = {
 QOS_POLICY_UPDATE = {
     "id": "d6220bbb-35f3-48ab-8eae-69c60aef3546",
     "policy": {
-        "bandwidth_limit_rules": [
-            {
-                "tenant_id": "aa902936679e4ea29bfe1158e3450a14",
-                "id": "d6220bbb-35f3-48ab-8eae-69c60aef3547",
-                "max_burst_kbps": 100,
-                "max_kbps": 25
-            }
-        ],
-        "name": "jaxb-test",
-        "tenant_id": "aa902936679e4ea29bfe1158e3450a13",
-        "dscp_marking_rules": [
-            {
-                "tenant_id": "aa902936679e4ea29bfe1158e3450a14",
-                "dscp_mark": 8,
-                "id": "d6220bbb-35f3-48ab-8eae-69c60aef3547"
-            }
-        ],
-        "shared": False,
-        "id": "d6220bbb-35f3-48ab-8eae-69c60aef3546"
+        "policy": {
+            "bandwidth_limit_rules": [
+                {
+                    "tenant_id": "aa902936679e4ea29bfe1158e3450a14",
+                    "id": "d6220bbb-35f3-48ab-8eae-69c60aef3547",
+                    "max_burst_kbps": 100,
+                    "max_kbps": 25
+                }
+            ],
+            "name": "jaxb-test",
+            "tenant_id": "aa902936679e4ea29bfe1158e3450a13",
+            "dscp_marking_rules": [
+                {
+                    "tenant_id": "aa902936679e4ea29bfe1158e3450a14",
+                    "dscp_mark": 8,
+                    "id": "d6220bbb-35f3-48ab-8eae-69c60aef3547"
+                }
+            ],
+            "shared": False,
+            "id": "d6220bbb-35f3-48ab-8eae-69c60aef3546"
+        }
     }
 }
 
-class Qos_policy(HttpAPI):
+
+class QosPolicy(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -67,7 +70,7 @@ class Qos_policy(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform qos_policy tests, server: %s, user: %s' % (servername, username))
 
-        tester = Qos_policy(servername, username)
+        tester = QosPolicy(servername, username)
 
         utils.assert_status(tester.get_qos_policys(), 200)
 

@@ -21,18 +21,21 @@ VPN_SERVICE_ONE = {
 VPN_SERVICE_UPDATE = {
     "id": "9faaf49f-dd89-4e39-a8c6-101839aa49bc",
     "vpnservice": {
-        "router_id": "ec8619be-0ba8-4955-8835-3b49ddb76f89",
-        "status": "PENDING_CREATE",
-        "name": "myservice-update",
-        "admin_state_up": True,
-        "subnet_id": "f4fb4528-ed93-467c-a57b-11c7ea9f963e",
-        "tenant_id": "ccb81365fe36411a9011e90491fe1330",
-        "id": "9faaf49f-dd89-4e39-a8c6-101839aa49bc",
-        "description": ""
+        "vpnservice": {
+            "router_id": "ec8619be-0ba8-4955-8835-3b49ddb76f89",
+            "status": "PENDING_CREATE",
+            "name": "myservice-update",
+            "admin_state_up": True,
+            "subnet_id": "f4fb4528-ed93-467c-a57b-11c7ea9f963e",
+            "tenant_id": "ccb81365fe36411a9011e90491fe1330",
+            "id": "9faaf49f-dd89-4e39-a8c6-101839aa49bc",
+            "description": ""
+        }
     }
 }
 
-class Vpn_service(HttpAPI):
+
+class VpnService(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -60,7 +63,7 @@ class Vpn_service(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform vpn_service tests, server: %s, user: %s' % (servername, username))
 
-        tester = Vpn_service(servername, username)
+        tester = VpnService(servername, username)
 
         utils.assert_status(tester.get_vpn_services(), 200)
 

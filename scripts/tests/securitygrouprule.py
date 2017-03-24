@@ -62,20 +62,23 @@ SECURITY_GROUP_RULES_BULK = {
 SECURITY_GROUP_RULE_UPDATE = {
     "id": "9b4be7fa-e56e-40fb-9516-1f0fa9185669",
     "security_group_rule": {
-        "remote_group_id": None,
-        "direction": "egress",
-        "remote_ip_prefix": None,
-        "protocol": "tcp",
-        "ethertype": "IPv6",
-        "tenant_id": "00f340c7c3b34ab7be1fc690c05a0275",
-        "port_range_ma": 77,
-        "port_range_min": 77,
-        "id": "9b4be7fa-e56e-40fb-9516-1f0fa9185669",
-        "security_group_id": "b60490fe-60a5-40be-af63-1d641381b784"
+        "security_group_rule": {
+            "remote_group_id": None,
+            "direction": "egress",
+            "remote_ip_prefix": None,
+            "protocol": "tcp",
+            "ethertype": "IPv6",
+            "tenant_id": "00f340c7c3b34ab7be1fc690c05a0275",
+            "port_range_ma": 77,
+            "port_range_min": 77,
+            "id": "9b4be7fa-e56e-40fb-9516-1f0fa9185669",
+            "security_group_id": "b60490fe-60a5-40be-af63-1d641381b784"
+        }
     }
 }
 
-class Security_group_rule(HttpAPI):
+
+class SecurityGroupRule(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -107,7 +110,7 @@ class Security_group_rule(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform security_group_rule tests, server: %s, user: %s' % (servername, username))
 
-        tester = Security_group_rule(servername, username)
+        tester = SecurityGroupRule(servername, username)
 
         utils.assert_status(tester.get_security_group_rules(), 200)
 

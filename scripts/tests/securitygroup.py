@@ -42,41 +42,43 @@ SECURITY_GROUP_ONE = {
 SECURITY_GROUP_UPDATE = {
     "id": "521e29d6-67b8-4b3c-8633-027d21195333",
     "security_group": {
-        "tenant_id": "00f340c7c3b34ab7be1fc690c05a0275",
-        "description": "tempest-security-description-897433715",
-        "id": "521e29d6-67b8-4b3c-8633-027d21195333",
-        "security_group_rules": [
-            {
-                "remote_group_id": None,
-                "direction": "egress",
-                "remote_ip_prefix": None,
-                "protocol": None,
-                "ethertype": "IPv4",
-                "tenant_id": "00f340c7c3b34ab7be1fc690c05a0275",
-                "port_range_max": None,
-                "port_range_min": None,
-                "id": "808bcefb-9917-4640-be68-14157bf33288",
-                "security_group_id": "521e29d6-67b8-4b3c-8633-027d21195333"
-            },
-            {
-                "remote_group_id": None,
-                "direction": "egress",
-                "remote_ip_prefix": None,
-                "protocol": None,
-                "ethertype": "IPv6",
-                "tenant_id": "00f340c7c3b34ab7be1fc690c05a0275",
-                "port_range_max": None,
-                "port_range_min": None,
-                "id": "c376f7b5-a281-40e0-a703-5c832c03aeb3",
-                "security_group_id": "521e29d6-67b8-4b3c-8633-027d21195333"
-            }
-        ],
-        "name": "tempest-security--1135434738"
+        "security_group": {
+            "tenant_id": "00f340c7c3b34ab7be1fc690c05a0275",
+            "description": "tempest-security-description-897433715",
+            "id": "521e29d6-67b8-4b3c-8633-027d21195333",
+            "security_group_rules": [
+                {
+                    "remote_group_id": None,
+                    "direction": "egress",
+                    "remote_ip_prefix": None,
+                    "protocol": None,
+                    "ethertype": "IPv4",
+                    "tenant_id": "00f340c7c3b34ab7be1fc690c05a0275",
+                    "port_range_max": None,
+                    "port_range_min": None,
+                    "id": "808bcefb-9917-4640-be68-14157bf33288",
+                    "security_group_id": "521e29d6-67b8-4b3c-8633-027d21195333"
+                },
+                {
+                    "remote_group_id": None,
+                    "direction": "egress",
+                    "remote_ip_prefix": None,
+                    "protocol": None,
+                    "ethertype": "IPv6",
+                    "tenant_id": "00f340c7c3b34ab7be1fc690c05a0275",
+                    "port_range_max": None,
+                    "port_range_min": None,
+                    "id": "c376f7b5-a281-40e0-a703-5c832c03aeb3",
+                    "security_group_id": "521e29d6-67b8-4b3c-8633-027d21195333"
+                }
+            ],
+            "name": "tempest-security--1135434738"
+        }
     }
 }
 
 
-class Security_group(HttpAPI):
+class SecurityGroup(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -104,7 +106,7 @@ class Security_group(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform security_group tests, server: %s, user: %s' % (servername, username))
 
-        tester = Security_group(servername, username)
+        tester = SecurityGroup(servername, username)
 
         utils.assert_status(tester.get_security_groups(), 200)
 

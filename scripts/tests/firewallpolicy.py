@@ -22,20 +22,22 @@ FIREWALL_POLICY_ONE = {
 FIREWALL_POLICY_UPDATE = {
     "id": "c69933c1-b472-44f9-8226-30dc4ffd454c",
     "firewall_policy": {
-        "name": "test-policy",
-        "firewall_rules": [
-            "a08ef905-0ff6-4784-8374-175fffe7dade",
-            "8722e0e0-9cc9-4490-9660-8c9a5732fbb0"
-        ],
-        "tenant_id": "45977fa2dbd7482098dd68d0d8970117",
-        "audited": False,
-        "shared": False,
-        "id": "c69933c1-b472-44f9-8226-30dc4ffd454c",
-        "description": ""
+        "firewall_policy": {
+            "name": "test-policy",
+            "firewall_rules": [
+                "a08ef905-0ff6-4784-8374-175fffe7dade",
+                "8722e0e0-9cc9-4490-9660-8c9a5732fbb0"
+            ],
+            "tenant_id": "45977fa2dbd7482098dd68d0d8970117",
+            "audited": False,
+            "shared": False,
+            "id": "c69933c1-b472-44f9-8226-30dc4ffd454c",
+            "description": ""
+        }
     }
 }
 
-class Firewall_Policy(HttpAPI):
+class FirewallPolicy(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -63,7 +65,7 @@ class Firewall_Policy(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform firewall_policy tests, server: %s, user: %s' % (servername, username))
 
-        tester = Firewall_Policy(servername, username)
+        tester = FirewallPolicy(servername, username)
 
         utils.assert_status(tester.get_firewall_policies(), 200)
 

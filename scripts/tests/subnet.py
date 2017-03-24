@@ -125,32 +125,35 @@ SUBNETS_BULK = {
 SUBNET_UPDATE = {
     "id": "b0e7435c-1512-45fb-aa9e-9a7c5932fb30",
     "subnet": {
-        "name": "my_subnet",
-        "enable_dhcp": True,
-        "network_id": "af374017-c9ae-4a1d-b799-ab73111476e2",
-        "tenant_id": "4fd44f30292945e481c7b8a0c8908869",
-        "dns_nameservers": [
-            "8.8.8.8",
-            "8.8.8.4"
-        ],
-        "allocation_pools": [
-            {
-                "start": "10.0.0.2",
-                "end": "10.0.0.254"
-            }
-        ],
-        "host_routes": [
-            {
-                "nexthop": "10.0.0.11",
-                "destination": "192.168.0.0/24"
-            }
-        ],
-        "ip_version": 4,
-        "gateway_ip": "10.0.0.1",
-        "cidr": "10.0.0.0/24",
-        "id": "b0e7435c-1512-45fb-aa9e-9a7c5932fb30"
+        "subnet": {
+            "name": "my_subnet",
+            "enable_dhcp": True,
+            "network_id": "af374017-c9ae-4a1d-b799-ab73111476e2",
+            "tenant_id": "4fd44f30292945e481c7b8a0c8908869",
+            "dns_nameservers": [
+                "8.8.8.8",
+                "8.8.8.4"
+            ],
+            "allocation_pools": [
+                {
+                    "start": "10.0.0.2",
+                    "end": "10.0.0.254"
+                }
+            ],
+            "host_routes": [
+                {
+                    "nexthop": "10.0.0.11",
+                    "destination": "192.168.0.0/24"
+                }
+            ],
+            "ip_version": 4,
+            "gateway_ip": "10.0.0.1",
+            "cidr": "10.0.0.0/24",
+            "id": "b0e7435c-1512-45fb-aa9e-9a7c5932fb30"
+        }
     }
 }
+
 
 class Subnet(HttpAPI):
     def __init__(self, servername, username):

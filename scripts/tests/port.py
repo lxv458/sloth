@@ -158,37 +158,40 @@ PORTS_BULK = {
 PORT_UPDATE = {
     "id": "43c831e0-19ce-4a76-9a49-57b57e69428b",
     "port": {
-        "status": "DOWN",
-        "binding:host_id": "00000000-1111-2222-3333-444444444444",
-        "name": "test-for-port-update",
-        "allowed_address_pairs": [
-            {
-                "ip_address": "192.168.1.200/32",
-                "mac_address": "fa:16:3e:11:11:5e"
-            }
-        ],
-        "admin_state_up": True,
-        "network_id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c",
-        "tenant_id": "522eda8d23124b25bf03fe44f1986b74",
-        "extra_dhcp_opts": [],
-        "mac_address": "fa:16:3e:11:11:5e",
-        "binding:vif_details": {},
-        "binding:vif_type": "binding_failed",
-        "device_owner": "compute:nova",
-        "port_security_enabled": True,
-        "binding:profile": {},
-        "binding:vnic_type": "normal",
-        "fixed_ips": [
-            {
-                "subnet_id": "3b80198d-4f7b-4f77-9ef5-774d54e17126",
-                "ip_address": "10.0.0.7"
-            }
-        ],
-        "id": "43c831e0-19ce-4a76-9a49-57b57e69428b",
-        "security_groups": [],
-        "device_id": ""
+        "port": {
+            "status": "DOWN",
+            "binding:host_id": "00000000-1111-2222-3333-444444444444",
+            "name": "test-for-port-update",
+            "allowed_address_pairs": [
+                {
+                    "ip_address": "192.168.1.200/32",
+                    "mac_address": "fa:16:3e:11:11:5e"
+                }
+            ],
+            "admin_state_up": True,
+            "network_id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c",
+            "tenant_id": "522eda8d23124b25bf03fe44f1986b74",
+            "extra_dhcp_opts": [],
+            "mac_address": "fa:16:3e:11:11:5e",
+            "binding:vif_details": {},
+            "binding:vif_type": "binding_failed",
+            "device_owner": "compute:nova",
+            "port_security_enabled": True,
+            "binding:profile": {},
+            "binding:vnic_type": "normal",
+            "fixed_ips": [
+                {
+                    "subnet_id": "3b80198d-4f7b-4f77-9ef5-774d54e17126",
+                    "ip_address": "10.0.0.7"
+                }
+            ],
+            "id": "43c831e0-19ce-4a76-9a49-57b57e69428b",
+            "security_groups": [],
+            "device_id": ""
+        }
     }
 }
+
 
 class Port(HttpAPI):
     def __init__(self, servername, username):
@@ -248,5 +251,3 @@ class Port(HttpAPI):
 
         for port in json.loads(ports.text)['ports']:
             utils.assert_status(tester.delete_port(port['id']), 204)
-
-

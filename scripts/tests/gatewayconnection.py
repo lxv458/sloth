@@ -26,7 +26,7 @@ GATEWAY_CONNECTION_TWO = {
     }
 }
 
-class Gateway_Connection(HttpAPI):
+class GatewayConnection(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -50,7 +50,7 @@ class Gateway_Connection(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform gateway_connection tests, server: %s, user: %s' % (servername, username))
 
-        tester = Gateway_Connection(servername, username)
+        tester = GatewayConnection(servername, username)
 
         utils.assert_status(tester.get_gateway_connections(), 200)
 

@@ -47,14 +47,17 @@ BGPVPNS_BULK = {
 BGPVPN_UPDATE = {
     "id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c",
     "bgpvpn": {
-        "status": "ACTIVE",
-        "name": "sample_bgpvpn_updated",
-        "admin_state_up": True,
-        "tenant_id": "4fd44f30292945e481c7b8a0c8908869",
-        "auto_aggregate": True,
-        "type": "l3"
+        "bgpvpn": {
+            "status": "ACTIVE",
+            "name": "sample_bgpvpn_updated",
+            "admin_state_up": True,
+            "tenant_id": "4fd44f30292945e481c7b8a0c8908869",
+            "auto_aggregate": True,
+            "type": "l3"
+        }
     }
 }
+
 
 class Bgpvpn(HttpAPI):
     def __init__(self, servername, username):

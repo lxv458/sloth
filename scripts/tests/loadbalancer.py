@@ -23,18 +23,21 @@ LOAD_BALANCER_ONE = {
 LOAD_BALANCER_UPDATE = {
     "id": "a36c20d0-18e9-42ce-88fd-82a35977ee8c",
     "loadbalancer": {
-        "description": "simple lb2",
-        "admin_state_up": False,
-        "tenant_id": "b7c1a69e88bf4b21a8148f787aef2081",
-        "provisioning_status": "PENDING_UPDATE",
-        "listeners": [],
-        "vip_address": "10.0.0.4",
-        "vip_subnet_id": "013d3059-87a4-45a5-91e9-d721068ae0b2",
-        "id": "a36c20d0-18e9-42ce-88fd-82a35977ee8c",
-        "operating_status": "ONLINE",
-        "name": "loadbalancer2"
+        "loadbalancer": {
+            "description": "simple lb2",
+            "admin_state_up": False,
+            "tenant_id": "b7c1a69e88bf4b21a8148f787aef2081",
+            "provisioning_status": "PENDING_UPDATE",
+            "listeners": [],
+            "vip_address": "10.0.0.4",
+            "vip_subnet_id": "013d3059-87a4-45a5-91e9-d721068ae0b2",
+            "id": "a36c20d0-18e9-42ce-88fd-82a35977ee8c",
+            "operating_status": "ONLINE",
+            "name": "loadbalancer2"
+        }
     }
 }
+
 
 class Loadbalancer(HttpAPI):
     def __init__(self, servername, username):

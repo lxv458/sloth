@@ -15,7 +15,7 @@ METERING_LABEL_RULE_ONE = {
     }
 }
 
-class Metering_label_rule(HttpAPI):
+class MeteringLabelRule(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -39,7 +39,7 @@ class Metering_label_rule(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform metering_label_rule tests, server: %s, user: %s' % (servername, username))
 
-        tester = Metering_label_rule(servername, username)
+        tester = MeteringLabelRule(servername, username)
 
         utils.assert_status(tester.get_metering_label_rules(), 200)
 

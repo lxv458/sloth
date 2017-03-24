@@ -17,17 +17,20 @@ SFC_PORT_PAIR_GROUP_ONE = {
 SFC_PORT_PAIR_GROUP_UPDATE = {
     "id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c",
     "portpairgroup": {
-        "name": "portpair1",
-        "port_pairs": [
-            "d11e9190-73d4-11e5-b392-2c27d72acb4c",
-            "d11e9190-73d4-11e5-b392-2c27d72acb4d"
-        ],
-        "tenant_id": "4969c491a3c74ee4af974e6d800c62de",
-        "id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c"
+        "portpairgroup": {
+            "name": "portpair1",
+            "port_pairs": [
+                "d11e9190-73d4-11e5-b392-2c27d72acb4c",
+                "d11e9190-73d4-11e5-b392-2c27d72acb4d"
+            ],
+            "tenant_id": "4969c491a3c74ee4af974e6d800c62de",
+            "id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c"
+        }
     }
 }
 
-class SFC_port_pair_group(HttpAPI):
+
+class SFCPortPairGroup(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -55,7 +58,7 @@ class SFC_port_pair_group(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform sfc_port_pair_group tests, server: %s, user: %s' % (servername, username))
 
-        tester = SFC_port_pair_group(servername, username)
+        tester = SFCPortPairGroup(servername, username)
 
         utils.assert_status(tester.get_sfc_port_pair_groups(), 200)
 

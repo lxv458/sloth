@@ -14,7 +14,7 @@ METERING_LABEL_ONE = {
     }
 }
 
-class Metering_label(HttpAPI):
+class MeteringLabel(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -38,7 +38,7 @@ class Metering_label(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform metering_label tests, server: %s, user: %s' % (servername, username))
 
-        tester = Metering_label(servername, username)
+        tester = MeteringLabel(servername, username)
 
         utils.assert_status(tester.get_metering_labels(), 200)
 

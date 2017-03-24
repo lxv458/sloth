@@ -28,25 +28,28 @@ LOAD_BALANCER_HEALTH_MONITOR_ONE = {
 LOAD_BALANCER_HEALTH_MONITOR_UPDATE = {
     "id": "0a9ac99d-0a09-4b18-8499-a0796850279a",
     "healthmonitor": {
-        "admin_state_up": False,
-        "delay": 2,
-        "expected_codes": "200",
-        "http_method": "POST",
-        "id": "0a9ac99d-0a09-4b18-8499-a0796850279a",
-        "max_retries": 2,
-        "pools": [
-            {
-                "id": "74aa2010-a59f-4d35-a436-60a6da882819"
-            }
-        ],
-        "tenant_id": "6f3584d5754048a18e30685362b88411",
-        "timeout": 2,
-        "type": "HTTP",
-        "url_path": "/page.html"
+        "healthmonitor": {
+            "admin_state_up": False,
+            "delay": 2,
+            "expected_codes": "200",
+            "http_method": "POST",
+            "id": "0a9ac99d-0a09-4b18-8499-a0796850279a",
+            "max_retries": 2,
+            "pools": [
+                {
+                    "id": "74aa2010-a59f-4d35-a436-60a6da882819"
+                }
+            ],
+            "tenant_id": "6f3584d5754048a18e30685362b88411",
+            "timeout": 2,
+            "type": "HTTP",
+            "url_path": "/page.html"
+        }
     }
 }
 
-class Loadbalancer_health_monitor(HttpAPI):
+
+class LoadbalancerHealthMonitor(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
 
@@ -74,7 +77,7 @@ class Loadbalancer_health_monitor(HttpAPI):
     def perform_tests(servername, username):
         logging.info('perform loadbalancer_health_monitor tests, server: %s, user: %s' % (servername, username))
 
-        tester = Loadbalancer_health_monitor(servername, username)
+        tester = LoadbalancerHealthMonitor(servername, username)
 
         utils.assert_status(tester.get_loadbalancer_health_monitors(), 200)
 
@@ -91,4 +94,3 @@ class Loadbalancer_health_monitor(HttpAPI):
         utils.assert_status(tester.delete_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 204)
 
         utils.assert_status(tester.get_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 404)
-
