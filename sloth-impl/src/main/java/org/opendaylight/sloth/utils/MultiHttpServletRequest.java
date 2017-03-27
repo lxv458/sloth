@@ -20,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
+public class MultiHttpServletRequest extends HttpServletRequestWrapper {
     private ByteArrayOutputStream cachedBytes;
     /**
      * Constructs a request object wrapping the given request.
@@ -28,7 +28,7 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
      * @param request
      * @throws IllegalArgumentException if the request is null
      */
-    public MultiReadHttpServletRequest(HttpServletRequest request) {
+    public MultiHttpServletRequest(HttpServletRequest request) {
         super(request);
     }
 

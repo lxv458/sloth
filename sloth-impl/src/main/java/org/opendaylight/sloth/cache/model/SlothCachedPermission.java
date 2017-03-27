@@ -8,8 +8,6 @@
 
 package org.opendaylight.sloth.cache.model;
 
-
-import com.jayway.jsonpath.JsonPath;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.Permission;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamJson;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.permissions.permission.ParamQuery;
@@ -47,17 +45,21 @@ public class SlothCachedPermission {
     private class SlothParamCheck {
         private String param;
         private List<Pattern> value;
+
         private SlothParamCheck(ParamQuery paramQuery) {
             param = paramQuery.getParam();
             value = paramQuery.getValue().stream().map(Pattern::compile).collect(Collectors.toList());
         }
+
         private SlothParamCheck(ParamJson paramJson) {
             param = paramJson.getParam();
             value = paramJson.getValue().stream().map(Pattern::compile).collect(Collectors.toList());
         }
+
         private String getParam() {
             return param;
         }
+
         private List<Pattern> getValue() {
             return value;
         }
@@ -83,10 +85,10 @@ public class SlothCachedPermission {
                         }
                     }
                 }
-                if (paramJsonList != null && !paramJsonList.isEmpty() && request.getDocument() != null) {
+                if (paramJsonList != null && !paramJsonList.isEmpty() && request.getReadContext() != null) {
                     for (SlothParamCheck paramJson : paramJsonList) {
                         boolean flag = false;
-                        String v = JsonPath.read(request.getDocument(), paramJson.getParam());
+                        String v = request.getReadContext().read(paramJson.getParam());
                         for (Pattern value : paramJson.getValue()) {
                             if (value.matcher(v).matches()) {
                                 flag = true;

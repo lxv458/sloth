@@ -10,6 +10,8 @@ package org.opendaylight.sloth.cache.model;
 
 
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.HttpType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.Request;
 
@@ -20,14 +22,14 @@ public class SlothRequest {
     private final String requestUrl;
     private final HttpType method;
     private final Map<String, String> queryString;
-    private final Object document;
+    private final ReadContext readContext;
 
     public SlothRequest(Request request) {
         requestUrl = request.getRequestUrl();
         method = request.getMethod();
         queryString = splitQuery(request.getQueryString());
-        document = request.getJsonBody() != null && !request.getJsonBody().isEmpty() ?
-                Configuration.defaultConfiguration().jsonProvider().parse(request.getJsonBody()) : null;
+        readContext = request.getJsonBody() != null && !request.getJsonBody().isEmpty() ?
+                JsonPath.parse(request.getJsonBody()) : null;
     }
 
     private static Map<String, String> splitQuery(String queryString) {
@@ -53,7 +55,7 @@ public class SlothRequest {
         return queryString;
     }
 
-    public Object getDocument() {
-        return document;
+    public ReadContext getReadContext() {
+        return readContext;
     }
 }

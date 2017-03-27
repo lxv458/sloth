@@ -8,20 +8,20 @@
 
 package org.opendaylight.sloth.filter;
 
-import com.google.common.net.MediaType;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.opendaylight.aaa.api.shiro.principal.ODLPrincipal;
 import org.opendaylight.sloth.exception.ServiceUnavailableException;
 import org.opendaylight.sloth.service.SlothServiceLocator;
-import org.opendaylight.sloth.utils.MultiReadHttpServletRequest;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+import org.opendaylight.sloth.utils.GenericResponseWrapper;
+import org.opendaylight.sloth.utils.MultiHttpServletRequest;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInputBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.HttpType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.SlothPermissionService;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.Principal;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.PrincipalBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.Request;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.RequestBuilder;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.slf4j.Logger;
@@ -34,13 +34,16 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class SlothSecurityFilter implements Filter {
     private static final Logger LOG = LoggerFactory.getLogger(SlothSecurityFilter.class);
+    private static final String JSON_CONTENT_TYPE = "application/json";
     private final SlothPermissionService slothPermissionService;
 
     public SlothSecurityFilter() throws ServiceUnavailableException {
@@ -53,41 +56,63 @@ public class SlothSecurityFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        // TODO: need to check permission both before and after process
-        if (request instanceof HttpServletRequest) {
+    public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (servletRequest instanceof HttpServletRequest) {
             long startTime = System.nanoTime();
-            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-            Subject subject = SecurityUtils.getSubject();
-            ODLPrincipal odlPrincipal = (ODLPrincipal) subject.getPrincipal();
+            HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
             HttpServletRequest multiReadHttpServletRequest =
-                    httpServletRequest.getContentType() != null && httpServletRequest.getContentType().equals(MediaType.JSON_UTF_8.toString()) ?
-                            new MultiReadHttpServletRequest(httpServletRequest) : httpServletRequest;
-            CheckPermissionInput checkPermissionInput = httpRequestToPermissionInput(odlPrincipal, multiReadHttpServletRequest);
-            final Future<RpcResult<CheckPermissionOutput>> rpcResultFuture = slothPermissionService.checkPermission(checkPermissionInput);
+                    httpServletRequest.getContentType() != null && Objects.equals(httpServletRequest.getContentType(), JSON_CONTENT_TYPE) ?
+                            new MultiHttpServletRequest(httpServletRequest) : httpServletRequest;
+
+            Principal principal = getPrincipal((ODLPrincipal) SecurityUtils.getSubject().getPrincipal());
+            final Future<RpcResult<CheckPermissionOutput>> rpcResultFuture = slothPermissionService
+                    .checkPermission(new CheckPermissionInputBuilder().setPrincipal(principal)
+                            .setRequest(getRequest(multiReadHttpServletRequest, null)).build());
             try {
                 RpcResult<CheckPermissionOutput> rpcResult = rpcResultFuture.get();
                 if (rpcResult.isSuccessful()) {
                     long endTime = System.nanoTime();
-                    LOG.info("Permission Checking Time: " + (endTime - startTime) + "nano seconds");
+                    LOG.info("Permission Checking Time: " + (endTime - startTime) + " nano seconds");
                     LOG.info("SlothSecurityFilter, check permission successful");
                     if (rpcResult.getResult().getStatusCode() / 100 == 2) {
-                        chain.doFilter(multiReadHttpServletRequest, response);
+                        if (multiReadHttpServletRequest.getMethod().equals("GET")) {
+                            LOG.info("response content type: " + multiReadHttpServletRequest.getContentType());
+                            GenericResponseWrapper genericResponseWrapper = new GenericResponseWrapper((HttpServletResponse) response);
+                            chain.doFilter(multiReadHttpServletRequest, genericResponseWrapper);
+                            final Future<RpcResult<CheckPermissionOutput>> resultFuture = slothPermissionService
+                                    .checkPermission(new CheckPermissionInputBuilder().setPrincipal(principal)
+                                            .setRequest(getRequest(multiReadHttpServletRequest,
+                                                    new String(genericResponseWrapper.getData()))).build());
+                            RpcResult<CheckPermissionOutput> result = resultFuture.get();
+                            if (result.isSuccessful()) {
+                                if (result.getResult().getStatusCode() / 100 == 2) {
+                                    response.getOutputStream().write(genericResponseWrapper.getData());
+                                } else {
+                                    response.getWriter().write(String.format("status code: %s, response: %s",
+                                            result.getResult().getStatusCode(), result.getResult().getResponse()));
+                                }
+                            } else {
+                                LOG.warn("SlothSecurityFilter, unknown exception during permission checking, GET check");
+                                response.getWriter().write("unknown exception during permission checking, GET check");
+                            }
+                        } else {
+                            chain.doFilter(multiReadHttpServletRequest, response);
+                        }
                     } else {
-                        response.getWriter().write("status code: " + rpcResult.getResult().getStatusCode() +
-                                ", response: " + rpcResult.getResult().getResponse());
+                        response.getWriter().write(String.format("status code: %s, response: %s",
+                                rpcResult.getResult().getStatusCode(), rpcResult.getResult().getResponse()));
                     }
                 } else {
-                    LOG.warn("SlothSecurityFilter, check permission unsuccessful");
-                    response.getWriter().write("failed to check permission");
+                    LOG.warn("SlothSecurityFilter, unknown exception during permission checking");
+                    response.getWriter().write("unknown exception during permission checking");
                 }
             } catch (InterruptedException | ExecutionException e) {
                 LOG.error("SlothSecurityFilter, check permission exception: " + e.getMessage());
                 response.getWriter().write("exception during check permission: " + e.getMessage());
             }
         } else {
-            LOG.warn("not http request, no permission check");
-            chain.doFilter(request, response);
+            LOG.warn("not http servletRequest, no permission check");
+            chain.doFilter(servletRequest, response);
         }
     }
 
@@ -96,26 +121,36 @@ public class SlothSecurityFilter implements Filter {
         LOG.info("SlothSecurityFilter destroyed");
     }
 
-    private static CheckPermissionInput httpRequestToPermissionInput(ODLPrincipal odlPrincipal, HttpServletRequest request) {
+    private static Principal getPrincipal(ODLPrincipal odlPrincipal) {
+        LOG.info(String.format("create principal, user-id: %s, user-name: %s, domain: %s, roles: %s",
+                odlPrincipal.getUserId(), odlPrincipal.getUsername(), odlPrincipal.getDomain(),
+                String.join(", ", odlPrincipal.getRoles())));
         PrincipalBuilder principalBuilder = new PrincipalBuilder();
-        RequestBuilder requestBuilder = new RequestBuilder();
-        CheckPermissionInputBuilder inputBuilder = new CheckPermissionInputBuilder();
-
-        LOG.info("user-id: " + odlPrincipal.getUserId() + ", user-name: " + odlPrincipal.getUserId() +
-                ", domain: " + odlPrincipal.getDomain() + ", roles: " + String.join(", ", odlPrincipal.getRoles()));
-
         principalBuilder.setUserName(odlPrincipal.getUsername()).setUserId(odlPrincipal.getUserId())
                 .setDomain(odlPrincipal.getDomain()).setRoles(new ArrayList<>(odlPrincipal.getRoles()));
+        return principalBuilder.build();
+    }
 
-        requestBuilder.setMethod(HttpType.valueOf(request.getMethod())).setRequestUrl(request.getRequestURI())
-                .setQueryString(request.getQueryString());
-        try {
-            if (request.getContentType() != null && request.getContentType().equals(MediaType.JSON_UTF_8.toString())) {
-                requestBuilder.setJsonBody(IOUtils.toString(request.getReader()));
+    private static Request getRequest(HttpServletRequest httpServletRequest, String externalJson) {
+        LOG.info(String.format("create request, method: %s, request-url: %s, query-string: %s", httpServletRequest.getMethod(),
+                httpServletRequest.getRequestURI(), httpServletRequest.getQueryString()));
+        RequestBuilder requestBuilder = new RequestBuilder();
+        requestBuilder.setMethod(HttpType.valueOf(httpServletRequest.getMethod()))
+                .setRequestUrl(httpServletRequest.getRequestURI())
+                .setQueryString(httpServletRequest.getQueryString());
+        if (externalJson == null || externalJson.isEmpty()) {
+            try {
+                if (httpServletRequest.getContentType() != null &&
+                        Objects.equals(httpServletRequest.getContentType(), JSON_CONTENT_TYPE)) {
+                    requestBuilder.setJsonBody(IOUtils.toString(httpServletRequest.getReader()));
+                }
+            } catch (IOException e) {
+                LOG.error("failed to get json body from http servlet request: " + e.getMessage());
             }
-        } catch (IOException e) {
-            LOG.error("failed to get json body from http servlet request: " + e.getMessage());
+        } else {
+            requestBuilder.setJsonBody(externalJson);
         }
-        return inputBuilder.setPrincipal(principalBuilder.build()).setRequest(requestBuilder.build()).build();
+
+        return requestBuilder.build();
     }
 }
