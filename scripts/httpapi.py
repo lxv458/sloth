@@ -1,5 +1,6 @@
 import requests
-
+import logging
+import datatime
 import utils
 
 
@@ -25,16 +26,32 @@ class HttpAPI(object):
         self.__init__(servername, username)
 
     def get(self, path):
-        return self.__session.get(self.__server + path, auth=self.__auth)
+        start_time = datatime.datetime.now().microsecond
+        session = self.__session.get(self.__server + path, auth=self.__auth)
+        end_time = datatime.datetime.now().microsecond
+        logging.info('GET request cost: %f ms' %((end_time-start_time)/1000))
+        return session
 
     def put(self, path, payload):
-        return self.__session.put(self.__server + path, auth=self.__auth, json=payload)
+        start_time = datatime.datetime.now().microsecond
+        session = self.__session.put(self.__server + path, auth=self.__auth, json=payload)
+        end_time = datatime.datetime.now().microsecond
+        logging.info('PUT request cost: %f ms' %((end_time-start_time)/1000))
+        return session
 
     def post(self, path, payload):
-        return self.__session.post(self.__server + path, auth=self.__auth, json=payload)
+        start_time = datatime.datetime.now().microsecond
+        session = self.__session.post(self.__server + path, auth=self.__auth, json=payload)
+        end_time = datatime.datetime.now().microsecond
+        logging.info('POST request cost: %f ms' %((end_time-start_time)/1000))
+        return session
 
     def delete(self, path):
-        return self.__session.delete(self.__server + path, auth=self.__auth)
+        start_time = datatime.datetime.now().microsecond
+        session = self.__session.delete(self.__server + path, auth=self.__auth)
+        end_time = datatime.datetime.now().microsecond
+        logging.info('DELETE request cost: %f ms' %((end_time-start_time)/1000))
+        return session
 
     @staticmethod
     def perform_tests(servername, username):
