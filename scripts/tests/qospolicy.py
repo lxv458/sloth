@@ -51,7 +51,7 @@ class QosPolicy(HttpAPI):
         return self.get(config.NEUTRON_QOS_POLICIES + '/' + qos_policyid)
 
     def get_qos_policys(self):
-        logging.info('get all qos_policys')
+        logging.info('get all qos_policies')
         return self.get(config.NEUTRON_QOS_POLICIES)
 
     def create_qos_policy(self, payload):
