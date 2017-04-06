@@ -29,28 +29,28 @@ class HttpAPI(object):
         start_time = datetime.datetime.now().microsecond
         session = self.__session.get(self.__server + path, auth=self.__auth)
         end_time = datetime.datetime.now().microsecond
-        logging.info('GET request cost: %f ms' %((end_time - start_time) * 0.001))
+        logging.info('GET request cost: %f ms' % ((end_time - start_time) * 0.001))
         return session
 
     def put(self, path, payload):
         start_time = datetime.datetime.now().microsecond
         session = self.__session.put(self.__server + path, auth=self.__auth, json=payload)
         end_time = datetime.datetime.now().microsecond
-        logging.info('PUT request cost: %f ms' %((end_time - start_time) * 0.001))
+        logging.info('PUT request cost: %f ms' % ((end_time - start_time) * 0.001))
         return session
 
     def post(self, path, payload):
         start_time = datetime.datetime.now().microsecond
         session = self.__session.post(self.__server + path, auth=self.__auth, json=payload)
         end_time = datetime.datetime.now().microsecond
-        logging.info('POST request cost: %f ms' %((end_time - start_time) * 0.001))
+        logging.info('POST request cost: %f ms' % ((end_time - start_time) * 0.001))
         return session
 
     def delete(self, path):
         start_time = datetime.datetime.now().microsecond
         session = self.__session.delete(self.__server + path, auth=self.__auth)
         end_time = datetime.datetime.now().microsecond
-        logging.info('DELETE request cost: %f ms' %((end_time - start_time) * 0.001))
+        logging.info('DELETE request cost: %f ms' % ((end_time - start_time) * 0.001))
         return session
 
     @staticmethod
