@@ -1,4 +1,5 @@
 import logging
+import latency
 
 from scripts import utils
 from scripts.tests.network import Network
@@ -57,3 +58,4 @@ if __name__ == '__main__':
     SFCPortChain.perform_tests('server', 'admin')
     SFCPortPair.perform_tests('server', 'admin')
     SFCPortPairGroup.perform_tests('server', 'admin')
+    latency.latency_data_transform()

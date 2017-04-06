@@ -1,6 +1,7 @@
 import xlwt
 
-if __name__ == "__main__":
+
+def latency_data_transform():
     input = open('sloth-test.log', 'r')
     wb = xlwt.Workbook()
     ws = wb.add_sheet('HTTP request cost time')
@@ -37,3 +38,6 @@ if __name__ == "__main__":
             row_index += 1
 
     wb.save('latency_data.xls')
+
+if __name__ == "__main__":
+    latency_data_transform()
