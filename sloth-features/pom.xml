@@ -31,6 +31,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
     <json-path.version>2.1.0</json-path.version>
     <json-smart.version>2.2</json-smart.version>
+    <antlr4.version>4.7</antlr4.version>
   </properties>
 
   <dependencyManagement>
@@ -154,6 +155,11 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
       <groupId>net.minidev</groupId>
       <artifactId>json-smart</artifactId>
       <version>${json-smart.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>${antlr4.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

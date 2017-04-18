@@ -44,6 +44,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <feature name='odl-sloth-cli' version='${project.version}' description='OpenDaylight :: sloth :: CLI'>
     <feature version="${project.version}">odl-sloth</feature>
     <bundle>mvn:org.opendaylight.sloth/sloth-cli/{{VERSION}}</bundle>
+    <bundle>mvn:org.antlr/antlr4-runtime/{{VERSION}}</bundle>
   </feature>
   <feature name="odl-sloth-northbound" version="${project.version}" description="OpenDaylight :: sloth :: northbound">
     <feature version='${aaa.version}'>odl-aaa-shiro</feature>

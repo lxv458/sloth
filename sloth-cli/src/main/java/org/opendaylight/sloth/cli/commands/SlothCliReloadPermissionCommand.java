@@ -7,6 +7,9 @@
  */
 package org.opendaylight.sloth.cli.commands;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
 import org.apache.karaf.shell.console.AbstractAction;
@@ -17,9 +20,10 @@ import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
 import org.opendaylight.sloth.cli.api.SlothCliCommands;
+import org.opendaylight.sloth.cli.policy.SlothPolicyLexer;
+import org.opendaylight.sloth.cli.policy.SlothPolicyParser;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Domains;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.DomainsBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.OperatorType;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Permissions;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.PermissionsBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.Domain;
