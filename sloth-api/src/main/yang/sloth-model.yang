@@ -11,14 +11,6 @@ module sloth-model {
         description "Initial revision of sloth-model model";
     }
 
-    typedef operator-type {
-        type enumeration {
-            enum ENUM;
-            enum RANGE;
-            enum REGEX;
-        }
-    }
-
     container domains {
         list domain {
             key "id";
