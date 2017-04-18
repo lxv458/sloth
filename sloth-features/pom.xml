@@ -31,7 +31,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html INTERNAL
     <configfile.directory>etc/opendaylight/karaf</configfile.directory>
     <json-path.version>2.1.0</json-path.version>
     <json-smart.version>2.2</json-smart.version>
-    <antlr4.version>4.7</antlr4.version>
+    <antlr4.version>4.5.3</antlr4.version>
   </properties>
 
   <dependencyManagement>
