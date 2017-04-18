@@ -11,6 +11,32 @@ module sloth-model {
         description "Initial revision of sloth-model model";
     }
 
+
+    grouping policies {
+        list policy-set {
+            key "id";
+            leaf id {
+                type string;
+            }
+            leaf content {
+                type string;
+            }
+        }
+    }
+
+    container sloth-policy {
+        container global-policy-set {
+            uses policies;
+        }
+        list local-policy-set {
+            key "id";
+            leaf id {
+                type string;
+            }
+            uses policies;
+        }
+    }
+
     container domains {
         list domain {
             key "id";
