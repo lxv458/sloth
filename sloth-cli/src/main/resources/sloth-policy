@@ -80,7 +80,7 @@
  *
  * The syntax for accessing attributes in Json data is:
  * $.network.admin_state_up == true
- * $.network.segments[0].provider:network_type == flat
+ * $.network.segments[0].provider:network_type == "flat"
  * $.network.segments[*].provider:network_type CONTAIN flat
  *
  * For detailed syntax, please refer to Jayway JsonPath
@@ -147,19 +147,20 @@
  */
 GLOBAL_POLICY {
     admin_accept_all {
-        if (sloth.subject.role == admin) {
+        if (sloth.subject.role == "admin") {
             ACCEPT
         }
     }
 
     block_after_7pm {
-        if (sloth.subject.role != admin && sloth.environment.time > 19:00:00) {
+        if (sloth.subject.role != "admin" &&
+            (sloth.environment.time > "19:00:00" || sloth.environment.time < "06:00:00")) {
             REJECT
         }
     }
 
     scheduled_maintenance {
-        if (sloth.subject.role != admin && sloth.environment.day_of_week == sun) {
+        if (sloth.subject.role != "admin" && sloth.environment.day_of_week == "sun") {
             REJECT
         }
     }
@@ -186,14 +187,14 @@ LOCAL_POLICY {
     user, bob {
         network_constraints {
             // regular expression checking if URL starts with /v2.0/networks
-            if (sloth.action.url REGULAR \/v2\.0\/networks.*) {
-                if (sloth.action.method == POST) {
+            if (sloth.action.url REGULAR "/v2[.]0/networks/?.*") {
+                if (sloth.action.method == "POST") {
                     ACCEPT
-                } else if (sloth.action.method == GET) {
+                } else if (sloth.action.method == "GET") {
                     ACCEPT
-                } else if (sloth.action.method == PUT) {
+                } else if (sloth.action.method == "PUT") {
                     ACCEPT
-                } else if (sloth.action.method == DELETE) {
+                } else if (sloth.action.method == "DELETE") {
                     // delete is not allowed
                     REJECT
                 }
