@@ -24,7 +24,7 @@ module sloth-model {
         }
     }
 
-    container sloth-policy {
+    container sloth-policy-hub {
         container global-policy-set {
             uses policies;
         }

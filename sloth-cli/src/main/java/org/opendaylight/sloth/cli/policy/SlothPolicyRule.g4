@@ -1,4 +1,4 @@
-grammar SlothPolicy;
+grammar SlothPolicyRule;
 
 policySet : globalPolicySet? localPolicySet?;
 
@@ -33,7 +33,7 @@ expression
 primary
     :   '(' expression ')'
     |   jsonpath
-    |   slothDefined
+    |   slothPredefined
     |   literal
     ;
 
@@ -59,7 +59,7 @@ queryExpression
     |   '@.' Identifier '==\'' IntegerLiteral '\''
     ;
 
-slothDefined
+slothPredefined
     :   'sloth.subject.' ('role' | 'user_id')
     |   'sloth.action.' ('method' | 'url' | 'query_string')
     |   'sloth.environment.' ('date' | 'time' | 'day_of_week')
