@@ -24,7 +24,7 @@ expression
     |   expression ('==' | '!=') expression
     |   expression '&&' expression
     |   expression '||' expression
-    |   expression 'REGULAR' expression
+    |   expression 'REG' expression
     ;
 
 primary
@@ -64,7 +64,6 @@ slothPredefined
 literal
     :   IntegerLiteral
     |   FloatingPointLiteral
-    |   CharacterLiteral
     |   StringLiteral
     |   BooleanLiteral
     |   NullLiteral
@@ -73,8 +72,6 @@ literal
 IntegerLiteral : NonzeroDigit Digit*;
 
 FloatingPointLiteral : Digit* '.' Digit*;
-
-CharacterLiteral :   '\'' SingleCharacter '\'';
 
 StringLiteral : '"' SingleCharacter+ '"';
 
@@ -109,7 +106,7 @@ LE : '<=';
 GE : '>=';
 AND : '&&';
 OR : '||';
-REGULAR : 'REGULAR';
+REGULAR : 'REG';
 
 
 

@@ -10,19 +10,10 @@ package org.opendaylight.sloth.policy;
 
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 
-public class TerminalStatement implements Statement {
-    private final Result result;
-
-    public TerminalStatement(Result result) {
-        this.result = result;
-    }
-
-    public Result getResult() {
-        return result;
-    }
-
+public class UnaryExpression implements Expression {
+    private Expression leftExpression, rightExpression;
     @Override
-    public Result Check(CheckPermissionInput input) {
-        return result;
+    public boolean Evaluate(CheckPermissionInput input) {
+        return false;
     }
 }

@@ -11,20 +11,20 @@ package org.opendaylight.sloth.policy;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Result {
-    ACCEPT(1, "ACCEPT"), REJECT(-1, "REJECT"), UNKNOWN(0, "UNKNOWN");
+public enum ElementType {
+    NULL(0, "NULL"), INTEGER(1, "INTEGER"), FLOAT(2, "FLOAT"), STRING(3, "STRING"), BOOLEAN(4, "BOOLEAN");
     private int value;
     private String name;
-    private static final Map<Integer, Result> VALUE_MAP;
+    private static final Map<Integer, ElementType> VALUE_MAP;
 
     static {
         VALUE_MAP = new HashMap<>();
-        for (Result result : Result.values()) {
+        for (ElementType result : ElementType.values()) {
             VALUE_MAP.put(result.getIntValue(), result);
         }
     }
 
-    Result(int value, String name) {
+    ElementType(int value, String name) {
         this.value = value;
         this.name = name;
     }
@@ -37,7 +37,7 @@ public enum Result {
         return value;
     }
 
-    public static Result forValue(int value) {
+    public static ElementType forValue(int value) {
         return VALUE_MAP.get(value);
     }
 }

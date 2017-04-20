@@ -187,7 +187,7 @@ LOCAL_POLICY {
     user, bob {
         network_constraints {
             // regular expression checking if URL starts with /v2.0/networks
-            if (sloth.action.url REGULAR "/v2[.]0/networks/?.*") {
+            if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "GET") {
