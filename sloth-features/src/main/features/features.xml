@@ -30,6 +30,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <configfile finalname="/etc/sloth-permission.conf">mvn:org.opendaylight.sloth/sloth-impl/{{VERSION}}/xml/slothpermissionconf</configfile>
     <bundle>mvn:com.jayway.jsonpath/json-path/{{VERSION}}</bundle>
     <bundle>mvn:net.minidev/json-smart/{{VERSION}}</bundle>
+    <bundle>mvn:org.antlr/antlr4-runtime/{{VERSION}}</bundle>
   </feature>
   <feature name='odl-sloth-rest' version='${project.version}' description='OpenDaylight :: sloth :: REST'>
     <feature version="${project.version}">odl-sloth</feature>
@@ -44,7 +45,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <feature name='odl-sloth-cli' version='${project.version}' description='OpenDaylight :: sloth :: CLI'>
     <feature version="${project.version}">odl-sloth</feature>
     <bundle>mvn:org.opendaylight.sloth/sloth-cli/{{VERSION}}</bundle>
-    <bundle>mvn:org.antlr/antlr4-runtime/{{VERSION}}</bundle>
   </feature>
   <feature name="odl-sloth-northbound" version="${project.version}" description="OpenDaylight :: sloth :: northbound">
     <feature version='${aaa.version}'>odl-aaa-shiro</feature>
