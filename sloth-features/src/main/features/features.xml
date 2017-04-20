@@ -28,6 +28,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <bundle>mvn:org.apache.shiro/shiro-web/{{VERSION}}</bundle>
     <bundle>mvn:org.apache.shiro/shiro-core/{{VERSION}}</bundle>
     <configfile finalname="/etc/sloth-permission.conf">mvn:org.opendaylight.sloth/sloth-impl/{{VERSION}}/xml/slothpermissionconf</configfile>
+    <configfile finalname="/etc/sloth-policy">mvn:org.opendaylight.sloth/sloth-impl/{{VERSION}}/xml/slothpolicy</configfile>
     <bundle>mvn:com.jayway.jsonpath/json-path/{{VERSION}}</bundle>
     <bundle>mvn:net.minidev/json-smart/{{VERSION}}</bundle>
     <bundle>mvn:org.antlr/antlr4-runtime/{{VERSION}}</bundle>

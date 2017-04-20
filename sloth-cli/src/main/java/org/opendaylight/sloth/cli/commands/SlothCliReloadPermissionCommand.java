@@ -18,10 +18,12 @@ import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
 import org.opendaylight.sloth.cli.api.SlothCliCommands;
+import org.opendaylight.sloth.policy.SlothPolicyFileParser;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Domains;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.DomainsBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Permissions;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.PermissionsBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.SlothPolicyHub;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.Domain;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.DomainBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.domain.Role;
@@ -53,8 +55,10 @@ import java.util.regex.Pattern;
 public class SlothCliReloadPermissionCommand extends AbstractAction {
     private static final Logger LOG = LoggerFactory.getLogger(SlothCliReloadPermissionCommand.class);
     private static final String PERMISSION_CONFIG_PATH = "./etc/sloth-permission.conf";
+    private static final String POLICY_FILE_PATH = "./etc/sloth-policy";
     private static final InstanceIdentifier<Domains> SLOTH_DOMAINS_ID = InstanceIdentifier.create(Domains.class);
     private static final InstanceIdentifier<Permissions> SLOTH_PERMISSIONS_ID = InstanceIdentifier.create(Permissions.class);
+    private static final InstanceIdentifier<SlothPolicyHub> SLOTH_POLICY_HUB_ID = InstanceIdentifier.create(SlothPolicyHub.class);
 
     private final SlothCliCommands service;
     private DataBroker dataBroker;
@@ -73,11 +77,12 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
         }
         String path = filePath == null ? PERMISSION_CONFIG_PATH : filePath;
         if (clearDataStore()) {
+            SlothPolicyHub slothPolicyHub = new SlothPolicyFileParser(POLICY_FILE_PATH).parse();
             JSONObject jsonObject = loadPermission(path);
             List<Domain> domainList = new ArrayList<>();
             List<Permission> permissionList = new ArrayList<>();
             extractDomainAndPermission(jsonObject, domainList, permissionList);
-            if (writeDataStore(domainList, permissionList)) {
+            if (writeDataStore(domainList, permissionList, slothPolicyHub)) {
                 return jsonObject.toString(4);
             } else {
                 return "failed to write data store. reload stopped";
@@ -252,6 +257,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
     private boolean clearDataStore() {
         try {
             WriteTransaction wtx = dataBroker.newWriteOnlyTransaction();
+            wtx.delete(LogicalDatastoreType.CONFIGURATION, SLOTH_POLICY_HUB_ID);
             wtx.delete(LogicalDatastoreType.CONFIGURATION, SLOTH_DOMAINS_ID);
             wtx.delete(LogicalDatastoreType.CONFIGURATION, SLOTH_PERMISSIONS_ID);
             wtx.submit().checkedGet();
@@ -262,7 +268,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
         return true;
     }
 
-    private boolean writeDataStore(List<Domain> domainList, List<Permission> permissionList) {
+    private boolean writeDataStore(List<Domain> domainList, List<Permission> permissionList, SlothPolicyHub slothPolicyHub) {
         try {
             WriteTransaction wtx = dataBroker.newWriteOnlyTransaction();
             DomainsBuilder domainsBuilder = new DomainsBuilder();
@@ -271,6 +277,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
             permissionsBuilder.setPermission(permissionList);
             wtx.put(LogicalDatastoreType.CONFIGURATION, SLOTH_DOMAINS_ID, domainsBuilder.build(), true);
             wtx.put(LogicalDatastoreType.CONFIGURATION, SLOTH_PERMISSIONS_ID, permissionsBuilder.build(), true);
+            wtx.put(LogicalDatastoreType.CONFIGURATION, SLOTH_POLICY_HUB_ID, slothPolicyHub, true);
             wtx.submit().checkedGet();
         } catch (TransactionCommitFailedException e) {
             LOG.error("failed to write permissions and domains into data store: " + e.getMessage());

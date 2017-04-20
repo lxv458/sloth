@@ -18,6 +18,9 @@ module sloth-model {
             leaf id {
                 type string;
             }
+            leaf name {
+                type string;
+            }
             leaf content {
                 type string;
             }

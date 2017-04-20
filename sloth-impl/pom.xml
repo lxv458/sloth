@@ -103,7 +103,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
             </goals>
             <configuration>
               <sources>
-                <source>target/generated-sources/antlr4</source>
+                <source>target/generated-sources</source>
               </sources>
             </configuration>
           </execution>
@@ -140,6 +140,11 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
                   <file>${project.build.directory}/classes/sloth-permission.conf</file>
                   <type>xml</type>
                   <classifier>slothpermissionconf</classifier>
+                </artifact>
+                <artifact>
+                  <file>${project.build.directory}/classes/sloth-policy</file>
+                  <type>xml</type>
+                  <classifier>slothpolicy</classifier>
                 </artifact>
               </artifacts>
             </configuration>
