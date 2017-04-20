@@ -18,7 +18,7 @@ import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
 import org.opendaylight.sloth.cli.api.SlothCliCommands;
-import org.opendaylight.sloth.policy.SlothPolicyFileParser;
+import org.opendaylight.sloth.policy.SlothPolicyParser;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Domains;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.DomainsBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.Permissions;
@@ -77,7 +77,7 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
         }
         String path = filePath == null ? PERMISSION_CONFIG_PATH : filePath;
         if (clearDataStore()) {
-            SlothPolicyHub slothPolicyHub = new SlothPolicyFileParser(POLICY_FILE_PATH).parse();
+            SlothPolicyHub slothPolicyHub = SlothPolicyParser.parseFile(POLICY_FILE_PATH);
             JSONObject jsonObject = loadPermission(path);
             List<Domain> domainList = new ArrayList<>();
             List<Permission> permissionList = new ArrayList<>();
