@@ -5,11 +5,8 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.sloth.policy;
+package org.opendaylight.sloth.cache.model;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
-
-public interface Statement {
-    Result Check(CheckPermissionInput input);
+public class SlothLocalPolicyCache {
 }

@@ -201,6 +201,12 @@ LOCAL_POLICY {
             }
         }
     }
+    user, alice {
+        block_all {
+            // alice is a user that is currently blocked
+            REJECT
+        }
+    }
 }
 
 

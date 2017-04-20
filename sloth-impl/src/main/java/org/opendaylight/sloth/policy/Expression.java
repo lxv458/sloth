@@ -8,6 +8,8 @@
 package org.opendaylight.sloth.policy;
 
 
-public interface Expression {
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 
+public interface Expression {
+    boolean Evaluate(CheckPermissionInput input);
 }

@@ -8,11 +8,14 @@
 package org.opendaylight.sloth.policy;
 
 
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+
 public class BinaryStatement implements Statement {
     private Expression expression;
     private Statement thenStatement, elseStatement;
     @Override
-    public Result Check() {
-        return null;
+    public Result Check(CheckPermissionInput input) {
+        return expression.Evaluate(input) ? thenStatement.Check(input) :
+                (elseStatement != null ? elseStatement.Check(input) : Result.UNKNOWN);
     }
 }

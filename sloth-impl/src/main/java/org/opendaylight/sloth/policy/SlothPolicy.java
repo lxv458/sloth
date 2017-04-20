@@ -8,9 +8,11 @@
 package org.opendaylight.sloth.policy;
 
 
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+
 public class SlothPolicy {
     private Statement statement;
-    public Result Check() {
-        return Result.ACCEPT;
+    public Result Check(CheckPermissionInput input) {
+        return statement.Check(input);
     }
 }

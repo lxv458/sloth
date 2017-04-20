@@ -8,21 +8,18 @@ localPolicySet : 'LOCAL_POLICY' '{' localPolicyStatement* '}';
 
 localPolicyStatement : Identifier ',' Identifier '{' policyStatement* '}';
 
-policyStatement : Identifier '{' statement '}';
+policyStatement : Identifier statement;
 
 statement
-    :   block
+    :   '{' statement '}'
     |   'ACCEPT'
     |   'REJECT'
-    |   'if' parExpression statement ('else' statement)?
+    |   'if' '(' expression ')' statement ('else' statement)?
     ;
-
-block : '{' statement? '}';
-
-parExpression : '(' expression ')';
 
 expression
     :   primary
+    |   '(' expression ')'
     |   expression ('<=' | '>=' | '>' | '<') expression
     |   expression ('==' | '!=') expression
     |   expression '&&' expression
@@ -31,8 +28,7 @@ expression
     ;
 
 primary
-    :   '(' expression ')'
-    |   jsonpath
+    :   jsonpath
     |   slothPredefined
     |   literal
     ;
