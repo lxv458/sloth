@@ -11,8 +11,15 @@ package org.opendaylight.sloth.policy;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 
 public class BinaryStatement implements Statement {
-    private Expression expression;
-    private Statement thenStatement, elseStatement;
+    private final Expression expression;
+    private final Statement thenStatement, elseStatement;
+
+    public BinaryStatement(Expression expression, Statement thenStatement, Statement elseStatement) {
+        this.expression = expression;
+        this.thenStatement = thenStatement;
+        this.elseStatement = elseStatement;
+    }
+
     @Override
     public Result Check(CheckPermissionInput input) {
         return expression.Evaluate(input) ? thenStatement.Check(input) :

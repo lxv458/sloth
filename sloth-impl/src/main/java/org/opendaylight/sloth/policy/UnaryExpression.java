@@ -11,7 +11,12 @@ package org.opendaylight.sloth.policy;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 
 public class UnaryExpression implements Expression {
-    private Expression leftExpression, rightExpression;
+    private final Object value;
+    private final ElementType elementType;
+    public UnaryExpression(Object value, ElementType elementType) {
+        this.value = value;
+        this.elementType = elementType;
+    }
     @Override
     public boolean Evaluate(CheckPermissionInput input) {
         return false;

@@ -11,6 +11,7 @@ package org.opendaylight.sloth.policy;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.Interval;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.SlothPolicyHub;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.SlothPolicyHubBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.policies.PolicySet;
@@ -29,7 +30,7 @@ public class SlothPolicyParser {
         return new SlothPolicyFileParser(fileName).parse();
     }
 
-    public static Object parsePolicy(String policyText) throws IOException {
+    public static Statement parsePolicy(String policyText) throws IOException {
         return new SlothSinglePolicyParser(policyText).parse();
     }
 
@@ -82,7 +83,8 @@ public class SlothPolicyParser {
             for (SlothPolicyRuleParser.PolicyStatementContext psc : list) {
                 policySetBuilder.setId(UUID.randomUUID().toString());
                 policySetBuilder.setName(psc.Identifier().getText());
-                policySetBuilder.setContent(psc.statement().getText());
+                policySetBuilder.setContent(psc.start.getInputStream().getText(
+                        new Interval(psc.statement().start.getStartIndex(), psc.statement().stop.getStopIndex())));
                 policySetList.add(policySetBuilder.build());
             }
             return policySetList;
@@ -90,17 +92,46 @@ public class SlothPolicyParser {
     }
 
     private static class SlothSinglePolicyParser extends SlothPolicyRuleBaseVisitor<String> {
+        private Statement statement;
+
         public SlothSinglePolicyParser(String policyText) {
             ANTLRInputStream antlrInputStream = new ANTLRInputStream(policyText);
             SlothPolicyRuleLexer slothPolicyRuleLexer = new SlothPolicyRuleLexer(antlrInputStream);
             CommonTokenStream commonTokenStream = new CommonTokenStream(slothPolicyRuleLexer);
             SlothPolicyRuleParser slothPolicyRuleParser = new SlothPolicyRuleParser(commonTokenStream);
-            SlothPolicyRuleParser.PolicyStatementContext policyStatementContext = slothPolicyRuleParser.policyStatement();
-            visit(policyStatementContext);
+            SlothPolicyRuleParser.StatementContext statementContext = slothPolicyRuleParser.statement();
+            visit(statementContext);
         }
 
-        public Object parse() throws IOException {
+        @Override public String visitStatement(SlothPolicyRuleParser.StatementContext ctx) {
+            statement = parseStatement(ctx);
             return null;
+        }
+
+        private static Statement parseStatement(SlothPolicyRuleParser.StatementContext ctx) {
+            if (ctx.getChildCount() == 1) {
+                return new UnaryStatement(Result.valueOf(ctx.getText()));
+            } else if (ctx.getChildCount() == 3) {
+                return parseStatement(ctx.statement(0));
+            } else {
+                return new BinaryStatement(parseExpression(ctx.expression()),
+                        parseStatement(ctx.statement(0)),
+                        ctx.statement().size() > 1 ? parseStatement(ctx.statement(1)) : null);
+            }
+        }
+
+        private static Expression parseExpression(SlothPolicyRuleParser.ExpressionContext ctx) {
+            if (ctx.getChildCount() == 1) {
+                return new UnaryExpression(null, null);
+            } else if (ctx.expression().size() == 1) {
+                return parseExpression(ctx.expression(0));
+            } else {
+                return new BinaryExpression(null, null, null);
+            }
+        }
+
+        public Statement parse() throws IOException {
+            return statement;
         }
     }
 }

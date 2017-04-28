@@ -20,11 +20,7 @@ statement
 expression
     :   primary
     |   '(' expression ')'
-    |   expression ('<=' | '>=' | '>' | '<') expression
-    |   expression ('==' | '!=') expression
-    |   expression '&&' expression
-    |   expression '||' expression
-    |   expression 'REG' expression
+    |   expression ('<=' | '>=' | '>' | '<' | '==' | '!=' | '&&' | '||' | 'REG') expression
     ;
 
 primary
