@@ -26,6 +26,16 @@ GATEWAY_CONNECTION_TWO = {
     }
 }
 
+
+def change_id(l2gateway_connection, count):
+    id = l2gateway_connection['l2gateway_connection']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    l2gateway_connection['l2gateway_connection']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return l2gateway_connection
+
+
 class GatewayConnection(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -47,21 +57,21 @@ class GatewayConnection(HttpAPI):
         return self.delete(config.NEUTRON_L2_GATEWAY_CONNECTIONS + '/' + gateway_connectionid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform gateway_connection tests, server: %s, user: %s' % (servername, username))
 
         tester = GatewayConnection(servername, username)
 
         utils.assert_status(tester.get_gateway_connections(), 200)
 
-        gateway_connection_one = tester.create_gateway_connection(GATEWAY_CONNECTION_ONE)
+        gateway_connection_one = tester.create_gateway_connection(change_id(GATEWAY_CONNECTION_ONE, count))
         utils.assert_status(gateway_connection_one, 201)
 
         gateway_connection_one_id = json.loads(gateway_connection_one.text)['l2gateway_connection']['id']
 
         utils.assert_status(tester.get_gateway_connection(gateway_connection_one_id), 200)
 
-        gateway_connection_two = tester.create_gateway_connection(GATEWAY_CONNECTION_TWO)
+        gateway_connection_two = tester.create_gateway_connection(change_id(GATEWAY_CONNECTION_TWO, count))
         utils.assert_status(gateway_connection_two, 201)
 
         gateway_connection_two_id = json.loads(gateway_connection_two.text)['l2gateway_connection']['id']
@@ -75,3 +85,6 @@ class GatewayConnection(HttpAPI):
         utils.assert_status(tester.delete_gateway_connection(gateway_connection_two_id), 204)
 
         utils.assert_status(tester.get_gateway_connection(gateway_connection_two_id), 404)
+
+if __name__ == '__main__':
+    GatewayConnection.perform_tests('server', 'admin', 0)

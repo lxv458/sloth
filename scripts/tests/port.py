@@ -160,37 +160,40 @@ PORT_UPDATE = {
     "port": {
         "port": {
             "status": "DOWN",
-            "binding:host_id": "00000000-1111-2222-3333-444444444444",
-            "name": "test-for-port-update",
-            "allowed_address_pairs": [
-                {
-                    "ip_address": "192.168.1.200/32",
-                    "mac_address": "fa:16:3e:11:11:5e"
-                }
-            ],
+            "binding:host_id": "",
+            "name": "private-port-update",
+            "allowed_address_pairs": [],
             "admin_state_up": True,
             "network_id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c",
-            "tenant_id": "522eda8d23124b25bf03fe44f1986b74",
-            "extra_dhcp_opts": [],
-            "mac_address": "fa:16:3e:11:11:5e",
+            "tenant_id": "9bacb3c5d39d41a79512987f338cf177",
             "binding:vif_details": {},
-            "binding:vif_type": "binding_failed",
-            "device_owner": "compute:nova",
-            "port_security_enabled": True,
-            "binding:profile": {},
             "binding:vnic_type": "normal",
+            "binding:vif_type": "unbound",
+            "device_owner": "",
+            "mac_address": "fa:16:3e:c9:cb:f0",
+            "binding:profile": {},
+            "port_security_enabled": True,
             "fixed_ips": [
                 {
                     "subnet_id": "3b80198d-4f7b-4f77-9ef5-774d54e17126",
-                    "ip_address": "10.0.0.7"
+                    "ip_address": "10.0.0.2"
                 }
             ],
-            "id": "43c831e0-19ce-4a76-9a49-57b57e69428b",
+            "id": "65c0ee9f-d634-4522-8954-51021b570b0d",
             "security_groups": [],
             "device_id": ""
         }
     }
 }
+
+
+def change_id(port, count):
+    id = port['port']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    port['port']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return port
 
 
 class Port(HttpAPI):
@@ -221,33 +224,36 @@ class Port(HttpAPI):
         return self.delete(config.NEUTRON_PORTS + '/' + portid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform port tests, server: %s, user: %s' % (servername, username))
 
         tester = Port(servername, username)
 
         utils.assert_status(tester.get_ports(), 200)
 
-        port_one = tester.create_port(PORT_ONE)
+        port_one = tester.create_port(change_id(PORT_ONE, count))
         utils.assert_status(port_one, 201)
 
         port_one_id = json.loads(port_one.text)['port']['id']
 
         utils.assert_status(tester.get_port(port_one_id), 200)
 
-        utils.assert_status(tester.create_port(PORT_DEFAULT), 201)
+        utils.assert_status(tester.create_port(change_id(PORT_DEFAULT, count)), 201)
 
-        utils.assert_status(tester.create_port(ROUTER_INTERFACE_PORT), 201)
+        if count == 0:
+            utils.assert_status(tester.create_port(ROUTER_INTERFACE_PORT), 201)
+            utils.assert_status(tester.create_port(PORTS_BULK), 201)
+            utils.assert_status(tester.delete_port(PORTS_BULK['ports'][0]['id']), 204)
+            utils.assert_status(tester.get_port(PORTS_BULK['ports'][0]['id']), 404)
 
-        utils.assert_status(tester.create_port(PORTS_BULK), 201)
-
-        utils.assert_status(tester.update_port(PORT_UPDATE['id'], PORT_UPDATE['port']), 200)
-
-        utils.assert_status(tester.delete_port(PORTS_BULK['ports'][0]['id']), 204)
-
-        utils.assert_status(tester.get_port(PORTS_BULK['ports'][0]['id']), 404)
+        utils.assert_status(tester.update_port(change_id(PORT_UPDATE['port'], count)['port']['id'],
+                                               change_id(PORT_UPDATE['port'], count)), 200)
 
         ports = tester.get_ports()
 
         for port in json.loads(ports.text)['ports']:
             utils.assert_status(tester.delete_port(port['id']), 204)
+
+
+if __name__ == '__main__':
+    Port.perform_tests('server', 'admin', 0)

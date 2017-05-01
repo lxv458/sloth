@@ -49,6 +49,15 @@ FLOATING_IP_UPDATE_TWO = {
 }
 
 
+def change_id(floatingip, count):
+    id = floatingip['floatingip']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    floatingip['floatingip']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return floatingip
+
+
 class FloatingIP(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -74,25 +83,27 @@ class FloatingIP(HttpAPI):
         return self.delete(config.NEUTRON_FLOATING_IPS + '/' + floating_ip_id)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform floating_ip tests, server: %s, user: %s' % (servername, username))
 
         tester = FloatingIP(servername, username)
 
         utils.assert_status(tester.get_floating_ips(), 200)
 
-        floating_ip_one = tester.create_floating_ip(FLOATING_IP_ONE)
+        floating_ip_one = tester.create_floating_ip(change_id(FLOATING_IP_ONE, count))
         utils.assert_status(floating_ip_one, 201)
 
         floating_ip_one_id = json.loads(floating_ip_one.text)['floatingip']['id']
 
         utils.assert_status(tester.get_floating_ip(floating_ip_one_id), 200)
 
-        utils.assert_status(tester.update_floating_ip(FLOATING_IP_UPDATE_ONE['id'],
-                                                      FLOATING_IP_UPDATE_ONE['floatingip']), 200)
+        utils.assert_status(tester.update_floating_ip(
+            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)['floatingip']['id'],
+            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 200)
 
-        utils.assert_status(tester.update_floating_ip(FLOATING_IP_UPDATE_TWO['id'],
-                                                      FLOATING_IP_UPDATE_TWO['floatingip']), 200)
+        utils.assert_status(tester.update_floating_ip(
+            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)['floatingip']['id'],
+            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 200)
 
         utils.assert_status(tester.delete_floating_ip(floating_ip_one_id), 204)
 
@@ -100,4 +111,4 @@ class FloatingIP(HttpAPI):
 
 
 if __name__ == '__main__':
-    FloatingIP.perform_tests('server', 'admin')
+    FloatingIP.perform_tests('server', 'admin', 0)

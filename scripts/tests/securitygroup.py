@@ -78,6 +78,15 @@ SECURITY_GROUP_UPDATE = {
 }
 
 
+def change_id(security_group, count):
+    id = security_group['security_group']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    security_group['security_group']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return security_group
+
+
 class SecurityGroup(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -103,23 +112,27 @@ class SecurityGroup(HttpAPI):
         return self.delete(config.NEUTRON_SECURITY_GROUPS + '/' + security_groupid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform security_group tests, server: %s, user: %s' % (servername, username))
 
         tester = SecurityGroup(servername, username)
 
         utils.assert_status(tester.get_security_groups(), 200)
 
-        security_group_one = tester.create_security_group(SECURITY_GROUP_ONE)
+        security_group_one = tester.create_security_group(change_id(SECURITY_GROUP_ONE, count))
         utils.assert_status(security_group_one, 201)
 
         security_group_one_id = json.loads(security_group_one.text)['security_group']['id']
 
         utils.assert_status(tester.get_security_group(security_group_one_id), 200)
 
-        utils.assert_status(tester.update_security_group(SECURITY_GROUP_UPDATE['id'],
-                                                         SECURITY_GROUP_UPDATE['security_group']), 200)
+        utils.assert_status(tester.update_security_group
+                            (change_id(SECURITY_GROUP_UPDATE['security_group'], count)['security_group']['id'],
+                             change_id(SECURITY_GROUP_UPDATE['security_group'], count)), 200)
 
         utils.assert_status(tester.delete_security_group(security_group_one_id), 204)
 
         utils.assert_status(tester.get_security_group(security_group_one_id), 404)
+
+if __name__ == '__main__':
+    SecurityGroup.perform_tests('server', 'admin', 0)

@@ -123,16 +123,14 @@ SUBNETS_BULK = {
 }
 
 SUBNET_UPDATE = {
-    "id": "b0e7435c-1512-45fb-aa9e-9a7c5932fb30",
     "subnet": {
         "subnet": {
-            "name": "my_subnet",
+            "name": "sub_update",
             "enable_dhcp": True,
-            "network_id": "af374017-c9ae-4a1d-b799-ab73111476e2",
-            "tenant_id": "4fd44f30292945e481c7b8a0c8908869",
+            "network_id": "4e8e5957-649f-477b-9e5b-f1f75b21c03c",
+            "tenant_id": "9bacb3c5d39d41a79512987f338cf177",
             "dns_nameservers": [
-                "8.8.8.8",
-                "8.8.8.4"
+                "8.8.8.8"
             ],
             "allocation_pools": [
                 {
@@ -142,17 +140,30 @@ SUBNET_UPDATE = {
             ],
             "host_routes": [
                 {
-                    "nexthop": "10.0.0.11",
+                    "nexthop": "10.0.0.1",
+                    "destination": "0.0.0.0/0"
+                },
+                {
+                    "nexthop": "10.0.0.2",
                     "destination": "192.168.0.0/24"
                 }
             ],
             "ip_version": 4,
             "gateway_ip": "10.0.0.1",
             "cidr": "10.0.0.0/24",
-            "id": "b0e7435c-1512-45fb-aa9e-9a7c5932fb30"
+            "id": "3b80198d-4f7b-4f77-9ef5-774d54e17126"
         }
     }
 }
+
+
+def change_id(subnet, count):
+    id = subnet['subnet']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    subnet['subnet']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return subnet
 
 
 class Subnet(HttpAPI):
@@ -183,31 +194,33 @@ class Subnet(HttpAPI):
         return self.delete(config.NEUTRON_SUBNETS + '/' + subnetid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform subnet tests, server: %s, user: %s' % (servername, username))
 
         tester = Subnet(servername, username)
 
         utils.assert_status(tester.get_subnets(), 200)
 
-        subnet = tester.create_subnet(SUBNET)
+        subnet = tester.create_subnet(change_id(SUBNET, count))
         utils.assert_status(subnet, 201)
 
         subnet_id = json.loads(subnet.text)['subnet']['id']
 
         utils.assert_status(tester.get_subnet(subnet_id), 200)
 
-        utils.assert_status(tester.create_subnet(SUBNET_EXTERNAL), 201)
+        utils.assert_status(tester.create_subnet(change_id(SUBNET_EXTERNAL, count)), 201)
 
-        utils.assert_status(tester.create_subnet(SUBNETS_BULK), 201)
-
-        utils.assert_status(tester.update_subnet(SUBNET_UPDATE['id'], SUBNET_UPDATE['subnet']), 200)
-
-        utils.assert_status(tester.delete_subnet(SUBNETS_BULK['subnets'][0]['id']), 204)
-
-        utils.assert_status(tester.get_subnet(SUBNETS_BULK['subnets'][0]['id']), 404)
+        utils.assert_status(tester.update_subnet(change_id(SUBNET_UPDATE['subnet'], count)['subnet']['id'],
+                                                 change_id(SUBNET_UPDATE['subnet'], count)), 200)
+        if count == 0:
+            utils.assert_status(tester.create_subnet(SUBNETS_BULK), 201)
+            utils.assert_status(tester.delete_subnet(SUBNETS_BULK['subnets'][0]['id']), 204)
+            utils.assert_status(tester.get_subnet(SUBNETS_BULK['subnets'][0]['id']), 404)
 
         subnets = tester.get_subnets()
 
         for sub in json.loads(subnets.text)['subnets']:
             utils.assert_status(tester.delete_subnet(sub['id']), 204)
+
+if __name__ == '__main__':
+    Subnet.perform_tests('server', 'admin', 0)

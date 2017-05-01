@@ -1,6 +1,6 @@
 import requests
 import logging
-import datetime
+import time
 import utils
 
 
@@ -26,33 +26,37 @@ class HttpAPI(object):
         self.__init__(servername, username)
 
     def get(self, path):
-        start_time = datetime.datetime.now().microsecond
+        start_time = time.time()
         session = self.__session.get(self.__server + path, auth=self.__auth)
-        end_time = datetime.datetime.now().microsecond
-        logging.info('GET request cost: %f ms' % ((end_time - start_time) * 0.001))
+        end_time = time.time()
+        logging.info('GET request cost: %f ms' % ((end_time - start_time) * 1000))
         return session
 
     def put(self, path, payload):
-        start_time = datetime.datetime.now().microsecond
+        start_time = time.time()
         session = self.__session.put(self.__server + path, auth=self.__auth, json=payload)
-        end_time = datetime.datetime.now().microsecond
-        logging.info('PUT request cost: %f ms' % ((end_time - start_time) * 0.001))
+        end_time = time.time()
+        logging.info('PUT request cost: %f ms' % ((end_time - start_time) * 1000))
         return session
 
     def post(self, path, payload):
-        start_time = datetime.datetime.now().microsecond
+        start_time = time.time()
         session = self.__session.post(self.__server + path, auth=self.__auth, json=payload)
-        end_time = datetime.datetime.now().microsecond
-        logging.info('POST request cost: %f ms' % ((end_time - start_time) * 0.001))
+        end_time = time.time()
+        logging.info('POST request cost: %f ms' % ((end_time - start_time) * 1000))
         return session
 
     def delete(self, path):
-        start_time = datetime.datetime.now().microsecond
+        start_time = time.time()
         session = self.__session.delete(self.__server + path, auth=self.__auth)
-        end_time = datetime.datetime.now().microsecond
-        logging.info('DELETE request cost: %f ms' % ((end_time - start_time) * 0.001))
+        end_time = time.time()
+        logging.info('DELETE request cost: %f ms' % ((end_time - start_time) * 1000))
         return session
 
     @staticmethod
-    def perform_tests(servername, username):
+    def throughput_test(servername, username):
+    	raise Exception('throughput_test not implemented')
+
+    @staticmethod
+    def perform_tests(servername, username, count):
         raise Exception('perform tests not implemented')

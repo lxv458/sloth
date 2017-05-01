@@ -51,6 +51,15 @@ FIREWALL_RULE_UPDATE = {
 }
 
 
+def change_id(firewall_rule, count):
+    id = firewall_rule['firewall_rule']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    firewall_rule['firewall_rule']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return firewall_rule
+
+
 class FirewallRule(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -76,23 +85,27 @@ class FirewallRule(HttpAPI):
         return self.delete(config.NEUTRON_FIREWALL_RULES + '/' + firewall_ruleid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform firewall_rule tests, server: %s, user: %s' % (servername, username))
 
         tester = FirewallRule(servername, username)
 
         utils.assert_status(tester.get_firewall_rules(), 200)
 
-        firewall_rule_one = tester.create_firewall_rule(FIREWALL_RULE_ONE)
+        firewall_rule_one = tester.create_firewall_rule(change_id(FIREWALL_RULE_ONE, count))
         utils.assert_status(firewall_rule_one, 201)
 
         firewall_rule_one_id = json.loads(firewall_rule_one.text)['firewall_rule']['id']
 
         utils.assert_status(tester.get_firewall_rule(firewall_rule_one_id), 200)
 
-        utils.assert_status(tester.update_firewall_rule(FIREWALL_RULE_UPDATE['id'], FIREWALL_RULE_UPDATE['firewall_rule'
-        ]), 200)
+        utils.assert_status(tester.update_firewall_rule(
+            change_id(FIREWALL_RULE_UPDATE['firewall_rule'], count)['firewall_rule']['id'],
+            change_id(FIREWALL_RULE_UPDATE['firewall_rule'], count)), 200)
 
         utils.assert_status(tester.delete_firewall_rule(firewall_rule_one_id), 204)
 
         utils.assert_status(tester.get_firewall_rule(firewall_rule_one_id), 404)
+
+if __name__ == '__main__':
+    FirewallRule.perform_tests('server', 'admin', 0)

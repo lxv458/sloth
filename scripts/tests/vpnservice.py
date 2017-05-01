@@ -35,6 +35,15 @@ VPN_SERVICE_UPDATE = {
 }
 
 
+def change_id(vpnservice, count):
+    id = vpnservice['vpnservice']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    vpnservice['vpnservice']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return vpnservice
+
+
 class VpnService(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -60,22 +69,27 @@ class VpnService(HttpAPI):
         return self.delete(config.NEUTRON_VPN_SERVICES + '/' + vpn_serviceid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform vpn_service tests, server: %s, user: %s' % (servername, username))
 
         tester = VpnService(servername, username)
 
         utils.assert_status(tester.get_vpn_services(), 200)
 
-        vpn_service_one = tester.create_vpn_service(VPN_SERVICE_ONE)
+        vpn_service_one = tester.create_vpn_service(change_id(VPN_SERVICE_ONE, count))
         utils.assert_status(vpn_service_one, 201)
 
         vpn_service_one_id = json.loads(vpn_service_one.text)['vpnservice']['id']
 
         utils.assert_status(tester.get_vpn_service(vpn_service_one_id), 200)
 
-        utils.assert_status(tester.update_vpn_service(VPN_SERVICE_UPDATE['id'], VPN_SERVICE_UPDATE['vpnservice']), 200)
+        utils.assert_status(tester.update_vpn_service(
+            change_id(VPN_SERVICE_UPDATE['vpnservice'], count)['vpnservice']['id'],
+            change_id(VPN_SERVICE_UPDATE['vpnservice'], count)), 200)
 
         utils.assert_status(tester.delete_vpn_service(vpn_service_one_id), 204)
 
         utils.assert_status(tester.get_vpn_service(vpn_service_one_id), 404)
+
+if __name__ == '__main__':
+    VpnService.perform_tests('server', 'admin', 0)

@@ -39,6 +39,15 @@ LOAD_BALANCER_UPDATE = {
 }
 
 
+def change_id(loadbalancer, count):
+    id = loadbalancer['loadbalancer']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    loadbalancer['loadbalancer']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return loadbalancer
+
+
 class Loadbalancer(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -64,23 +73,27 @@ class Loadbalancer(HttpAPI):
         return self.delete(config.NEUTRON_LOAD_BALANCERS + '/' + loadbalancerid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform loadbalancer tests, server: %s, user: %s' % (servername, username))
 
         tester = Loadbalancer(servername, username)
 
         utils.assert_status(tester.get_loadbalancers(), 200)
 
-        loadbalancer_one = tester.create_loadbalancer(LOAD_BALANCER_ONE)
+        loadbalancer_one = tester.create_loadbalancer(change_id(LOAD_BALANCER_ONE, count))
         utils.assert_status(loadbalancer_one, 201)
 
         loadbalancer_one_id = json.loads(loadbalancer_one.text)['loadbalancer']['id']
 
         utils.assert_status(tester.get_loadbalancer(loadbalancer_one_id), 200)
 
-        utils.assert_status(tester.update_loadbalancer(LOAD_BALANCER_UPDATE['id'], LOAD_BALANCER_UPDATE['loadbalancer']
-                                                       ), 200)
+        utils.assert_status(tester.update_loadbalancer(
+            change_id(LOAD_BALANCER_UPDATE['loadbalancer'], count)['loadbalancer']['id'],
+            change_id(LOAD_BALANCER_UPDATE['loadbalancer'], count)), 200)
 
         utils.assert_status(tester.delete_loadbalancer(loadbalancer_one_id), 204)
 
         utils.assert_status(tester.get_loadbalancer(loadbalancer_one_id), 404)
+
+if __name__ == '__main__':
+    Loadbalancer.perform_tests('server', 'admin', 0)

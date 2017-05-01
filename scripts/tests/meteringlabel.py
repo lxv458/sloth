@@ -14,6 +14,16 @@ METERING_LABEL_ONE = {
     }
 }
 
+
+def change_id(metering_label, count):
+    id = metering_label['metering_label']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    metering_label['metering_label']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return metering_label
+
+
 class MeteringLabel(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -35,14 +45,14 @@ class MeteringLabel(HttpAPI):
         return self.delete(config.NEUTRON_METERING_LABELS + '/' + metering_labelid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform metering_label tests, server: %s, user: %s' % (servername, username))
 
         tester = MeteringLabel(servername, username)
 
         utils.assert_status(tester.get_metering_labels(), 200)
 
-        metering_label_one = tester.create_metering_label(METERING_LABEL_ONE)
+        metering_label_one = tester.create_metering_label(change_id(METERING_LABEL_ONE, count))
         utils.assert_status(metering_label_one, 201)
 
         metering_label_one_id = json.loads(metering_label_one.text)['metering_label']['id']
@@ -53,3 +63,6 @@ class MeteringLabel(HttpAPI):
 
         utils.assert_status(tester.get_metering_label(metering_label_one_id), 404)
 
+
+if __name__ == '__main__':
+    MeteringLabel.perform_tests('server', 'admin', 0)

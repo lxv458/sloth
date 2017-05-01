@@ -54,6 +54,15 @@ GATEWAY_UPDATE = {
 }
 
 
+def change_id(l2_gateway, count):
+    id = l2_gateway['l2_gateway']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    l2_gateway['l2_gateway']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return l2_gateway
+
+
 class Gateway(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -79,22 +88,26 @@ class Gateway(HttpAPI):
         return self.delete(config.NEUTRON_L2_GATEWAYS + '/' + gatewayid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform gateway tests, server: %s, user: %s' % (servername, username))
 
         tester = Gateway(servername, username)
 
         utils.assert_status(tester.get_gateways(), 200)
 
-        gateway_one = tester.create_gateway(GATEWAY_ONE)
+        gateway_one = tester.create_gateway(change_id(GATEWAY_ONE, count))
         utils.assert_status(gateway_one, 201)
 
         gateway_one_id = json.loads(gateway_one.text)['l2_gateway']['id']
 
         utils.assert_status(tester.get_gateway(gateway_one_id), 200)
 
-        utils.assert_status(tester.update_gateway(GATEWAY_UPDATE['id'], GATEWAY_UPDATE['l2_gateway']), 200)
+        utils.assert_status(tester.update_gateway(change_id(GATEWAY_UPDATE['l2_gateway'], count)['l2_gateway']['id'],
+                                                  change_id(GATEWAY_UPDATE['l2_gateway'], count)), 200)
 
         utils.assert_status(tester.delete_gateway(gateway_one_id), 204)
 
         utils.assert_status(tester.get_gateway(gateway_one_id), 404)
+
+if __name__ == '__main__':
+    Gateway.perform_tests('server', 'admin', 0)

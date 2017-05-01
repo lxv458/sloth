@@ -55,6 +55,15 @@ SFC_FLOW_CLASSIFIER_UPDATE = {
 }
 
 
+def change_id(flowclassifier, count):
+    id = flowclassifier['flowclassifier']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    flowclassifier['flowclassifier']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return flowclassifier
+
+
 class SFCFlowClassifier(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -80,23 +89,27 @@ class SFCFlowClassifier(HttpAPI):
         return self.delete(config.NEUTRON_SFC_FLOW_CLASSIFIERS + '/' + sfc_flow_classifierid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform sfc_flow_classifier tests, server: %s, user: %s' % (servername, username))
 
         tester = SFCFlowClassifier(servername, username)
 
         utils.assert_status(tester.get_sfc_flow_classifiers(), 200)
 
-        sfc_flow_classifier_one = tester.create_sfc_flow_classifier(SFC_FLOW_CLASSIFIER_ONE)
+        sfc_flow_classifier_one = tester.create_sfc_flow_classifier(change_id(SFC_FLOW_CLASSIFIER_ONE, count))
         utils.assert_status(sfc_flow_classifier_one, 201)
 
         sfc_flow_classifier_one_id = json.loads(sfc_flow_classifier_one.text)['flowclassifier']['id']
 
         utils.assert_status(tester.get_sfc_flow_classifier(sfc_flow_classifier_one_id), 200)
 
-        utils.assert_status(tester.update_sfc_flow_classifier(SFC_FLOW_CLASSIFIER_UPDATE['id'],
-                                                              SFC_FLOW_CLASSIFIER_UPDATE['flowclassifier']), 200)
+        utils.assert_status(tester.update_sfc_flow_classifier(
+            change_id(SFC_FLOW_CLASSIFIER_UPDATE['flowclassifier'], count)['flowclassifier']['id'],
+            change_id(SFC_FLOW_CLASSIFIER_UPDATE['flowclassifier'], count)), 200)
 
         utils.assert_status(tester.delete_sfc_flow_classifier(sfc_flow_classifier_one_id), 204)
 
         utils.assert_status(tester.get_sfc_flow_classifier(sfc_flow_classifier_one_id), 404)
+
+if __name__ == '__main__':
+    SFCFlowClassifier.perform_tests('server', 'admin', 0)

@@ -27,10 +27,19 @@ FIREWALL_UPDATE = {
             "tenant_id": "45977fa2dbd7482098dd68d0d8970117",
             "firewall_policy_id": "c69933c1-b472-44f9-8226-30dc4ffd454c",
             "id": "3b0ef8f4-82c7-44d4-a4fb-6177f9a21977",
-            "name": ""
+            "name": "update"
         }
     }
 }
+
+
+def change_id(firewall, count):
+    id = firewall['firewall']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    firewall['firewall']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return firewall
 
 
 class Firewall(HttpAPI):
@@ -58,22 +67,26 @@ class Firewall(HttpAPI):
         return self.delete(config.NEUTRON_FIREWALLS + '/' + firewallid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform firewall tests, server: %s, user: %s' % (servername, username))
 
         tester = Firewall(servername, username)
 
         utils.assert_status(tester.get_firewalls(), 200)
 
-        firewall_one = tester.create_firewall(FIREWALL_ONE)
+        firewall_one = tester.create_firewall(change_id(FIREWALL_ONE, count))
         utils.assert_status(firewall_one, 201)
 
         firewall_one_id = json.loads(firewall_one.text)['firewall']['id']
 
         utils.assert_status(tester.get_firewall(firewall_one_id), 200)
 
-        utils.assert_status(tester.update_firewall(FIREWALL_UPDATE['id'], FIREWALL_UPDATE['firewall']), 200)
+        utils.assert_status(tester.update_firewall(change_id(FIREWALL_UPDATE['firewall'], count)['firewall']['id'],
+                                                   change_id(FIREWALL_UPDATE['firewall'], count)), 200)
 
         utils.assert_status(tester.delete_firewall(firewall_one_id), 204)
 
         utils.assert_status(tester.get_firewall(firewall_one_id), 404)
+
+if __name__ == '__main__':
+    Firewall.perform_tests('server', 'admin', 0)

@@ -15,6 +15,16 @@ METERING_LABEL_RULE_ONE = {
     }
 }
 
+
+def change_id(metering_label_rule, count):
+    id = metering_label_rule['metering_label_rule']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    metering_label_rule['metering_label_rule']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return metering_label_rule
+
+
 class MeteringLabelRule(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -36,14 +46,14 @@ class MeteringLabelRule(HttpAPI):
         return self.delete(config.NEUTRON_METERING_LABEL_RULES + '/' + metering_label_ruleid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform metering_label_rule tests, server: %s, user: %s' % (servername, username))
 
         tester = MeteringLabelRule(servername, username)
 
         utils.assert_status(tester.get_metering_label_rules(), 200)
 
-        metering_label_rule_one = tester.create_metering_label_rule(METERING_LABEL_RULE_ONE)
+        metering_label_rule_one = tester.create_metering_label_rule(change_id(METERING_LABEL_RULE_ONE, count))
         utils.assert_status(metering_label_rule_one, 201)
 
         metering_label_rule_one_id = json.loads(metering_label_rule_one.text)['metering_label_rule']['id']
@@ -53,3 +63,6 @@ class MeteringLabelRule(HttpAPI):
         utils.assert_status(tester.delete_metering_label_rule(metering_label_rule_one_id), 204)
 
         utils.assert_status(tester.get_metering_label_rule(metering_label_rule_one_id), 404)
+
+if __name__ == '__main__':
+    MeteringLabelRule.perform_tests('server', 'admin', 0)

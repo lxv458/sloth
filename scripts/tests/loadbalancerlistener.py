@@ -47,6 +47,15 @@ LOAD_BALANCER_LISTENER_UPDATE = {
 }
 
 
+def change_id(listener, count):
+    id = listener['listener']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    listener['listener']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return listener
+
+
 class LoadbalancerListener(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -72,14 +81,14 @@ class LoadbalancerListener(HttpAPI):
         return self.delete(config.NEUTRON_LOAD_BALANCER_LISTENERS + '/' + loadbalancer_listenerid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform loadbalancer_listener tests, server: %s, user: %s' % (servername, username))
 
         tester = LoadbalancerListener(servername, username)
 
         utils.assert_status(tester.get_loadbalancer_listeners(), 200)
 
-        loadbalancer_listener_one = tester.create_loadbalancer_listener(LOAD_BALANCER_LISTENER_ONE)
+        loadbalancer_listener_one = tester.create_loadbalancer_listener(change_id(LOAD_BALANCER_LISTENER_ONE, count))
         utils.assert_status(loadbalancer_listener_one, 201)
 
         loadbalancer_listener_one_id = json.loads(loadbalancer_listener_one.text)['listener']['id']
@@ -87,8 +96,13 @@ class LoadbalancerListener(HttpAPI):
         utils.assert_status(tester.get_loadbalancer_listener(loadbalancer_listener_one_id), 200)
 
         utils.assert_status(tester.update_loadbalancer_listener(
-            LOAD_BALANCER_LISTENER_UPDATE['id'], LOAD_BALANCER_LISTENER_UPDATE['listener']), 200)
+            change_id(LOAD_BALANCER_LISTENER_UPDATE['listener'], count)['listener']['id'],
+            change_id(LOAD_BALANCER_LISTENER_UPDATE['listener'], count)), 200)
 
         utils.assert_status(tester.delete_loadbalancer_listener(loadbalancer_listener_one_id), 204)
 
         utils.assert_status(tester.get_loadbalancer_listener(loadbalancer_listener_one_id), 404)
+
+
+if __name__ == '__main__':
+    LoadbalancerListener.perform_tests('server', 'admin', 0)

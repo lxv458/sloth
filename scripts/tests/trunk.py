@@ -105,19 +105,34 @@ TRUNK_UPDATE = {
             "status": "DOWN",
             "name": "trunk0",
             "admin_state_up": True,
+            "tenant_id": "cc3641789c8a4304abaa841c64f638d9",
             "port_id": "60aac28d-1d3a-48d9-99bc-dd4bd62e50f2",
             "sub_ports": [
                 {
                     "segmentation_type": "vlan",
                     "port_id": "dca33436-2a7c-415b-aa35-14769e7834e3",
                     "segmentation_id": 101
+                },
+                {
+                    "segmentation_type": "vlan",
+                    "port_id": "be28febe-bdff-45cc-8a2d-872d54e62527",
+                    "segmentation_id": 102
                 }
             ],
             "id": "c935240e-4aa6-496a-841c-d113c54499b9",
-            "description": "test trunk0 updated"
+            "description": "test trunk0"
         }
     }
 }
+
+
+def change_id(trunk, count):
+    id = trunk['trunk']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    trunk['trunk']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return trunk
 
 
 class Trunk(HttpAPI):
@@ -148,31 +163,34 @@ class Trunk(HttpAPI):
         return self.delete(config.NEUTRON_TRUNKS + '/' + trunkid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform trunk tests, server: %s, user: %s' % (servername, username))
 
         tester = Trunk(servername, username)
 
         utils.assert_status(tester.get_trunks(), 200)
 
-        trunk_one = tester.create_trunk(TRUNK_ONE)
+        trunk_one = tester.create_trunk(change_id(TRUNK_ONE, count))
         utils.assert_status(trunk_one, 201)
 
         trunk_one_id = json.loads(trunk_one.text)['trunk']['id']
 
         utils.assert_status(tester.get_trunk(trunk_one_id), 200)
 
-        utils.assert_status(tester.create_trunk(TRUNK_DEFAULT), 201)
+        utils.assert_status(tester.create_trunk(change_id(TRUNK_DEFAULT, count)), 201)
 
-        utils.assert_status(tester.create_trunk(TRUNKS_BULK), 201)
+        utils.assert_status(tester.update_trunk(change_id(TRUNK_UPDATE['trunk'], count)['trunk']['id'],
+                                                change_id(TRUNK_UPDATE['trunk'], count)), 200)
 
-        utils.assert_status(tester.update_trunk(TRUNK_UPDATE['id'], TRUNK_UPDATE['trunk']), 200)
-
-        utils.assert_status(tester.delete_trunk(TRUNKS_BULK['trunks'][0]['id']), 204)
-
-        utils.assert_status(tester.get_trunk(TRUNKS_BULK['trunks'][0]['id']), 404)
+        if count == 0:
+            utils.assert_status(tester.create_trunk(TRUNKS_BULK), 201)
+            utils.assert_status(tester.delete_trunk(TRUNKS_BULK['trunks'][0]['id']), 204)
+            utils.assert_status(tester.get_trunk(TRUNKS_BULK['trunks'][0]['id']), 404)
 
         trunks = tester.get_trunks()
 
         for trunk in json.loads(trunks.text)['trunks']:
             utils.assert_status(tester.delete_trunk(trunk['id']), 204)
+
+if __name__ == '__main__':
+    Trunk.perform_tests('server', 'admin', 0)

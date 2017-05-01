@@ -78,6 +78,15 @@ SECURITY_GROUP_RULE_UPDATE = {
 }
 
 
+def change_id(security_group_rule, count):
+    id = security_group_rule['security_group_rule']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    security_group_rule['security_group_rule']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return security_group_rule
+
+
 class SecurityGroupRule(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -107,32 +116,36 @@ class SecurityGroupRule(HttpAPI):
         return self.delete(config.NEUTRON_SECURITY_GROUP_RULES + '/' + security_group_ruleid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform security_group_rule tests, server: %s, user: %s' % (servername, username))
 
         tester = SecurityGroupRule(servername, username)
 
         utils.assert_status(tester.get_security_group_rules(), 200)
 
-        security_group_rule_one = tester.create_security_group_rule(SECURITY_GROUP_RULE_ONE)
+        security_group_rule_one = tester.create_security_group_rule(change_id(SECURITY_GROUP_RULE_ONE, count))
         utils.assert_status(security_group_rule_one, 201)
 
         security_group_rule_one_id = json.loads(security_group_rule_one.text)['security_group_rule']['id']
 
         utils.assert_status(tester.get_security_group_rule(security_group_rule_one_id), 200)
 
-        utils.assert_status(tester.create_security_group_rule(SECURITY_GROUP_RULES_BULK), 201)
+        utils.assert_status(tester.update_security_group_rule(
+            change_id(SECURITY_GROUP_RULE_UPDATE['security_group_rule'], count)['security_group_rule']['id'],
+            change_id(SECURITY_GROUP_RULE_UPDATE['security_group_rule'], count)), 200)
 
-        utils.assert_status(tester.update_security_group_rule(SECURITY_GROUP_RULE_UPDATE['id'],
-                                                              SECURITY_GROUP_RULE_UPDATE['security_group_rule']), 200)
+        if count == 0:
+            utils.assert_status(tester.create_security_group_rule(SECURITY_GROUP_RULES_BULK), 201)
+            utils.assert_status(tester.delete_security_group_rule(
+                SECURITY_GROUP_RULES_BULK['security_group_rules'][0]['id']), 204)
 
-        utils.assert_status(tester.delete_security_group_rule(
-            SECURITY_GROUP_RULES_BULK['security_group_rules'][0]['id']), 204)
-
-        utils.assert_status(tester.get_security_group_rule(
-            SECURITY_GROUP_RULES_BULK['security_group_rules'][0]['id']), 404)
+            utils.assert_status(tester.get_security_group_rule(
+                SECURITY_GROUP_RULES_BULK['security_group_rules'][0]['id']), 404)
 
         security_group_rules = tester.get_security_group_rules()
 
         for s in json.loads(security_group_rules.text)['security_group_rules']:
             utils.assert_status(tester.delete_security_group_rule(s['id']), 204)
+
+if __name__ == '__main__':
+    SecurityGroupRule.perform_tests('server', 'admin', 0)

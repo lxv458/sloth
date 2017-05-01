@@ -39,6 +39,15 @@ SFC_PORT_PAIR_UPDATE = {
 }
 
 
+def change_id(portpair, count):
+    id = portpair['portpair']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    portpair['portpair']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return portpair
+
+
 class SFCPortPair(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -64,23 +73,27 @@ class SFCPortPair(HttpAPI):
         return self.delete(config.NEUTRON_SFC_PORT_PAIRS + '/' + sfc_port_pairid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform sfc_port_pair tests, server: %s, user: %s' % (servername, username))
 
         tester = SFCPortPair(servername, username)
 
         utils.assert_status(tester.get_sfc_port_pairs(), 200)
 
-        sfc_port_pair_one = tester.create_sfc_port_pair(SFC_PORT_PAIR_ONE)
+        sfc_port_pair_one = tester.create_sfc_port_pair(change_id(SFC_PORT_PAIR_ONE, count))
         utils.assert_status(sfc_port_pair_one, 201)
 
         sfc_port_pair_one_id = json.loads(sfc_port_pair_one.text)['portpair']['id']
 
         utils.assert_status(tester.get_sfc_port_pair(sfc_port_pair_one_id), 200)
 
-        utils.assert_status(tester.update_sfc_port_pair(SFC_PORT_PAIR_UPDATE['id'],
-                                                        SFC_PORT_PAIR_UPDATE['portpair']), 200)
+        utils.assert_status(tester.update_sfc_port_pair(
+            change_id(SFC_PORT_PAIR_UPDATE['portpair'], count)['portpair']['id'],
+            change_id(SFC_PORT_PAIR_UPDATE['portpair'], count)), 200)
 
         utils.assert_status(tester.delete_sfc_port_pair(sfc_port_pair_one_id), 204)
 
         utils.assert_status(tester.get_sfc_port_pair(sfc_port_pair_one_id), 404)
+
+if __name__ == '__main__':
+    SFCPortPair.perform_tests('server', 'admin', 0)

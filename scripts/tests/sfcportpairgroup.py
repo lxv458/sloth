@@ -30,6 +30,15 @@ SFC_PORT_PAIR_GROUP_UPDATE = {
 }
 
 
+def change_id(portpairgroup, count):
+    id = portpairgroup['portpairgroup']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    portpairgroup['portpairgroup']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return portpairgroup
+
+
 class SFCPortPairGroup(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -55,23 +64,28 @@ class SFCPortPairGroup(HttpAPI):
         return self.delete(config.NEUTRON_SFC_PORT_PAIR_GROUPS + '/' + sfc_port_pair_groupid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform sfc_port_pair_group tests, server: %s, user: %s' % (servername, username))
 
         tester = SFCPortPairGroup(servername, username)
 
         utils.assert_status(tester.get_sfc_port_pair_groups(), 200)
 
-        sfc_port_pair_group_one = tester.create_sfc_port_pair_group(SFC_PORT_PAIR_GROUP_ONE)
+        sfc_port_pair_group_one = tester.create_sfc_port_pair_group(change_id(SFC_PORT_PAIR_GROUP_ONE, count))
         utils.assert_status(sfc_port_pair_group_one, 201)
 
         sfc_port_pair_group_one_id = json.loads(sfc_port_pair_group_one.text)['portpairgroup']['id']
 
         utils.assert_status(tester.get_sfc_port_pair_group(sfc_port_pair_group_one_id), 200)
 
-        utils.assert_status(tester.update_sfc_port_pair_group(SFC_PORT_PAIR_GROUP_UPDATE['id'],
-                                                              SFC_PORT_PAIR_GROUP_UPDATE['portpairgroup']), 200)
+        utils.assert_status(tester.update_sfc_port_pair_group(
+            change_id(SFC_PORT_PAIR_GROUP_UPDATE['portpairgroup'], count)['portpairgroup']['id'],
+            change_id(SFC_PORT_PAIR_GROUP_UPDATE['portpairgroup'], count)), 200)
 
         utils.assert_status(tester.delete_sfc_port_pair_group(sfc_port_pair_group_one_id), 204)
 
         utils.assert_status(tester.get_sfc_port_pair_group(sfc_port_pair_group_one_id), 404)
+
+
+if __name__ == '__main__':
+    SFCPortPairGroup.perform_tests('server', 'admin', 0)

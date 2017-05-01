@@ -95,22 +95,40 @@ NETWORKS_BULK = {
 }
 
 NETWORK_UPDATE = {
-    'id': 'bc1a76cb-8767-4c3a-bb95-018b822f2130',
     'network': {
         "network": {
+            'id': '4e8e5957-649f-477b-9e5b-f1f75b21c03c',
             "status": "ACTIVE",
             "subnets": [],
-            "name": "sample_network_5_updated",
-            "provider:physical_network": None,
-            "admin_state_up": True,
-            "tenant_id": "4fd44f30292945e481c7b8a0c8908869",
-            "provider:network_type": "local",
+            "name": "net_update",
             "router:external": False,
-            "shared": False,
-            "provider:segmentation_id": None
+            "tenant_id": "9bacb3c5d39d41a79512987f338cf177",
+            "segments": [
+                {
+                    "provider:network_type": "vlan",
+                    "provider:physical_network": "8bab8453-1bc9-45af-8c70-f83aa9b50453",
+                    "provider:segmentation_id": 2
+                },
+                {
+                    "provider:network_type": "stt",
+                    "provider:physical_network": "8bab8453-1bc9-45af-8c70-f83aa9b50453",
+                    "provider:segmentation_id": None
+                }
+            ],
+            "admin_state_up": True,
+            "shared": False
         }
     }
 }
+
+
+def change_id(network, count):
+    id = network['network']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    network['network']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return network
 
 
 class Network(HttpAPI):
@@ -141,31 +159,36 @@ class Network(HttpAPI):
         return self.delete(config.NEUTRON_NETWORKS + '/' + networkid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def throughput_test(servername, username):
+        logging.info('perform throughput test, server: %s, user: %s' % (servername, username))
+        tester = Network(servername, username)
+        return tester
+
+    @staticmethod
+    def perform_tests(servername, username, count):
         logging.info('perform network tests, server: %s, user: %s' % (servername, username))
 
         tester = Network(servername, username)
 
         utils.assert_status(tester.get_networks(), 200)
 
-        network_one = tester.create_network(NETWORK_ONE)
+        network_one = tester.create_network(change_id(NETWORK_ONE, count))
         utils.assert_status(network_one, 201)
 
         network_one_id = json.loads(network_one.text)['network']['id']
 
         utils.assert_status(tester.get_network(network_one_id), 200)
 
-        utils.assert_status(tester.create_network(NETWORK_DEFAULT), 201)
+        utils.assert_status(tester.create_network(change_id(NETWORK_DEFAULT, count)), 201)
 
-        utils.assert_status(tester.create_network(NETWORK_EXTERNAL), 201)
+        utils.assert_status(tester.update_network(change_id(NETWORK_UPDATE['network'], count)['network']['id'],
+                                                  change_id(NETWORK_UPDATE['network'], count)), 200)
 
-        utils.assert_status(tester.create_network(NETWORKS_BULK), 201)
-
-        utils.assert_status(tester.update_network(NETWORK_UPDATE['id'], NETWORK_UPDATE['network']), 200)
-
-        utils.assert_status(tester.delete_network(NETWORKS_BULK['networks'][0]['id']), 204)
-
-        utils.assert_status(tester.get_network(NETWORKS_BULK['networks'][0]['id']), 404)
+        if count == 0:
+            # utils.assert_status(tester.create_network(change_id(NETWORK_EXTERNAL, count)), 201)
+            utils.assert_status(tester.create_network(NETWORKS_BULK), 201)
+            utils.assert_status(tester.delete_network(NETWORKS_BULK['networks'][0]['id']), 204)
+            utils.assert_status(tester.get_network(NETWORKS_BULK['networks'][0]['id']), 404)
 
         networks = tester.get_networks()
 
@@ -174,4 +197,4 @@ class Network(HttpAPI):
 
 
 if __name__ == '__main__':
-    Network.perform_tests('server', 'admin')
+    Network.perform_tests('server', 'admin', 0)

@@ -49,6 +49,15 @@ LOAD_BALANCER_HEALTH_MONITOR_UPDATE = {
 }
 
 
+def change_id(healthmonitor, count):
+    id = healthmonitor['healthmonitor']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    healthmonitor['healthmonitor']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return healthmonitor
+
+
 class LoadbalancerHealthMonitor(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -74,14 +83,15 @@ class LoadbalancerHealthMonitor(HttpAPI):
         return self.delete(config.NEUTRON_LOAD_BALANCER_HEALTH_MONITORS + '/' + loadbalancer_health_monitorid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform loadbalancer_health_monitor tests, server: %s, user: %s' % (servername, username))
 
         tester = LoadbalancerHealthMonitor(servername, username)
 
         utils.assert_status(tester.get_loadbalancer_health_monitors(), 200)
 
-        loadbalancer_health_monitor_one = tester.create_loadbalancer_health_monitor(LOAD_BALANCER_HEALTH_MONITOR_ONE)
+        loadbalancer_health_monitor_one = tester.create_loadbalancer_health_monitor(
+            change_id(LOAD_BALANCER_HEALTH_MONITOR_ONE, count))
         utils.assert_status(loadbalancer_health_monitor_one, 201)
 
         loadbalancer_health_monitor_one_id = json.loads(loadbalancer_health_monitor_one.text)['healthmonitor']['id']
@@ -89,8 +99,13 @@ class LoadbalancerHealthMonitor(HttpAPI):
         utils.assert_status(tester.get_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 200)
 
         utils.assert_status(tester.update_loadbalancer_health_monitor(
-            LOAD_BALANCER_HEALTH_MONITOR_UPDATE['id'], LOAD_BALANCER_HEALTH_MONITOR_UPDATE['healthmonitor']), 200)
+            change_id(LOAD_BALANCER_HEALTH_MONITOR_UPDATE['healthmonitor'], count)['healthmonitor']['id'],
+            change_id(LOAD_BALANCER_HEALTH_MONITOR_UPDATE['healthmonitor'], count)), 200)
 
         utils.assert_status(tester.delete_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 204)
 
         utils.assert_status(tester.get_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 404)
+
+
+if __name__ == '__main__':
+    LoadbalancerHealthMonitor.perform_tests('server', 'admin', 0)

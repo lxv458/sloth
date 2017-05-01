@@ -42,6 +42,15 @@ QOS_POLICY_UPDATE = {
 }
 
 
+def change_id(policy, count):
+    id = policy['policy']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    policy['policy']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return policy
+
+
 class QosPolicy(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -67,22 +76,26 @@ class QosPolicy(HttpAPI):
         return self.delete(config.NEUTRON_QOS_POLICIES + '/' + qos_policyid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform qos_policy tests, server: %s, user: %s' % (servername, username))
 
         tester = QosPolicy(servername, username)
 
         utils.assert_status(tester.get_qos_policys(), 200)
 
-        qos_policy_one = tester.create_qos_policy(QOS_POLICY_ONE)
+        qos_policy_one = tester.create_qos_policy(change_id(QOS_POLICY_ONE, count))
         utils.assert_status(qos_policy_one, 201)
 
         qos_policy_one_id = json.loads(qos_policy_one.text)['policy']['id']
 
         utils.assert_status(tester.get_qos_policy(qos_policy_one_id), 200)
 
-        utils.assert_status(tester.update_qos_policy(QOS_POLICY_UPDATE['id'], QOS_POLICY_UPDATE['policy']), 200)
+        utils.assert_status(tester.update_qos_policy(change_id(QOS_POLICY_UPDATE['policy'], count)['policy']['id'],
+                                                     change_id(QOS_POLICY_UPDATE['policy'], count)), 200)
 
         utils.assert_status(tester.delete_qos_policy(qos_policy_one_id), 204)
 
         utils.assert_status(tester.get_qos_policy(qos_policy_one_id), 404)
+
+if __name__ == '__main__':
+    QosPolicy.perform_tests('server', 'admin', 0)

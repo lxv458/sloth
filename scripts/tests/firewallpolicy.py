@@ -37,6 +37,16 @@ FIREWALL_POLICY_UPDATE = {
     }
 }
 
+
+def change_id(firewall_policy, count):
+    id = firewall_policy['firewall_policy']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    firewall_policy['firewall_policy']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return firewall_policy
+
+
 class FirewallPolicy(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -62,23 +72,27 @@ class FirewallPolicy(HttpAPI):
         return self.delete(config.NEUTRON_FIREWALL_POLICIES + '/' + firewall_policyid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform firewall_policy tests, server: %s, user: %s' % (servername, username))
 
         tester = FirewallPolicy(servername, username)
 
         utils.assert_status(tester.get_firewall_policies(), 200)
 
-        firewall_policy_one = tester.create_firewall_policy(FIREWALL_POLICY_ONE)
+        firewall_policy_one = tester.create_firewall_policy(change_id(FIREWALL_POLICY_ONE, count))
         utils.assert_status(firewall_policy_one, 201)
 
         firewall_policy_one_id = json.loads(firewall_policy_one.text)['firewall_policy']['id']
 
         utils.assert_status(tester.get_firewall_policy(firewall_policy_one_id), 200)
 
-        utils.assert_status(tester.update_firewall_policy(FIREWALL_POLICY_UPDATE['id'], FIREWALL_POLICY_UPDATE
-        ['firewall_policy']), 200)
+        utils.assert_status(tester.update_firewall_policy(
+            change_id(FIREWALL_POLICY_UPDATE['firewall_policy'], count)['firewall_policy']['id'],
+            change_id(FIREWALL_POLICY_UPDATE['firewall_policy'], count)), 200)
 
         utils.assert_status(tester.delete_firewall_policy(firewall_policy_one_id), 204)
 
         utils.assert_status(tester.get_firewall_policy(firewall_policy_one_id), 404)
+
+if __name__ == '__main__':
+    FirewallPolicy.perform_tests('server', 'admin', 0)

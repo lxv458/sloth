@@ -55,6 +55,15 @@ LOAD_BALANCER_POOL_UPDATE = {
 }
 
 
+def change_id(pool, count):
+    id = pool['pool']['id']
+    l = id.split('-')
+    tmp = int(l[4], 16) + count
+    tmp_id = str(hex(tmp))[2:]
+    pool['pool']['id'] = l[0] + '-' + l[1] + '-' + l[2] + '-' + l[3] + '-' + tmp_id
+    return pool
+
+
 class LoadbalancerPool(HttpAPI):
     def __init__(self, servername, username):
         HttpAPI.__init__(self, servername, username)
@@ -80,23 +89,27 @@ class LoadbalancerPool(HttpAPI):
         return self.delete(config.NEUTRON_LOAD_BALANCER_POOLS + '/' + loadbalancer_poolid)
 
     @staticmethod
-    def perform_tests(servername, username):
+    def perform_tests(servername, username, count):
         logging.info('perform loadbalancer_pool tests, server: %s, user: %s' % (servername, username))
 
         tester = LoadbalancerPool(servername, username)
 
         utils.assert_status(tester.get_loadbalancer_pools(), 200)
 
-        loadbalancer_pool_one = tester.create_loadbalancer_pool(LOAD_BALANCER_POOL_ONE)
+        loadbalancer_pool_one = tester.create_loadbalancer_pool(change_id(LOAD_BALANCER_POOL_ONE, count))
         utils.assert_status(loadbalancer_pool_one, 201)
 
         loadbalancer_pool_one_id = json.loads(loadbalancer_pool_one.text)['pool']['id']
 
         utils.assert_status(tester.get_loadbalancer_pool(loadbalancer_pool_one_id), 200)
 
-        utils.assert_status(tester.update_loadbalancer_pool(LOAD_BALANCER_POOL_UPDATE['id'],
-                                                            LOAD_BALANCER_POOL_UPDATE['pool']), 200)
+        utils.assert_status(tester.update_loadbalancer_pool(
+            change_id(LOAD_BALANCER_POOL_UPDATE['pool'], count)['pool']['id'],
+            change_id(LOAD_BALANCER_POOL_UPDATE['pool'], count)), 200)
 
         utils.assert_status(tester.delete_loadbalancer_pool(loadbalancer_pool_one_id), 204)
 
         utils.assert_status(tester.get_loadbalancer_pool(loadbalancer_pool_one_id), 404)
+
+if __name__ == '__main__':
+    LoadbalancerPool.perform_tests('server', 'admin', 0)
