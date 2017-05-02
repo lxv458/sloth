@@ -22,7 +22,7 @@ from scripts.tests.meteringlabel import MeteringLabel
 from scripts.tests.meteringrule import MeteringLabelRule
 from scripts.tests.qospolicy import QosPolicy
 from scripts.tests.vpnservice import VpnService
-from scripts.tests.securitygroup import SecurityGroup
+# from scripts.tests.securitygroup import SecurityGroup
 from scripts.tests.securitygrouprule import SecurityGroupRule
 from scripts.tests.sfcflowclassifier import SFCFlowClassifier
 from scripts.tests.sfcportchain import SFCPortChain

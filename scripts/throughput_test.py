@@ -4,6 +4,31 @@ import time
 import utils
 from scripts.tests.network import Network
 from scripts.tests.network import NETWORK_ONE
+from scripts.tests.router import Router
+from scripts.tests.subnet import Subnet
+from scripts.tests.port import Port
+from scripts.tests.trunk import Trunk
+from scripts.tests.bgpvpn import Bgpvpn
+from scripts.tests.firewall import Firewall
+from scripts.tests.firewallpolicy import FirewallPolicy
+from scripts.tests.firewallrule import FirewallRule
+from scripts.tests.floatingip import FloatingIP
+from scripts.tests.gateway import Gateway
+from scripts.tests.gatewayconnection import GatewayConnection
+from scripts.tests.loadbalancer import Loadbalancer
+from scripts.tests.loadbalancerhealthmonitor import LoadbalancerHealthMonitor
+from scripts.tests.loadbalancerlistener import LoadbalancerListener
+from scripts.tests.loadbalancerpool import LoadbalancerPool
+from scripts.tests.meteringlabel import MeteringLabel
+from scripts.tests.meteringrule import MeteringLabelRule
+from scripts.tests.qospolicy import QosPolicy
+from scripts.tests.vpnservice import VpnService
+# from scripts.tests.securitygroup import SecurityGroup
+from scripts.tests.securitygrouprule import SecurityGroupRule
+from scripts.tests.sfcflowclassifier import SFCFlowClassifier
+from scripts.tests.sfcportchain import SFCPortChain
+from scripts.tests.sfcportpair import SFCPortPair
+from scripts.tests.sfcportpairgroup import SFCPortPairGroup
 
 lock = threading.Lock()
 count_get = 0
@@ -125,9 +150,46 @@ def throughput_delete_test():
     logging.info('Successfully!')
 
 
+def throughput_mix():
+    log_config()
+    start_time = time.time()
+    logging.info('start_time: %f' % start_time)
+    task = []
+    task.append(threading.Thread(target=Network.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=Router.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=Subnet.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=Port.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=Trunk.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=Bgpvpn.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=Firewall.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=FirewallPolicy.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=FirewallRule.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=FloatingIP.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=Gateway.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=GatewayConnection.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=Loadbalancer.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=LoadbalancerHealthMonitor.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=LoadbalancerListener.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=LoadbalancerPool.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=MeteringLabel.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=MeteringLabelRule.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=QosPolicy.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=VpnService.perform_tests, args=('server', 'admin', 0)))
+    # task.append(threading.Thread(target=SecurityGroup.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=SecurityGroupRule.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=SFCFlowClassifier.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=SFCPortChain.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=SFCPortPair.perform_tests, args=('server', 'admin', 0)))
+    task.append(threading.Thread(target=SFCPortPairGroup.perform_tests, args=('server', 'admin', 0)))
+    for t in task:
+        t.start()
+    for t in task:
+        t.join()
+    end_time = time.time()
+    logging.info('end_time: %f' % end_time)
+    logging.info('cost time: %f ms' % ((end_time - start_time) * 1000))
+    logging.info('Successfully!')
+
 if __name__ == '__main__':
-    throughput_get_test()
-    throughput_post_test()
-    # throughput_put_test()
-    throughput_delete_test()
+    throughput_mix()
 

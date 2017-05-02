@@ -1,6 +1,14 @@
 import xlwt
 import throughput_test
 import logging
+import sys
+
+
+def main(argv):
+    if argv[1] == 'mix':
+        throughput_test_mix()
+    else:
+        throughput_test_separate()
 
 
 def throughput_data_transform():
@@ -51,18 +59,32 @@ def throughput_data_transform():
 
     wb.save('throughput_data.xls')
 
-if __name__ == "__main__":
-    throughput_test.log_config()
+
+def throughput_test_mix():
+    logging.info("test throughput wih multiple API and 780 mixed Request")
+    throughput_test.throughput_mix()
+
+
+def throughput_test_separate():
+    logging.info("test throughput wih multiple API and separated Request")
     logging.info("test GET Request")
     for i in range(50):
         throughput_test.throughput_get_test()
+
     logging.info("test POST Request")
     for i in range(50):
         throughput_test.throughput_post_test()
+
     logging.info("test PUT Request")
-    # for i in range(40):
-        # throughput_test.throughput_put_test()
+    for i in range(50):
+        throughput_test.throughput_put_test()
+
     logging.info("test DELETE Request")
     for i in range(50):
         throughput_test.throughput_delete_test()
+
+
+if __name__ == "__main__":
+    throughput_test.log_config()
+    main(sys.argv)
     throughput_data_transform()
