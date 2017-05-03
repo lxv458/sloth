@@ -69,7 +69,7 @@ class VpnService(HttpAPI):
         return self.delete(config.NEUTRON_VPN_SERVICES + '/' + vpn_serviceid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform vpn_service tests, server: %s, user: %s' % (servername, username))
 
         tester = VpnService(servername, username)
@@ -92,4 +92,4 @@ class VpnService(HttpAPI):
         utils.assert_status(tester.get_vpn_service(vpn_service_one_id), 404)
 
 if __name__ == '__main__':
-    VpnService.perform_tests('server', 'admin', 0)
+    VpnService.perform_tests('server', 'admin')

@@ -165,7 +165,7 @@ class Network(HttpAPI):
         return tester
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform network tests, server: %s, user: %s' % (servername, username))
 
         tester = Network(servername, username)
@@ -197,4 +197,4 @@ class Network(HttpAPI):
 
 
 if __name__ == '__main__':
-    Network.perform_tests('server', 'admin', 0)
+    Network.perform_tests('server', 'admin')

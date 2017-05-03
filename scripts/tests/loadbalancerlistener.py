@@ -81,7 +81,7 @@ class LoadbalancerListener(HttpAPI):
         return self.delete(config.NEUTRON_LOAD_BALANCER_LISTENERS + '/' + loadbalancer_listenerid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform loadbalancer_listener tests, server: %s, user: %s' % (servername, username))
 
         tester = LoadbalancerListener(servername, username)
@@ -105,4 +105,4 @@ class LoadbalancerListener(HttpAPI):
 
 
 if __name__ == '__main__':
-    LoadbalancerListener.perform_tests('server', 'admin', 0)
+    LoadbalancerListener.perform_tests('server', 'admin')

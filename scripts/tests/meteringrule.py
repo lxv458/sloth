@@ -46,7 +46,7 @@ class MeteringLabelRule(HttpAPI):
         return self.delete(config.NEUTRON_METERING_LABEL_RULES + '/' + metering_label_ruleid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform metering_label_rule tests, server: %s, user: %s' % (servername, username))
 
         tester = MeteringLabelRule(servername, username)
@@ -65,4 +65,4 @@ class MeteringLabelRule(HttpAPI):
         utils.assert_status(tester.get_metering_label_rule(metering_label_rule_one_id), 404)
 
 if __name__ == '__main__':
-    MeteringLabelRule.perform_tests('server', 'admin', 0)
+    MeteringLabelRule.perform_tests('server', 'admin')

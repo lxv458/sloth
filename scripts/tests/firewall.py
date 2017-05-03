@@ -67,7 +67,7 @@ class Firewall(HttpAPI):
         return self.delete(config.NEUTRON_FIREWALLS + '/' + firewallid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform firewall tests, server: %s, user: %s' % (servername, username))
 
         tester = Firewall(servername, username)
@@ -89,4 +89,4 @@ class Firewall(HttpAPI):
         utils.assert_status(tester.get_firewall(firewall_one_id), 404)
 
 if __name__ == '__main__':
-    Firewall.perform_tests('server', 'admin', 0)
+    Firewall.perform_tests('server', 'admin')

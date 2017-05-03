@@ -194,7 +194,7 @@ class Subnet(HttpAPI):
         return self.delete(config.NEUTRON_SUBNETS + '/' + subnetid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform subnet tests, server: %s, user: %s' % (servername, username))
 
         tester = Subnet(servername, username)
@@ -223,4 +223,4 @@ class Subnet(HttpAPI):
             utils.assert_status(tester.delete_subnet(sub['id']), 204)
 
 if __name__ == '__main__':
-    Subnet.perform_tests('server', 'admin', 0)
+    Subnet.perform_tests('server', 'admin')

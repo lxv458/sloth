@@ -86,7 +86,7 @@ class SFCPortChain(HttpAPI):
         return self.delete(config.NEUTRON_SFC_PORT_CHAINS + '/' + sfc_port_chainid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform sfc_port_chain tests, server: %s, user: %s' % (servername, username))
 
         tester = SFCPortChain(servername, username)
@@ -109,4 +109,4 @@ class SFCPortChain(HttpAPI):
         utils.assert_status(tester.get_sfc_port_chain(sfc_port_chain_one_id), 404)
 
 if __name__ == '__main__':
-    SFCPortChain.perform_tests('server', 'admin', 0)
+    SFCPortChain.perform_tests('server', 'admin')

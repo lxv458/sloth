@@ -224,7 +224,7 @@ class Port(HttpAPI):
         return self.delete(config.NEUTRON_PORTS + '/' + portid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform port tests, server: %s, user: %s' % (servername, username))
 
         tester = Port(servername, username)
@@ -256,4 +256,4 @@ class Port(HttpAPI):
 
 
 if __name__ == '__main__':
-    Port.perform_tests('server', 'admin', 0)
+    Port.perform_tests('server', 'admin')

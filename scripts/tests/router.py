@@ -107,7 +107,7 @@ class Router(HttpAPI):
         return self.put(config.NEUTRON_ROUTERS + '/' + routerid + '/remove_router_interface', payload)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         tester = Router(servername, username)
 
         router_one = tester.create_router(change_id(ROUTER_ONE, count))
@@ -141,4 +141,4 @@ class Router(HttpAPI):
 
 
 if __name__ == '__main__':
-    Router.perform_tests('server', 'admin', 0)
+    Router.perform_tests('server', 'admin')

@@ -89,7 +89,7 @@ class LoadbalancerPool(HttpAPI):
         return self.delete(config.NEUTRON_LOAD_BALANCER_POOLS + '/' + loadbalancer_poolid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform loadbalancer_pool tests, server: %s, user: %s' % (servername, username))
 
         tester = LoadbalancerPool(servername, username)
@@ -112,4 +112,4 @@ class LoadbalancerPool(HttpAPI):
         utils.assert_status(tester.get_loadbalancer_pool(loadbalancer_pool_one_id), 404)
 
 if __name__ == '__main__':
-    LoadbalancerPool.perform_tests('server', 'admin', 0)
+    LoadbalancerPool.perform_tests('server', 'admin')

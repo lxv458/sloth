@@ -83,7 +83,7 @@ class LoadbalancerHealthMonitor(HttpAPI):
         return self.delete(config.NEUTRON_LOAD_BALANCER_HEALTH_MONITORS + '/' + loadbalancer_health_monitorid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform loadbalancer_health_monitor tests, server: %s, user: %s' % (servername, username))
 
         tester = LoadbalancerHealthMonitor(servername, username)
@@ -108,4 +108,4 @@ class LoadbalancerHealthMonitor(HttpAPI):
 
 
 if __name__ == '__main__':
-    LoadbalancerHealthMonitor.perform_tests('server', 'admin', 0)
+    LoadbalancerHealthMonitor.perform_tests('server', 'admin')

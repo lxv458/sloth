@@ -88,7 +88,7 @@ class Gateway(HttpAPI):
         return self.delete(config.NEUTRON_L2_GATEWAYS + '/' + gatewayid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform gateway tests, server: %s, user: %s' % (servername, username))
 
         tester = Gateway(servername, username)
@@ -110,4 +110,4 @@ class Gateway(HttpAPI):
         utils.assert_status(tester.get_gateway(gateway_one_id), 404)
 
 if __name__ == '__main__':
-    Gateway.perform_tests('server', 'admin', 0)
+    Gateway.perform_tests('server', 'admin')

@@ -89,7 +89,7 @@ class SFCFlowClassifier(HttpAPI):
         return self.delete(config.NEUTRON_SFC_FLOW_CLASSIFIERS + '/' + sfc_flow_classifierid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform sfc_flow_classifier tests, server: %s, user: %s' % (servername, username))
 
         tester = SFCFlowClassifier(servername, username)
@@ -112,4 +112,4 @@ class SFCFlowClassifier(HttpAPI):
         utils.assert_status(tester.get_sfc_flow_classifier(sfc_flow_classifier_one_id), 404)
 
 if __name__ == '__main__':
-    SFCFlowClassifier.perform_tests('server', 'admin', 0)
+    SFCFlowClassifier.perform_tests('server', 'admin')

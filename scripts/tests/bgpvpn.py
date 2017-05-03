@@ -99,7 +99,7 @@ class Bgpvpn(HttpAPI):
         return self.delete(config.NEUTRON_BGPVPNS + '/' + bgpvpnid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform bgpvpn tests, server: %s, user: %s' % (servername, username))
 
         tester = Bgpvpn(servername, username)
@@ -128,4 +128,4 @@ class Bgpvpn(HttpAPI):
             utils.assert_status(tester.delete_bgpvpn(bgp['id']), 204)
 
 if __name__ == '__main__':
-    Bgpvpn.perform_tests('server', 'admin', 0)
+    Bgpvpn.perform_tests('server', 'admin')

@@ -112,7 +112,7 @@ class SecurityGroup(HttpAPI):
         return self.delete(config.NEUTRON_SECURITY_GROUPS + '/' + security_groupid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform security_group tests, server: %s, user: %s' % (servername, username))
 
         tester = SecurityGroup(servername, username)
@@ -135,4 +135,4 @@ class SecurityGroup(HttpAPI):
         utils.assert_status(tester.get_security_group(security_group_one_id), 404)
 
 if __name__ == '__main__':
-    SecurityGroup.perform_tests('server', 'admin', 0)
+    SecurityGroup.perform_tests('server', 'admin')

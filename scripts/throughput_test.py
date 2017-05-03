@@ -152,7 +152,7 @@ def throughput_delete_test():
 
 def test_API(API, num):
     for i in range(num):
-        API.perform_tests('server', 'admin', 0)
+        API.perform_tests('server', 'admin')
 
 
 def throughput_mix():

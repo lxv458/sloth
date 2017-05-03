@@ -76,7 +76,7 @@ class QosPolicy(HttpAPI):
         return self.delete(config.NEUTRON_QOS_POLICIES + '/' + qos_policyid)
 
     @staticmethod
-    def perform_tests(servername, username, count):
+    def perform_tests(servername, username, count=0):
         logging.info('perform qos_policy tests, server: %s, user: %s' % (servername, username))
 
         tester = QosPolicy(servername, username)
@@ -98,4 +98,4 @@ class QosPolicy(HttpAPI):
         utils.assert_status(tester.get_qos_policy(qos_policy_one_id), 404)
 
 if __name__ == '__main__':
-    QosPolicy.perform_tests('server', 'admin', 0)
+    QosPolicy.perform_tests('server', 'admin')
