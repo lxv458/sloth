@@ -80,7 +80,7 @@ def throughput_test_mix():
     start_time = time.time()
     logging.info('start_time: %f' % start_time)
 
-    thread = threading.Thread(target=throughput_test.throughput_mix(), args=())
+    thread = threading.Thread(target=throughput_test.throughput_mix, args=())
     thread.setDaemon(True)
     thread.start()
     thread.join(2)
