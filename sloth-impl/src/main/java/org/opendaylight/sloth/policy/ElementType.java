@@ -12,9 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ElementType {
-    NULL(0, "NULL"), INTEGER(1, "INTEGER"), FLOAT(2, "FLOAT"), STRING(3, "STRING"), BOOLEAN(4, "BOOLEAN");
-    private int value;
-    private String name;
+    NULL(0, "NULL"), FLOAT(1, "FLOAT"), STRING(2, "STRING"), BOOLEAN(3, "BOOLEAN"),
+    JSON_PATH(4, "JSON_PATH"), SLOTH_PREDEFINED(5, "SLOTH_PREDEFINED");
     private static final Map<Integer, ElementType> VALUE_MAP;
 
     static {
@@ -24,9 +23,16 @@ public enum ElementType {
         }
     }
 
+    private int value;
+    private String name;
+
     ElementType(int value, String name) {
         this.value = value;
         this.name = name;
+    }
+
+    public static ElementType forValue(int value) {
+        return VALUE_MAP.get(value);
     }
 
     public String getName() {
@@ -35,9 +41,5 @@ public enum ElementType {
 
     public int getIntValue() {
         return value;
-    }
-
-    public static ElementType forValue(int value) {
-        return VALUE_MAP.get(value);
     }
 }

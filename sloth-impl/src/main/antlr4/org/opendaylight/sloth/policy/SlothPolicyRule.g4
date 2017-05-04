@@ -63,7 +63,7 @@ slothPredefined
 
 literal
     :   IntegerLiteral
-    |   FloatingPointLiteral
+    |   FloatLiteral
     |   StringLiteral
     |   BooleanLiteral
     |   NullLiteral
@@ -71,7 +71,7 @@ literal
 
 IntegerLiteral : NonzeroDigit Digit*;
 
-FloatingPointLiteral : Digit* '.' Digit*;
+FloatLiteral : Digit* '.' Digit*;
 
 StringLiteral : '"' SingleCharacter+ '"';
 

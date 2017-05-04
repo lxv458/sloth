@@ -13,12 +13,24 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.
 public class UnaryExpression implements Expression {
     private final Object value;
     private final ElementType elementType;
+
     public UnaryExpression(Object value, ElementType elementType) {
         this.value = value;
         this.elementType = elementType;
     }
+
     @Override
-    public boolean Evaluate(CheckPermissionInput input) {
-        return false;
+    public ExprValue Evaluate(CheckPermissionInput input) {
+        ExprValue exprValue = null;
+        switch (elementType) {
+            case JSON_PATH:
+                break;
+            case SLOTH_PREDEFINED:
+                break;
+            default:
+                exprValue = new ExprValue(value, elementType);
+                break;
+        }
+        return exprValue;
     }
 }

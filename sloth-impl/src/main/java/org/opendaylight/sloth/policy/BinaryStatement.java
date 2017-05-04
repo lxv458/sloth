@@ -22,7 +22,12 @@ public class BinaryStatement implements Statement {
 
     @Override
     public Result Check(CheckPermissionInput input) {
-        return expression.Evaluate(input) ? thenStatement.Check(input) :
-                (elseStatement != null ? elseStatement.Check(input) : Result.UNKNOWN);
+        ExprValue exprValue = expression.Evaluate(input);
+        if (exprValue.getType() == ElementType.BOOLEAN) {
+            return (Boolean)exprValue.getValue() ? thenStatement.Check(input) :
+            (elseStatement != null ? elseStatement.Check(input) : Result.UNKNOWN);
+        } else {
+            throw new IllegalArgumentException("expression type not boolean");
+        }
     }
 }

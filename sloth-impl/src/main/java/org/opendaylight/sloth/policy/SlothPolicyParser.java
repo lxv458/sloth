@@ -47,6 +47,19 @@ public class SlothPolicyParser {
             visit(policySetContext);
         }
 
+        private static List<PolicySet> getPolicySetList(List<SlothPolicyRuleParser.PolicyStatementContext> list) {
+            List<PolicySet> policySetList = new ArrayList<>();
+            PolicySetBuilder policySetBuilder = new PolicySetBuilder();
+            for (SlothPolicyRuleParser.PolicyStatementContext psc : list) {
+                policySetBuilder.setId(UUID.randomUUID().toString());
+                policySetBuilder.setName(psc.Identifier().getText());
+                policySetBuilder.setContent(psc.start.getInputStream().getText(
+                        new Interval(psc.statement().start.getStartIndex(), psc.statement().stop.getStopIndex())));
+                policySetList.add(policySetBuilder.build());
+            }
+            return policySetList;
+        }
+
         public SlothPolicyHub parse() {
             return slothPolicyHubBuilder.build();
         }
@@ -76,19 +89,6 @@ public class SlothPolicyParser {
             slothPolicyHubBuilder.setLocalPolicySet(localPolicySetList);
             return null;
         }
-
-        private static List<PolicySet> getPolicySetList(List<SlothPolicyRuleParser.PolicyStatementContext> list) {
-            List<PolicySet> policySetList = new ArrayList<>();
-            PolicySetBuilder policySetBuilder = new PolicySetBuilder();
-            for (SlothPolicyRuleParser.PolicyStatementContext psc : list) {
-                policySetBuilder.setId(UUID.randomUUID().toString());
-                policySetBuilder.setName(psc.Identifier().getText());
-                policySetBuilder.setContent(psc.start.getInputStream().getText(
-                        new Interval(psc.statement().start.getStartIndex(), psc.statement().stop.getStopIndex())));
-                policySetList.add(policySetBuilder.build());
-            }
-            return policySetList;
-        }
     }
 
     private static class SlothSinglePolicyParser extends SlothPolicyRuleBaseVisitor<String> {
@@ -101,11 +101,6 @@ public class SlothPolicyParser {
             SlothPolicyRuleParser slothPolicyRuleParser = new SlothPolicyRuleParser(commonTokenStream);
             SlothPolicyRuleParser.StatementContext statementContext = slothPolicyRuleParser.statement();
             visit(statementContext);
-        }
-
-        @Override public String visitStatement(SlothPolicyRuleParser.StatementContext ctx) {
-            statement = parseStatement(ctx);
-            return null;
         }
 
         private static Statement parseStatement(SlothPolicyRuleParser.StatementContext ctx) {
@@ -122,12 +117,36 @@ public class SlothPolicyParser {
 
         private static Expression parseExpression(SlothPolicyRuleParser.ExpressionContext ctx) {
             if (ctx.getChildCount() == 1) {
-                return new UnaryExpression(null, null);
+                if (ctx.primary().jsonpath() != null) {
+                    return new UnaryExpression(ctx.primary().jsonpath(), ElementType.JSON_PATH);
+                } else if (ctx.primary().slothPredefined() != null) {
+                    return new UnaryExpression(ctx.primary().slothPredefined(), ElementType.SLOTH_PREDEFINED);
+                } else if (ctx.primary().literal() != null) {
+                    if (ctx.primary().literal().IntegerLiteral() != null || ctx.primary().literal().FloatLiteral() != null) {
+                        return new UnaryExpression(Float.valueOf(ctx.getText()), ElementType.FLOAT);
+                    } else if (ctx.primary().literal().StringLiteral() != null) {
+                        return new UnaryExpression(ctx.getText(), ElementType.STRING);
+                    } else if (ctx.primary().literal().BooleanLiteral() != null) {
+                        return new UnaryExpression(Boolean.parseBoolean(ctx.getText()), ElementType.BOOLEAN);
+                    } else if (ctx.primary().literal().NullLiteral() != null) {
+                        return new UnaryExpression(null, ElementType.NULL);
+                    } else {
+                        throw new IllegalArgumentException("unknown primary literal expression: " + ctx.getText());
+                    }
+                } else {
+                    throw new IllegalArgumentException("unknown primary expression: " + ctx.getText());
+                }
             } else if (ctx.expression().size() == 1) {
                 return parseExpression(ctx.expression(0));
             } else {
-                return new BinaryExpression(null, null, null);
+                return new BinaryExpression(parseExpression(ctx.expression(0)), parseExpression(ctx.expression(1)), Operator.parse(ctx.operator().getText()));
             }
+        }
+
+        @Override
+        public String visitStatement(SlothPolicyRuleParser.StatementContext ctx) {
+            statement = parseStatement(ctx);
+            return null;
         }
 
         public Statement parse() throws IOException {
