@@ -20,7 +20,11 @@ statement
 expression
     :   primary
     |   '(' expression ')'
-    |   expression ('<=' | '>=' | '>' | '<' | '==' | '!=' | '&&' | '||' | 'REG') expression
+    |   expression operator expression
+    ;
+
+operator
+    : '<=' | '>=' | '>' | '<' | '==' | '!=' | '&&' | '||' | 'REG'
     ;
 
 primary
@@ -59,7 +63,7 @@ slothPredefined
 
 literal
     :   IntegerLiteral
-    |   FloatingPointLiteral
+    |   FloatLiteral
     |   StringLiteral
     |   BooleanLiteral
     |   NullLiteral
@@ -67,7 +71,7 @@ literal
 
 IntegerLiteral : NonzeroDigit Digit*;
 
-FloatingPointLiteral : Digit* '.' Digit*;
+FloatLiteral : Digit* '.' Digit*;
 
 StringLiteral : '"' SingleCharacter+ '"';
 
@@ -110,18 +114,10 @@ REGULAR : 'REG';
 Identifier :Letter LetterOrDigit*;
 
 fragment
-Letter
-    :   [a-zA-Z$_]
-    |   ~[\u0000-\u007F\uD800-\uDBFF]
-    |   [\uD800-\uDBFF] [\uDC00-\uDFFF]
-    ;
+Letter : [a-zA-Z$_];
 
 fragment
-LetterOrDigit
-    :   [a-zA-Z0-9$_]
-    |   ~[\u0000-\u007F\uD800-\uDBFF]
-    |   [\uD800-\uDBFF] [\uDC00-\uDFFF]
-    ;
+LetterOrDigit : [a-zA-Z0-9$_];
 
 
 WS  : [ \t\r\n\u000C]+ -> skip;

@@ -8,8 +8,20 @@
 package org.opendaylight.sloth.policy;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+public class ExprValue {
+    private final ElementType type;
+    private final Object value;
 
-public interface Expression {
-    ExprValue Evaluate(CheckPermissionInput input);
+    public ExprValue(Object value, ElementType type) {
+        this.type = type;
+        this.value = value;
+    }
+
+    public ElementType getType() {
+        return type;
+    }
+
+    public Object getValue() {
+        return value;
+    }
 }

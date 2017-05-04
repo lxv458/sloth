@@ -12,6 +12,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.
 
 public class SlothPolicy {
     private Statement statement;
+
     public Result Check(CheckPermissionInput input) {
         return statement.Check(input);
     }

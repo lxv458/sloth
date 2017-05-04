@@ -13,8 +13,6 @@ import java.util.Map;
 
 public enum Result {
     ACCEPT(1, "ACCEPT"), REJECT(-1, "REJECT"), UNKNOWN(0, "UNKNOWN");
-    private int value;
-    private String name;
     private static final Map<Integer, Result> VALUE_MAP;
 
     static {
@@ -24,9 +22,16 @@ public enum Result {
         }
     }
 
+    private int value;
+    private String name;
+
     Result(int value, String name) {
         this.value = value;
         this.name = name;
+    }
+
+    public static Result forValue(int value) {
+        return VALUE_MAP.get(value);
     }
 
     public String getName() {
@@ -35,9 +40,5 @@ public enum Result {
 
     public int getIntValue() {
         return value;
-    }
-
-    public static Result forValue(int value) {
-        return VALUE_MAP.get(value);
     }
 }
