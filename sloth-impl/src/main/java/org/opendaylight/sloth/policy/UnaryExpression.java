@@ -33,4 +33,9 @@ public class UnaryExpression implements Expression {
         }
         return exprValue;
     }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

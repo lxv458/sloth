@@ -12,4 +12,5 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.
 
 public interface Statement {
     Result Check(CheckPermissionInput input);
+    String toString(int indent);
 }

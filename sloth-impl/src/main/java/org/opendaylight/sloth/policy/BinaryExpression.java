@@ -66,4 +66,9 @@ public class BinaryExpression implements Expression {
         }
         return evalResult;
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%s %s %s)", leftExpression.toString(), operator.getName(), rightExpression.toString());
+    }
 }

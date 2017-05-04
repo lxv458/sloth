@@ -25,4 +25,14 @@ public class UnaryStatement implements Statement {
     public Result Check(CheckPermissionInput input) {
         return result;
     }
+
+    @Override
+    public String toString() {
+        return toString(0);
+    }
+
+    @Override
+    public String toString(int indent) {
+        return String.format("%1$#" + indent + "s", "") + result.getName();
+    }
 }

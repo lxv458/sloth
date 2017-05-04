@@ -30,4 +30,22 @@ public class BinaryStatement implements Statement {
             throw new IllegalArgumentException("expression type not boolean");
         }
     }
+
+    @Override
+    public String toString() {
+        return toString(0);
+    }
+
+    @Override
+    public String toString(int indent) {
+        String spaces = String.format("%1$#" + indent + "s", "");
+        String exprStr = expression instanceof UnaryExpression ? "(" + expression.toString() + ")" : expression.toString();
+        if (elseStatement != null) {
+            return String.format("%sif %s {\n%s\n%s} else {\n%s\n%s}", spaces,
+                    exprStr, thenStatement.toString(indent + 4), spaces,
+                    elseStatement.toString(indent + 4), spaces);
+        } else {
+            return String.format("%sif %s {\n%s\n%s}", spaces, exprStr, thenStatement.toString(indent + 4), spaces);
+        }
+    }
 }
