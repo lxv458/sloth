@@ -27,12 +27,16 @@ public class SlothReadCacheImpl implements SlothReadCache {
     private final DataBroker dataBroker;
     private final SlothPermissionCache slothPermissionCache;
     private final SlothDomainCache slothDomainCache;
+    private final GlobalPolicyCache globalPolicyCache;
+    private final LocalPolicyCache localPolicyCache;
 
     public SlothReadCacheImpl(DataBroker dataBroker) {
         Preconditions.checkNotNull(dataBroker, "SlothReadCacheImpl initialization failure: empty data broker");
         this.dataBroker = dataBroker;
         slothPermissionCache = new SlothPermissionCache(dataBroker);
         slothDomainCache = new SlothDomainCache(dataBroker);
+        globalPolicyCache = new GlobalPolicyCache(dataBroker);
+        localPolicyCache = new LocalPolicyCache(dataBroker);
         LOG.info("SlothReadCacheImpl initialized");
     }
 
@@ -40,6 +44,8 @@ public class SlothReadCacheImpl implements SlothReadCache {
     public void close() throws Exception {
         slothPermissionCache.close();
         slothDomainCache.close();
+        globalPolicyCache.close();
+        localPolicyCache.close();
         LOG.info("SlothReadCacheImpl closed");
     }
 
