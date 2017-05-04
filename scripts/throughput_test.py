@@ -157,8 +157,7 @@ def test_API(API, num):
 
 def throughput_mix():
     log_config()
-    start_time = time.time()
-    logging.info('start_time: %f' % start_time)
+    logging.info('start sending requests')
     task = []
     task.append(threading.Thread(target=test_API, args=(Network, 4)))
     task.append(threading.Thread(target=test_API, args=(Router, 4)))
@@ -187,13 +186,12 @@ def throughput_mix():
     task.append(threading.Thread(target=test_API, args=(SFCPortPair, 4)))
     task.append(threading.Thread(target=test_API, args=(SFCPortPairGroup, 4)))
     for t in task:
-        t.start()
+        t.setDaemon(True)
     for t in task:
-        t.join()
-    end_time = time.time()
-    logging.info('end_time: %f' % end_time)
-    logging.info('cost time: %f ms' % ((end_time - start_time) * 1000))
-    logging.info('Successfully!')
+        t.start()
+
+    time.sleep(5)
+
 
 if __name__ == '__main__':
     throughput_mix()
