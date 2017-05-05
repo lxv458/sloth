@@ -38,7 +38,7 @@ public class BinaryStatement implements Statement {
 
     @Override
     public String toString(int indent) {
-        String spaces = String.format("%1$#" + indent + "s", "");
+        String spaces = indent > 0 ? String.format("%" + indent + "s", "") : "";
         String exprStr = expression instanceof UnaryExpression ? "(" + expression.toString() + ")" : expression.toString();
         if (elseStatement != null) {
             return String.format("%sif %s {\n%s\n%s} else {\n%s\n%s}", spaces,

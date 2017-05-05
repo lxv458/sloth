@@ -33,6 +33,6 @@ public class UnaryStatement implements Statement {
 
     @Override
     public String toString(int indent) {
-        return String.format("%1$#" + indent + "s", "") + result.getName();
+        return (indent > 0 ? String.format("%" + indent + "s", "") : "") + result.getName();
     }
 }

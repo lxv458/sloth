@@ -52,8 +52,8 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Command(name = "reload", scope = "sloth", description = "reload permission from configuration file")
-public class SlothCliReloadPermissionCommand extends AbstractAction {
-    private static final Logger LOG = LoggerFactory.getLogger(SlothCliReloadPermissionCommand.class);
+public class SlothCliReloadPermissionCmd extends AbstractAction {
+    private static final Logger LOG = LoggerFactory.getLogger(SlothCliReloadPermissionCmd.class);
     private static final String PERMISSION_CONFIG_PATH = "./etc/sloth-permission.conf";
     private static final String POLICY_FILE_PATH = "./etc/sloth-policy";
     private static final InstanceIdentifier<Domains> SLOTH_DOMAINS_ID = InstanceIdentifier.create(Domains.class);
@@ -65,9 +65,9 @@ public class SlothCliReloadPermissionCommand extends AbstractAction {
     @Option(name = "-f", aliases = {"--file"}, description = "file location")
     private String filePath;
 
-    public SlothCliReloadPermissionCommand(final SlothCliCommands service) {
+    public SlothCliReloadPermissionCmd(final SlothCliCommands service) {
         this.service = service;
-        LOG.info("SlothCliReloadPermissionCommand initialized");
+        LOG.info("SlothCliReloadPermissionCmd initialized");
     }
 
     @Override
