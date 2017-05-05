@@ -120,7 +120,7 @@ public class SlothPolicyParser {
                 if (ctx.primary().jsonpath() != null) {
                     return new UnaryExpression(ctx.getText(), ElementType.JSON_PATH);
                 } else if (ctx.primary().slothPredefined() != null) {
-                    return new UnaryExpression(ctx.getText(), ElementType.SLOTH_PREDEFINED);
+                    return new UnaryExpression(SlothPredefined.parse(ctx.getText()), ElementType.SLOTH_PREDEFINED);
                 } else if (ctx.primary().literal() != null) {
                     if (ctx.primary().literal().IntegerLiteral() != null || ctx.primary().literal().FloatLiteral() != null) {
                         return new UnaryExpression(Float.valueOf(ctx.getText()), ElementType.FLOAT);

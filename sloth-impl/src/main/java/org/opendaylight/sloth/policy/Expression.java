@@ -8,8 +8,8 @@
 package org.opendaylight.sloth.policy;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+import org.opendaylight.sloth.cache.model.SlothRequest;
 
 public interface Expression {
-    ExprValue Evaluate(CheckPermissionInput input);
+    ExprValue Evaluate(SlothRequest input);
 }

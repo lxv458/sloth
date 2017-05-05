@@ -9,11 +9,10 @@
 package org.opendaylight.sloth.cache.model;
 
 
-import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.HttpType;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.check.permission.input.Request;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,12 +23,12 @@ public class SlothRequest {
     private final Map<String, String> queryString;
     private final ReadContext readContext;
 
-    public SlothRequest(Request request) {
-        requestUrl = request.getRequestUrl();
-        method = request.getMethod();
-        queryString = splitQuery(request.getQueryString());
-        readContext = request.getJsonBody() != null && !request.getJsonBody().isEmpty() ?
-                JsonPath.parse(request.getJsonBody()) : null;
+    public SlothRequest(CheckPermissionInput input) {
+        requestUrl = input.getRequest().getRequestUrl();
+        method = input.getRequest().getMethod();
+        queryString = splitQuery(input.getRequest().getQueryString());
+        readContext = input.getRequest().getJsonBody() != null && !input.getRequest().getJsonBody().isEmpty() ?
+                JsonPath.parse(input.getRequest().getJsonBody()) : null;
     }
 
     private static Map<String, String> splitQuery(String queryString) {

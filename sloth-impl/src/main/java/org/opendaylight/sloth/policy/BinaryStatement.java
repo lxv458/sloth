@@ -8,7 +8,7 @@
 package org.opendaylight.sloth.policy;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+import org.opendaylight.sloth.cache.model.SlothRequest;
 
 public class BinaryStatement implements Statement {
     private final Expression expression;
@@ -21,7 +21,7 @@ public class BinaryStatement implements Statement {
     }
 
     @Override
-    public Result Check(CheckPermissionInput input) {
+    public Result Check(SlothRequest input) {
         ExprValue exprValue = expression.Evaluate(input);
         if (exprValue.getType() == ElementType.BOOLEAN) {
             return (Boolean)exprValue.getValue() ? thenStatement.Check(input) :

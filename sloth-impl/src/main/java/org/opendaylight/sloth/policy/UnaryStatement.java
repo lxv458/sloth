@@ -8,7 +8,7 @@
 package org.opendaylight.sloth.policy;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+import org.opendaylight.sloth.cache.model.SlothRequest;
 
 public class UnaryStatement implements Statement {
     private final Result result;
@@ -22,7 +22,7 @@ public class UnaryStatement implements Statement {
     }
 
     @Override
-    public Result Check(CheckPermissionInput input) {
+    public Result Check(SlothRequest input) {
         return result;
     }
 

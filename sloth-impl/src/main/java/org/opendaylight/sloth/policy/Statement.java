@@ -8,9 +8,9 @@
 package org.opendaylight.sloth.policy;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+import org.opendaylight.sloth.cache.model.SlothRequest;
 
 public interface Statement {
-    Result Check(CheckPermissionInput input);
+    Result Check(SlothRequest input);
     String toString(int indent);
 }
