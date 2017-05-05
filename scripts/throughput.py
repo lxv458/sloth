@@ -8,7 +8,9 @@ import threading
 
 def main(argv):
     if argv[1] == 'mix':
-        throughput_test_mix()
+        for i in range(5):
+            logging.info("new round: %d" % i)
+            throughput_test_mix()
     else:
         throughput_test_separate()
 
@@ -54,6 +56,10 @@ def throughput_data_transform():
         if 'test DELETE Request' in line:
             ws.write(row_index, 0, "DELETE", style)
             row_index += 1
+        if 'new round' in line:
+            ws.write(row_index, 0, "new round", style)
+            num = 1
+            row_index += 1
         if 'cost:' in line:
             l = line.split(':')
             ws.write(row_index, 0, num, style)
@@ -83,7 +89,7 @@ def throughput_test_mix():
     thread = threading.Thread(target=throughput_test.throughput_mix, args=())
     thread.setDaemon(True)
     thread.start()
-    thread.join(2)
+    thread.join(1)
 
     end_time = time.time()
     logging.info('end_time: %f' % end_time)
