@@ -9,7 +9,7 @@ import threading
 def main(argv):
     if argv[1] == 'mix':
         for i in range(5):
-            logging.info("new round: %d" % i)
+            logging.info("new round: %d" % (i+1))
             throughput_test_mix()
     else:
         throughput_test_separate()
@@ -82,7 +82,7 @@ def throughput_data_transform():
 
 
 def throughput_test_mix():
-    logging.info("test throughput wih multiple API and 780 mixed Request")
+    logging.info("test throughput wih multiple mixed API Request")
     start_time = time.time()
     logging.info('start_time: %f' % start_time)
 
