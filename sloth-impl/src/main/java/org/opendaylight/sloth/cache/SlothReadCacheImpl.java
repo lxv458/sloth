@@ -27,12 +27,16 @@ public class SlothReadCacheImpl implements SlothReadCache {
     private final DataBroker dataBroker;
     private final SlothPermissionCache slothPermissionCache;
     private final SlothDomainCache slothDomainCache;
+    private final GlobalPolicyCache globalPolicyCache;
+    private final LocalPolicyCache localPolicyCache;
 
     public SlothReadCacheImpl(DataBroker dataBroker) {
         Preconditions.checkNotNull(dataBroker, "SlothReadCacheImpl initialization failure: empty data broker");
         this.dataBroker = dataBroker;
         slothPermissionCache = new SlothPermissionCache(dataBroker);
         slothDomainCache = new SlothDomainCache(dataBroker);
+        globalPolicyCache = new GlobalPolicyCache(dataBroker);
+        localPolicyCache = new LocalPolicyCache(dataBroker);
         LOG.info("SlothReadCacheImpl initialized");
     }
 
@@ -40,13 +44,15 @@ public class SlothReadCacheImpl implements SlothReadCache {
     public void close() throws Exception {
         slothPermissionCache.close();
         slothDomainCache.close();
+        globalPolicyCache.close();
+        localPolicyCache.close();
         LOG.info("SlothReadCacheImpl closed");
     }
 
     @Override
     public SlothPermissionCheckResult checkPermission(CheckPermissionInput input) {
         LOG.info("Check permission for input: " + input.getRequest().getRequestUrl() + ", Method: " + input.getRequest().getMethod().getName());
-        SlothRequest slothRequest = new SlothRequest(input.getRequest());
+        SlothRequest slothRequest = new SlothRequest(input);
         List<Role> roleList = slothDomainCache.getRelatedRoleList(input.getPrincipal().getDomain(), input.getPrincipal().getRoles());
         if (roleList != null && !roleList.isEmpty()) {
             for (Role role : roleList) {
@@ -70,5 +76,11 @@ public class SlothReadCacheImpl implements SlothReadCache {
             return new SlothPermissionCheckResult(false, "no related domain/roles. domain: " +
                     input.getPrincipal().getDomain() + "roles: " + String.join(", ", input.getPrincipal().getRoles()));
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Global Policy Cache\n" + globalPolicyCache.toString() +
+                "\nLocal Policy Cache" + localPolicyCache.toString();
     }
 }

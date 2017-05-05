@@ -23,7 +23,12 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     interface="org.opendaylight.sloth.cli.api.SlothCliCommands" />
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
         <command>
-            <action class="org.opendaylight.sloth.cli.commands.SlothCliReloadPermissionCommand">
+            <action class="org.opendaylight.sloth.cli.commands.SlothCliReloadPermissionCmd">
+                <argument ref="cliCommandsImpl"/>
+            </action>
+        </command>
+        <command>
+            <action class="org.opendaylight.sloth.cli.commands.SlothCliReadCacheCmd">
                 <argument ref="cliCommandsImpl"/>
             </action>
         </command>

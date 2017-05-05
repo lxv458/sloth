@@ -8,12 +8,23 @@
 package org.opendaylight.sloth.policy;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+import org.opendaylight.sloth.cache.model.SlothRequest;
 
-public class SlothPolicy {
-    private Statement statement;
+public class Policy {
+    private final String name;
+    private final Statement statement;
 
-    public Result Check(CheckPermissionInput input) {
+    public Policy(String name, Statement statement) {
+        this.name = name;
+        this.statement = statement;
+    }
+
+    public Result Check(SlothRequest input) {
         return statement.Check(input);
+    }
+
+    @Override
+    public String toString() {
+        return name + "\n" + statement.toString();
     }
 }

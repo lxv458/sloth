@@ -118,9 +118,9 @@ public class SlothPolicyParser {
         private static Expression parseExpression(SlothPolicyRuleParser.ExpressionContext ctx) {
             if (ctx.getChildCount() == 1) {
                 if (ctx.primary().jsonpath() != null) {
-                    return new UnaryExpression(ctx.primary().jsonpath(), ElementType.JSON_PATH);
+                    return new UnaryExpression(ctx.getText(), ElementType.JSON_PATH);
                 } else if (ctx.primary().slothPredefined() != null) {
-                    return new UnaryExpression(ctx.primary().slothPredefined(), ElementType.SLOTH_PREDEFINED);
+                    return new UnaryExpression(SlothPredefined.parse(ctx.getText()), ElementType.SLOTH_PREDEFINED);
                 } else if (ctx.primary().literal() != null) {
                     if (ctx.primary().literal().IntegerLiteral() != null || ctx.primary().literal().FloatLiteral() != null) {
                         return new UnaryExpression(Float.valueOf(ctx.getText()), ElementType.FLOAT);

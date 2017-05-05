@@ -8,7 +8,7 @@
 package org.opendaylight.sloth.policy;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+import org.opendaylight.sloth.cache.model.SlothRequest;
 
 public class BinaryStatement implements Statement {
     private final Expression expression;
@@ -21,13 +21,31 @@ public class BinaryStatement implements Statement {
     }
 
     @Override
-    public Result Check(CheckPermissionInput input) {
+    public Result Check(SlothRequest input) {
         ExprValue exprValue = expression.Evaluate(input);
         if (exprValue.getType() == ElementType.BOOLEAN) {
             return (Boolean)exprValue.getValue() ? thenStatement.Check(input) :
             (elseStatement != null ? elseStatement.Check(input) : Result.UNKNOWN);
         } else {
             throw new IllegalArgumentException("expression type not boolean");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return toString(0);
+    }
+
+    @Override
+    public String toString(int indent) {
+        String spaces = indent > 0 ? String.format("%" + indent + "s", "") : "";
+        String exprStr = expression instanceof UnaryExpression ? "(" + expression.toString() + ")" : expression.toString();
+        if (elseStatement != null) {
+            return String.format("%sif %s {\n%s\n%s} else {\n%s\n%s}", spaces,
+                    exprStr, thenStatement.toString(indent + 4), spaces,
+                    elseStatement.toString(indent + 4), spaces);
+        } else {
+            return String.format("%sif %s {\n%s\n%s}", spaces, exprStr, thenStatement.toString(indent + 4), spaces);
         }
     }
 }

@@ -8,9 +8,22 @@
 package org.opendaylight.sloth.policy;
 
 
-import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
+import org.opendaylight.sloth.cache.model.SlothRequest;
 
 public class UnaryExpression implements Expression {
+    /*
+    * The value here is defined as object.
+    * It should be casted to actual value, according to ElementType.
+    * Here is the mapping:
+    * ElementType.NULL                  =>     null
+    * ElementType.FLOAT                 =>     Float
+    * ElementType.STRING                =>     String
+    * ElementType.BOOLEAN               =>     Boolean
+    * ElementType.JSON_PATH             =>     String
+    * ElementType.SLOTH_PREDEFINED      =>     SlothPredefined
+    *
+    * SlothPredefined is for extensibility.
+    * */
     private final Object value;
     private final ElementType elementType;
 
@@ -20,7 +33,7 @@ public class UnaryExpression implements Expression {
     }
 
     @Override
-    public ExprValue Evaluate(CheckPermissionInput input) {
+    public ExprValue Evaluate(SlothRequest input) {
         ExprValue exprValue = null;
         switch (elementType) {
             case JSON_PATH:
@@ -32,5 +45,10 @@ public class UnaryExpression implements Expression {
                 break;
         }
         return exprValue;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }
