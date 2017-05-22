@@ -1,0 +1,1073 @@
+role：admin，user
+User id：Tom，Gary，Lily，Jack
+
+e.g.
+	can_access(sub, obj, env) <-((Role(sub) == ‘admin’) && ((Method(sub) == ‘POST’) || (Method(sub) == ‘PUT’) || (Method(sub) == ‘GET’) || (Method(sub) == ‘DELETE’)))
+	deny(sub, obj, env) <- ((Role(sub) == ‘admin’) && (UserID(sub) == ‘bob’) && (Action(sub) == ‘/v2.0/networks/’) && (Method(sub) == ‘POST’) && (NetworkType(obj) == ‘vlan’))
+
+78 + 1 + 4 = 78 Policy
+
+GLOBAL_POLICY {
+    admin_accept_all {
+        if (sloth.subject.role == "admin") {
+            ACCEPT
+        }
+    }
+
+    block_after_7pm {
+        if (sloth.subject.role != "admin" &&
+            (sloth.environment.time > "22:00:00" || sloth.environment.time < "06:00:00")) {
+            REJECT
+        }
+    }
+
+    scheduled_maintenance {
+        if (sloth.subject.role != "admin" && sloth.environment.day_of_week == "sun") {
+            REJECT
+        }
+    }
+	
+	all_can_get {
+		if (sloth.action.method == "GET") {
+            ACCEPT
+        }
+	}
+}
+
+LOCAL_POLICY {
+    user, Lily {
+        only_get {
+			if (sloth.action.method == "GET") {
+                    ACCEPT
+                } else if (sloth.action.method == "POST") {
+                    REJECT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+		}
+    }
+
+    user, Gary {
+		network_constraints {
+            if (sloth.action.url REG "/v2[.]0/networks/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.network.port_security_enabled == True ) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		port_constraints {
+            if (sloth.action.url REG "/v2[.]0/ports/?.*") {
+                if (sloth.action.method == "POST") {
+					if (($.port.binding:vnic_type == "normal") || ($.port.binding:vnic_type == "macvtap")) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		trunk_constraints {
+            if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.trunk.name == null) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		floatingip_constraints {
+            if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		router_constraints {
+            if (sloth.action.url REG "/v2[.]0/routers/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.router.external_gateway_info == null) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		subnet_constraints {
+            if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
+                if (sloth.action.method == "POST") {
+					if (($.subnet.ip_version == 6) && ($.subnet.ipv6_address_mode == "dhcpv6-stateful")) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		firewall_policy_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		firewall_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.firewall_rule.ip_version == 4 ) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		firewall_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.firewall.admin_state_up == True ) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		security_group_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.security_group_rule.ethertype == "IPv6") {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		security_group_constraints {
+            if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		metering_label_constraints {
+            if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		metering_label_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.metering_label_rule.remote_ip_prefix == "10.0.1.0/24") {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		qos_policy_constraints {
+            if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_pool_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.pool.lb_algorithm == "LEAST_CONNECTIONS") {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_healthmonitor_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.healthmonitor.http_method == "DELETE") {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		bgpvpn_constraints {
+            if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		gateway_constraints {
+            if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		gateway_connection_constraints {
+            if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		vpnservice_constraints {
+            if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCFlowClassifier_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortChain_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortPair_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortPairGroup_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+    }
+	
+	user, Tom {
+        network_constraints {
+            if (sloth.action.url REG "/v2[.]0/networks/?.*") {
+                if (sloth.action.method == "POST") {
+					if (($.network.port_security_enabled == "vlan") || ($.network.port_security_enabled == "vxlan")) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		port_constraints {
+            if (sloth.action.url REG "/v2[.]0/ports/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		trunk_constraints {
+            if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.trunk.admin_state_up == False) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		floatingip_constraints {
+            if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.floatingip.floating_ip_address == null) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		router_constraints {
+            if (sloth.action.url REG "/v2[.]0/routers/?.*") {
+                if (sloth.action.method == "POST") {
+					REJECT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		subnet_constraints {
+            if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.subnet.ip_version == 4) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		firewall_policy_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		firewall_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		firewall_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		security_group_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
+                if (sloth.action.method == "POST") {
+					if (($.security_group_rule.protocol == "tcp") && ($.security_group_rule.ethertype == "IPv4")) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		security_group_constraints {
+            if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		metering_label_constraints {
+            if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		metering_label_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		qos_policy_constraints {
+            if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		loadbalancer_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.loadbalancer.operating_status == "ONLINE") {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_listener_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/listeners/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.listener.protocol == "tcp") {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_pool_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.pool.lb_algorithm == "ROUND_ROBIN") {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_healthmonitor_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
+                if (sloth.action.method == "POST") {
+					if (($.healthmonitor.http_method == "GET") && ($.healthmonitor.type == "HTTP")) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		bgpvpn_constraints {
+            if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.bgpvpn.type == "l3") {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		gateway_constraints {
+            if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		gateway_connection_constraints {
+            if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		vpnservice_constraints {
+            if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCFlowClassifier_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortChain_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortPair_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortPairGroup_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+    }
+	
+	user, Jack {
+        network_constraints {
+            if (sloth.action.url REG "/v2[.]0/networks/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		port_constraints {
+            if (sloth.action.url REG "/v2[.]0/ports/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		trunk_constraints {
+            if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.trunk.name == null) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		floatingip_constraints {
+            if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		router_constraints {
+            if (sloth.action.url REG "/v2[.]0/routers/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		subnet_constraints {
+            if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.subnet.ip_version == 6) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		firewall_policy_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.firewall_policy.name == null) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		firewall_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.firewall_rule.protocol == "icmp" ) {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		firewall_constraints {
+            if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		security_group_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.security_group_rule.protocol == "icmp" ) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		security_group_constraints {
+            if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
+                if (sloth.action.method == "POST") {
+					REJECT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		metering_label_constraints {
+            if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		metering_label_rule_constraints {
+            if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		qos_policy_constraints {
+            if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.policy.name == null ) {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.loadbalancer.vip_address == "10.0.0.4") {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_listener_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/listeners/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
+            }
+        }
+		
+		loadbalancer_pool_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.pool.protocol == "tcp") {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		loadbalancer_healthmonitor_constraints {
+            if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.healthmonitor.type == "HTTP") {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		bgpvpn_constraints {
+            if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
+                if (sloth.action.method == "POST") {
+					if ($.bgpvpn.type == "l2") {
+						REJECT
+					} else {
+						ACCEPT
+					}
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		gateway_constraints {
+            if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		gateway_connection_constraints {
+            if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		vpnservice_constraints {
+            if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCFlowClassifier_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortChain_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortPair_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+		
+		SFCPortPairGroup_constraints {
+            if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
+                if (sloth.action.method == "POST") {
+					ACCEPT
+                } else if (sloth.action.method == "PUT") {
+                    ACCEPT
+                } else if (sloth.action.method == "DELETE") {
+                    ACCEPT
+                }
+            }
+        }
+    }
+}
