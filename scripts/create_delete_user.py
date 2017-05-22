@@ -91,13 +91,13 @@ def clear():
     roles = dur.get_roles()
     for role in json.loads(roles.text)['roles']:
         if (role['name'] == 'admin') or (role['roleid'] == 'user@sdn'):
-            break
+            continue
         dur.delete_role(role['roleid'])
 
     users = dur.get_users()
     for user in json.loads(users.text)['users']:
         if (user['name'] == 'admin') or (user['userid'] == 'user@sdn'):
-            break
+            continue
         dur.delete_user(user['userid'])
 
 
