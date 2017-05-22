@@ -9,6 +9,8 @@ def main(argv):
         deleteusers()
     if argv[1] == 'create':
         createusers()
+    if argv[1] == 'clear':
+        clear()
 
 
 def createusers():
@@ -83,6 +85,21 @@ def deleteusers():
 
     # delete domain
     dur.delete_domain(domainId)
+
+
+def clear():
+    roles = dur.get_roles()
+    for role in json.loads(roles.text)['roles']:
+        if (role['name'] == 'admin') or (role['roleid'] == 'user@sdn'):
+            pass
+        dur.delete_role(role['roleid'])
+
+    users = dur.get_users()
+    for user in json.loads(users.text)['users']:
+        if (user['name'] == 'admin') or (user['userid'] == 'user@sdn'):
+            pass
+        dur.delete_user(user['userid'])
+
 
 if __name__ == "__main__":
     dur = DomainUserRole('server', 'admin')
