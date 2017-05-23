@@ -12,7 +12,7 @@ class DomainUserRole(HttpAPI):
     def get_domain(self, domainid):
         return self.get(config.AUTH_DOMAINS + '/' + domainid)
 
-    def create_domain(self, name, domainId, description='', enabled=False):
+    def create_domain(self, name, description='', enabled=False, domainId=''):
         payload = {
             'domainid': domainId,
             'name': name,
@@ -30,7 +30,7 @@ class DomainUserRole(HttpAPI):
     def get_role(self, roleid):
         return self.get(config.AUTH_ROLES + '/' + roleid)
 
-    def create_role(self, name, roleId, domainid, description=''):
+    def create_role(self, name, domainid, description='', roleId=''):
         payload = {
             'roleid': roleId,
             'name': name,
@@ -48,7 +48,7 @@ class DomainUserRole(HttpAPI):
     def get_user(self, userid):
         return self.get(config.AUTH_USERS + '/' + userid)
 
-    def create_user(self, name, userId, domainid, password='changeme', description='', email=''):
+    def create_user(self, name, domainid, password='changeme', description='', email='', userId=''):
         payload = {
             'name': name,
             'userid': userId,
@@ -63,19 +63,23 @@ class DomainUserRole(HttpAPI):
         return self.delete(config.AUTH_USERS + '/' + userid)
 
     def get_grants(self, domainId, userId):
-        return self.delete(config.AUTH_DOMAINS + '/' + domainId + '/users' + userId + '/roles')
+        return self.get(config.AUTH_DOMAINS + '/' + domainId + '/users/' + userId + '/roles')
 
-    def create_grant(self, domainId, userId, role):
-        return self.post(config.AUTH_DOMAINS + '/' + domainId + '/users' + userId + '/roles', role)
-
-    def delete_grant(self, domainId, userId, roleId):
-        return self.delete(config.AUTH_DOMAINS + '/' + domainId + '/users' + userId + '/roles' + roleId)
-
-    def validate_user(self, domainId, username, password, role):
+    def create_grant(self, domainId, userId, roleId, grantId=''):
         payload = {
             'domainid': domainId,
+            'userid': userId,
+            'roleid': roleId,
+            'grantid': grantId
+        }
+        return self.post(config.AUTH_DOMAINS + '/' + domainId + '/users/' + userId + '/roles', payload)
+
+    def delete_grant(self, domainId, userId, roleId):
+        return self.delete(config.AUTH_DOMAINS + '/' + domainId + '/users/' + userId + '/roles' + roleId)
+
+    def validate_user(self, domainId, username, password):
+        payload = {
             'username': username,
-            'password': password,
-            'role': role
+            'password': password
         }
         return self.post(config.AUTH_DOMAINS + '/' + domainId + '/users/roles', payload)

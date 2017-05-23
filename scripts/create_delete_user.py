@@ -1,5 +1,4 @@
 from domainuserrole import DomainUserRole
-import uuid
 import sys
 import json
 
@@ -15,42 +14,36 @@ def main(argv):
 
 def createusers():
     # create domain named sloth
-    domainId = str(uuid.uuid1())
-    dur.create_domain('sloth', domainId, 'create a domain for sloth', True)
+    domainId = 'sloth'
+    dur.create_domain('sloth', 'create a domain for sloth', True)
 
     # create user Lily, Gary, Tom, Jack
-    userId_Lily = str(uuid.uuid1())
-    dur.create_user('Lily', userId_Lily, domainId, 'Lily')
-    userId_Gary = str(uuid.uuid1())
-    dur.create_user('Gary', userId_Gary, domainId, 'Gary')
-    userId_Tom = str(uuid.uuid1())
-    dur.create_user('Tom', userId_Tom, domainId, 'Tom')
-    userId_Jack = str(uuid.uuid1())
-    dur.create_user('Jack', userId_Jack, domainId, 'Jack')
+    dur.create_user('Lily', domainId, 'Lily')
+    dur.create_user('Gary', domainId, 'Gary')
+    dur.create_user('Tom', domainId, 'Tom')
+    dur.create_user('Jack', domainId, 'Jack')
 
     # create role named user
-    roleId = str(uuid.uuid1())
-    dur.create_role('user', roleId, domainId)
+    dur.create_role('user', domainId)
 
     # create grant
     roleId = 'user@' + domainId
     role = json.loads(dur.get_role(roleId).text)
-    domainId_new = 'sloth'
-    dur.create_grant(domainId_new, 'Lily@' + domainId, role)
-    dur.create_grant(domainId_new, 'Gary@' + domainId, role)
-    dur.create_grant(domainId_new, 'Tom@' + domainId, role)
-    dur.create_grant(domainId_new, 'Jack@' + domainId, role)
+    dur.create_grant(domainId, 'Lily@' + domainId, roleId)
+    dur.create_grant(domainId, 'Gary@' + domainId, roleId)
+    dur.create_grant(domainId, 'Tom@' + domainId, roleId)
+    dur.create_grant(domainId, 'Jack@' + domainId, roleId)
 
-    print 'grants-Lily: ' + dur.get_grants(domainId_new, 'Lily@' + domainId).text
-    print 'grants-Gary: ' + dur.get_grants(domainId_new, 'Gary@' + domainId).text
-    print 'grants-Tom: ' + dur.get_grants(domainId_new, 'Tom@' + domainId).text
-    print 'grants-Jack: ' + dur.get_grants(domainId_new, 'Jack@' + domainId).text
+    print 'grants-Lily: ' + dur.get_grants(domainId, 'Lily@' + domainId).text
+    print 'grants-Gary: ' + dur.get_grants(domainId, 'Gary@' + domainId).text
+    print 'grants-Tom: ' + dur.get_grants(domainId, 'Tom@' + domainId).text
+    print 'grants-Jack: ' + dur.get_grants(domainId, 'Jack@' + domainId).text
 
     # validate user
-    dur.validate_user(domainId_new, 'Lily', 'Lily', role)
-    dur.validate_user(domainId_new, 'Gary', 'Gary', role)
-    dur.validate_user(domainId_new, 'Tom', 'Tom', role)
-    dur.validate_user(domainId_new, 'Jack', 'Jack', role)
+    dur.validate_user(domainId, 'Lily', 'Lily')
+    dur.validate_user(domainId, 'Gary', 'Gary')
+    dur.validate_user(domainId, 'Tom', 'Tom')
+    dur.validate_user(domainId, 'Jack', 'Jack')
 
 
 def deleteusers():
@@ -61,6 +54,8 @@ def deleteusers():
 
     roles = dur.get_roles()
     for role in json.loads(roles.text)['roles']:
+        if role['roleid'] == 'user@sdn':
+            continue
         if role['name'] == 'user':
             roleId = role['roleid']
 
