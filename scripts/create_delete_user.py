@@ -33,16 +33,18 @@ def createusers():
     dur.create_role('user', roleId, domainId)
 
     # create grant
-    dur.create_grant('grant-Lily', domainId, userId_Lily, roleId)
-    dur.create_grant('grant-Gary', domainId, userId_Gary, roleId)
-    dur.create_grant('grant-Tom', domainId, userId_Tom, roleId)
-    dur.create_grant('grant-Jack', domainId, userId_Jack, roleId)
+    roleId = 'user@' + domainId
+    role = json.loads(dur.get_role(roleId).text)
+    domainId_new = 'sloth'
+    dur.create_grant(domainId_new, 'Lily@' + domainId, role)
+    dur.create_grant(domainId_new, 'Gary@' + domainId, role)
+    dur.create_grant(domainId_new, 'Tom@' + domainId, role)
+    dur.create_grant(domainId_new, 'Jack@' + domainId, role)
 
-    domainId = 'sloth'
-    print 'grants-Lily' + dur.get_grants(domainId, 'Lily@' + userId_Lily).text
-    print 'grants-Gary' + dur.get_grants(domainId, 'Gary@' + userId_Gary).text
-    print 'grants-Tom' + dur.get_grants(domainId, 'Tom@' + userId_Tom).text
-    print 'grants-Jack' + dur.get_grants(domainId, 'Jack@' + userId_Jack).text
+    print 'grants-Lily: ' + dur.get_grants(domainId_new, 'Lily@' + domainId).text
+    print 'grants-Gary: ' + dur.get_grants(domainId_new, 'Gary@' + domainId).text
+    print 'grants-Tom: ' + dur.get_grants(domainId_new, 'Tom@' + domainId).text
+    print 'grants-Jack: ' + dur.get_grants(domainId_new, 'Jack@' + domainId).text
 
 
 def deleteusers():
