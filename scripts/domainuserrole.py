@@ -70,3 +70,12 @@ class DomainUserRole(HttpAPI):
 
     def delete_grant(self, domainId, userId, roleId):
         return self.delete(config.AUTH_DOMAINS + '/' + domainId + '/users' + userId + '/roles' + roleId)
+
+    def validate_user(self, domainId, username, password, role):
+        payload = {
+            'domainid': domainId,
+            'username': username,
+            'password': password,
+            'role': role
+        }
+        return self.post(config.AUTH_DOMAINS + '/' + domainId + '/users/roles', payload)

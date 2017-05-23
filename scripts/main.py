@@ -32,11 +32,11 @@ from scripts.tests.sfcportpairgroup import SFCPortPairGroup
 if __name__ == '__main__':
     logging_config = utils.get_logging_config('logging')
     logging.basicConfig(filename=logging_config['filename'], level=logging_config['level'])
-    Network.perform_tests('server', 'Lily')
+    Network.perform_tests('server', 'admin')
     Router.perform_tests('server', 'Gary')
     Subnet.perform_tests('server', 'Tom')
     Port.perform_tests('server', 'Jack')
-    Trunk.perform_tests('server', 'admin')
+    Trunk.perform_tests('server', 'Lily')
     Bgpvpn.perform_tests('server', 'admin')
     Firewall.perform_tests('server', 'admin')
     FirewallPolicy.perform_tests('server', 'admin')

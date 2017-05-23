@@ -46,6 +46,12 @@ def createusers():
     print 'grants-Tom: ' + dur.get_grants(domainId_new, 'Tom@' + domainId).text
     print 'grants-Jack: ' + dur.get_grants(domainId_new, 'Jack@' + domainId).text
 
+    # validate user
+    dur.validate_user(domainId_new, 'Lily', 'Lily', role)
+    dur.validate_user(domainId_new, 'Gary', 'Gary', role)
+    dur.validate_user(domainId_new, 'Tom', 'Tom', role)
+    dur.validate_user(domainId_new, 'Jack', 'Jack', role)
+
 
 def deleteusers():
     domains = dur.get_domains()
