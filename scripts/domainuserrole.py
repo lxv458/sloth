@@ -80,6 +80,6 @@ class DomainUserRole(HttpAPI):
     def validate_user(self, domainId, username, password):
         payload = {
             'username': username,
-            'password': password
+            'userpwd': password
         }
         return self.post(config.AUTH_DOMAINS + '/' + domainId + '/users/roles', payload)
