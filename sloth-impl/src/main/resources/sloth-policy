@@ -152,7 +152,7 @@ GLOBAL_POLICY {
         }
     }
 
-    block_after_7pm {
+    block_after_10pm {
         if (sloth.subject.role != "admin" &&
             (sloth.environment.time > "22:00:00" || sloth.environment.time < "06:00:00")) {
             REJECT

@@ -1,7 +1,6 @@
 from domainuserrole import DomainUserRole
 import sys
 import json
-import utils
 
 
 def main(argv):
@@ -43,10 +42,10 @@ def createusers():
     print 'grants-Jack: ' + dur.get_grants(domainId, 'Jack@' + domainId).text
 
     # validate user
-    print utils.assert_status(dur.validate_user(domainId, 'Lily', 'lily'), 201)
-    print utils.assert_status(dur.validate_user(domainId, 'Gary', 'gary'), 201)
-    print utils.assert_status(dur.validate_user(domainId, 'Tom', 'tom'), 201)
-    print utils.assert_status(dur.validate_user(domainId, 'Jack', 'jack'), 201)
+    dur.validate_user(domainId, 'Lily', 'lily')
+    dur.validate_user(domainId, 'Gary', 'gary')
+    dur.validate_user(domainId, 'Tom', 'tom')
+    dur.validate_user(domainId, 'Jack', 'jack')
 
     show()
 
