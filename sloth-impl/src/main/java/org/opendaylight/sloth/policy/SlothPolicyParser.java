@@ -105,7 +105,7 @@ public class SlothPolicyParser {
 
         private static Statement parseStatement(SlothPolicyRuleParser.StatementContext ctx) {
             if (ctx.getChildCount() == 1) {
-                return new UnaryStatement(Result.valueOf(ctx.getText()));
+                return new UnaryStatement(CheckResult.valueOf(ctx.getText()));
             } else if (ctx.getChildCount() == 3) {
                 return parseStatement(ctx.statement(0));
             } else {

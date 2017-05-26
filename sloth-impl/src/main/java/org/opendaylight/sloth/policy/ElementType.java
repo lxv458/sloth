@@ -13,7 +13,8 @@ import java.util.Map;
 
 public enum ElementType {
     NULL(0, "NULL"), FLOAT(1, "FLOAT"), STRING(2, "STRING"), BOOLEAN(3, "BOOLEAN"),
-    JSON_PATH(4, "JSON_PATH"), SLOTH_PREDEFINED(5, "SLOTH_PREDEFINED");
+    JSON_PATH(4, "JSON_PATH"), SLOTH_PREDEFINED(5, "SLOTH_PREDEFINED"), FLOAT_LIST(6, "FLOAT_LIST"),
+    BOOLEAN_LIST(7, "BOOLEAN_LIST"), STRING_LIST(8, "STRING_LIST"), EMPTY_LIST(9, "EMPTY_LIST");
     private static final Map<Integer, ElementType> VALUE_MAP;
 
     static {

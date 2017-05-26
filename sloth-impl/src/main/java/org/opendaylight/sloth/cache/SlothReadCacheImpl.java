@@ -12,7 +12,7 @@ package org.opendaylight.sloth.cache;
 import com.google.common.base.Preconditions;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.sloth.cache.model.SlothCachedPermission;
-import org.opendaylight.sloth.cache.model.SlothPermissionCheckResult;
+import org.opendaylight.sloth.cache.model.SlothPolicyCheckResult;
 import org.opendaylight.sloth.cache.model.SlothRequest;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.domains.domain.Role;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
@@ -50,7 +50,7 @@ public class SlothReadCacheImpl implements SlothReadCache {
     }
 
     @Override
-    public SlothPermissionCheckResult checkPermission(CheckPermissionInput input) {
+    public SlothPolicyCheckResult checkPermission(CheckPermissionInput input) {
         LOG.info("Check permission for input: " + input.getRequest().getRequestUrl() + ", Method: " + input.getRequest().getMethod().getName());
         SlothRequest slothRequest = new SlothRequest(input);
         List<Role> roleList = slothDomainCache.getRelatedRoleList(input.getPrincipal().getDomain(), input.getPrincipal().getRoles());
@@ -61,20 +61,31 @@ public class SlothReadCacheImpl implements SlothReadCache {
                     for (String permissionId : role.getPermissionId()) {
                         SlothCachedPermission slothCachedPermission = slothPermissionCache.getSlothCachedPermission(permissionId);
                         if (!slothCachedPermission.isDisabled()) {
-                            SlothPermissionCheckResult result = slothCachedPermission.isContradictory(slothRequest);
+                            SlothPolicyCheckResult result = slothCachedPermission.isContradictory(slothRequest);
                             if (!result.isSuccess()) {
                                 return result;
                             }
                         }
                     }
                 } else {
-                    return new SlothPermissionCheckResult(false, "no related permissions for role: " + role.getName());
+                    return new SlothPolicyCheckResult(false, "no related permissions for role: " + role.getName());
                 }
             }
-            return new SlothPermissionCheckResult(true, null);
+            return new SlothPolicyCheckResult(true, null);
         } else {
-            return new SlothPermissionCheckResult(false, "no related domain/roles. domain: " +
+            return new SlothPolicyCheckResult(false, "no related domain/roles. domain: " +
                     input.getPrincipal().getDomain() + "roles: " + String.join(", ", input.getPrincipal().getRoles()));
+        }
+    }
+
+    @Override
+    public SlothPolicyCheckResult policyCheck(CheckPermissionInput input) {
+        SlothRequest slothRequest = new SlothRequest(input);
+        SlothPolicyCheckResult globalResult = globalPolicyCache.policyCheck(slothRequest);
+        if (globalResult.isSuccess() == null) {
+            return localPolicyCache.policyCheck(slothRequest);
+        } else {
+            return globalResult;
         }
     }
 

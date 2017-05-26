@@ -15,15 +15,20 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.HttpType;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SlothRequest {
+    private final String userId;
+    private final List<String> roles;
     private final String requestUrl;
     private final HttpType method;
     private final Map<String, String> queryString;
     private final ReadContext readContext;
 
     public SlothRequest(CheckPermissionInput input) {
+        userId = input.getPrincipal().getUserId();
+        roles = input.getPrincipal().getRoles();
         requestUrl = input.getRequest().getRequestUrl();
         method = input.getRequest().getMethod();
         queryString = splitQuery(input.getRequest().getQueryString());
@@ -40,6 +45,14 @@ public class SlothRequest {
             }
         }
         return queryPairs;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public List<String> getRoles() {
+        return roles;
     }
 
     public String getRequestUrl() {

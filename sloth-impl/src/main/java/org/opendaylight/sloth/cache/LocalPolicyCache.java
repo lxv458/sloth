@@ -12,9 +12,11 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.sloth.cache.model.SlothPolicyCheckResult;
+import org.opendaylight.sloth.cache.model.SlothRequest;
+import org.opendaylight.sloth.policy.CheckResult;
 import org.opendaylight.sloth.policy.Policy;
 import org.opendaylight.sloth.policy.SlothPolicyParser;
-import org.opendaylight.sloth.policy.Statement;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.SlothPolicyHub;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.policies.PolicySet;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.sloth.policy.hub.LocalPolicySet;
@@ -26,7 +28,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-public class LocalPolicyCache extends FilteredClusteredDTCListener<LocalPolicySet> {
+public class LocalPolicyCache extends FilteredClusteredDTCListener<LocalPolicySet> implements PolicyChecker {
     private static final Logger LOG = LoggerFactory.getLogger(LocalPolicyCache.class);
     private static final InstanceIdentifier<LocalPolicySet> LOCAL_POLICY_SET_ID = InstanceIdentifier
             .create(SlothPolicyHub.class).child(LocalPolicySet.class);
@@ -103,5 +105,29 @@ public class LocalPolicyCache extends FilteredClusteredDTCListener<LocalPolicySe
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public SlothPolicyCheckResult policyCheck(SlothRequest input) {
+        //TODO: a user may have multiple roles at the same time, currently we only use one of them
+        String key = input.getRoles().get(0) + ":" + input.getUserId();
+        Cache<String, Policy> value = localPolicyCache.getIfPresent(key);
+        if (value != null) {
+            for (Map.Entry<String, Policy> entry : value.asMap().entrySet()) {
+                try {
+                    CheckResult r = entry.getValue().Check(input);
+                    if (r == CheckResult.ACCEPT) {
+                        return new SlothPolicyCheckResult(true, "request is permitted by policy: " + entry.getKey());
+                    } else if (r == CheckResult.REJECT) {
+                        return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getKey());
+                    }
+                } catch (Exception e) {
+                    LOG.info("local policy check exception of policy: " + entry.getKey());
+                    LOG.info(e.getMessage());
+                }
+            }
+            return new SlothPolicyCheckResult(false, "request matches no local policy");
+        }
+        return new SlothPolicyCheckResult(false, key + " has no local policy");
     }
 }

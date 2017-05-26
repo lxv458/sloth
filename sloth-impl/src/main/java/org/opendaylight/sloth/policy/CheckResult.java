@@ -11,26 +11,26 @@ package org.opendaylight.sloth.policy;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Result {
+public enum CheckResult {
     ACCEPT(1, "ACCEPT"), REJECT(-1, "REJECT"), UNKNOWN(0, "UNKNOWN");
-    private static final Map<Integer, Result> VALUE_MAP;
+    private static final Map<Integer, CheckResult> VALUE_MAP;
 
     static {
         VALUE_MAP = new HashMap<>();
-        for (Result result : Result.values()) {
-            VALUE_MAP.put(result.getIntValue(), result);
+        for (CheckResult checkResult : CheckResult.values()) {
+            VALUE_MAP.put(checkResult.getIntValue(), checkResult);
         }
     }
 
     private int value;
     private String name;
 
-    Result(int value, String name) {
+    CheckResult(int value, String name) {
         this.value = value;
         this.name = name;
     }
 
-    public static Result forValue(int value) {
+    public static CheckResult forValue(int value) {
         return VALUE_MAP.get(value);
     }
 

@@ -8,10 +8,10 @@
 
 package org.opendaylight.sloth.cache.model;
 
-public class SlothPermissionCheckResult {
-    private final boolean success;
+public class SlothPolicyCheckResult {
+    private final Boolean success;
     private final String message;
-    public SlothPermissionCheckResult(boolean success, String message) {
+    public SlothPolicyCheckResult(Boolean success, String message) {
         this.success = success;
         this.message = message;
     }
@@ -20,7 +20,7 @@ public class SlothPermissionCheckResult {
         return message;
     }
 
-    public boolean isSuccess() {
+    public Boolean isSuccess() {
         return success;
     }
 }

@@ -11,19 +11,19 @@ package org.opendaylight.sloth.policy;
 import org.opendaylight.sloth.cache.model.SlothRequest;
 
 public class UnaryStatement implements Statement {
-    private final Result result;
+    private final CheckResult checkResult;
 
-    public UnaryStatement(Result result) {
-        this.result = result;
+    public UnaryStatement(CheckResult checkResult) {
+        this.checkResult = checkResult;
     }
 
-    public Result getResult() {
-        return result;
+    public CheckResult getCheckResult() {
+        return checkResult;
     }
 
     @Override
-    public Result Check(SlothRequest input) {
-        return result;
+    public CheckResult Check(SlothRequest input) {
+        return checkResult;
     }
 
     @Override
@@ -33,6 +33,6 @@ public class UnaryStatement implements Statement {
 
     @Override
     public String toString(int indent) {
-        return (indent > 0 ? String.format("%" + indent + "s", "") : "") + result.getName();
+        return (indent > 0 ? String.format("%" + indent + "s", "") : "") + checkResult.getName();
     }
 }

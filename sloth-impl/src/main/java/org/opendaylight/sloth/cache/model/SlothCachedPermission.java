@@ -65,7 +65,7 @@ public class SlothCachedPermission {
         }
     }
 
-    public SlothPermissionCheckResult isContradictory(SlothRequest request) {
+    public SlothPolicyCheckResult isContradictory(SlothRequest request) {
         LOG.info("checking with permission: " + id + ", " + name);
         for (Pattern resource : resourceList) {
             if (actionList.contains(request.getMethod()) && resource.matcher(request.getRequestUrl()).matches()) {
@@ -80,7 +80,7 @@ public class SlothCachedPermission {
                                 }
                             }
                             if (!flag) {
-                                return new SlothPermissionCheckResult(false, "query string check failure: " + request.getQueryString());
+                                return new SlothPolicyCheckResult(false, "query string check failure: " + request.getQueryString());
                             }
                         }
                     }
@@ -96,13 +96,13 @@ public class SlothCachedPermission {
                             }
                         }
                         if (!flag) {
-                            return new SlothPermissionCheckResult(false, "json data check failure: " + paramJson.getParam());
+                            return new SlothPolicyCheckResult(false, "json data check failure: " + paramJson.getParam());
                         }
                     }
                 }
             }
         }
-        return new SlothPermissionCheckResult(true, null);
+        return new SlothPolicyCheckResult(true, null);
     }
 
     public boolean isDisabled() {

@@ -13,7 +13,7 @@ import akka.pattern.Patterns;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.sloth.akka.SlothActorSystem;
 import org.opendaylight.sloth.akka.SlothPermissionRouter;
-import org.opendaylight.sloth.cache.model.SlothPermissionCheckResult;
+import org.opendaylight.sloth.cache.model.SlothPolicyCheckResult;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.permission.rev150105.CheckPermissionOutputBuilder;
@@ -49,11 +49,11 @@ public class SlothPermissionEngine implements SlothPermissionService, AutoClosea
         CheckPermissionOutputBuilder checkPermissionOutputBuilder = new CheckPermissionOutputBuilder();
         RpcResultBuilder<CheckPermissionOutput> resultBuilder;
         try {
-            SlothPermissionCheckResult slothPermissionCheckResult = (SlothPermissionCheckResult) Await.result(result, Duration.create(5, TimeUnit.SECONDS));
-            if (slothPermissionCheckResult.isSuccess()) {
-                checkPermissionOutputBuilder.setStatusCode(200).setResponse(slothPermissionCheckResult.getMessage());
+            SlothPolicyCheckResult slothPolicyCheckResult = (SlothPolicyCheckResult) Await.result(result, Duration.create(5, TimeUnit.SECONDS));
+            if (slothPolicyCheckResult.isSuccess()) {
+                checkPermissionOutputBuilder.setStatusCode(200).setResponse(slothPolicyCheckResult.getMessage());
             } else {
-                checkPermissionOutputBuilder.setStatusCode(401).setResponse(slothPermissionCheckResult.getMessage());
+                checkPermissionOutputBuilder.setStatusCode(401).setResponse(slothPolicyCheckResult.getMessage());
             }
             resultBuilder = RpcResultBuilder.success(checkPermissionOutputBuilder.build());
             LOG.info("SlothPermissionEngine success process permission check");

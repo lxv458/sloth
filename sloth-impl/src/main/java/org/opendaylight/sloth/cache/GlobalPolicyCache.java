@@ -12,6 +12,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.sloth.cache.model.SlothPolicyCheckResult;
+import org.opendaylight.sloth.cache.model.SlothRequest;
+import org.opendaylight.sloth.policy.CheckResult;
 import org.opendaylight.sloth.policy.Policy;
 import org.opendaylight.sloth.policy.SlothPolicyParser;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.sloth.model.rev150105.SlothPolicyHub;
@@ -26,7 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> {
+public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> implements PolicyChecker {
     private static final Logger LOG = LoggerFactory.getLogger(GlobalPolicyCache.class);
     private static final InstanceIdentifier<PolicySet> GLOBAL_POLICY_SET_ID = InstanceIdentifier
             .create(SlothPolicyHub.class).child(GlobalPolicySet.class).child(PolicySet.class);
@@ -87,5 +90,23 @@ public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> {
             sb.append(entry.getValue().toString()).append('\n');
         }
         return sb.toString();
+    }
+
+    @Override
+    public SlothPolicyCheckResult policyCheck(SlothRequest input) {
+        for (Map.Entry<String, Policy> entry : globalPolicyCache.asMap().entrySet()) {
+            try {
+                CheckResult r = entry.getValue().Check(input);
+                if (r == CheckResult.ACCEPT) {
+                    return new SlothPolicyCheckResult(true, "request is permitted by policy: " + entry.getKey());
+                } else if (r == CheckResult.REJECT) {
+                    return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getKey());
+                }
+            } catch (Exception e) {
+                LOG.info("global policy check exception of policy: " + entry.getKey());
+                LOG.info(e.getMessage());
+            }
+        }
+        return new SlothPolicyCheckResult(null, "request matches none of the policies");
     }
 }

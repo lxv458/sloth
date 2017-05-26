@@ -11,6 +11,6 @@ package org.opendaylight.sloth.policy;
 import org.opendaylight.sloth.cache.model.SlothRequest;
 
 public interface Statement {
-    Result Check(SlothRequest input);
+    CheckResult Check(SlothRequest input);
     String toString(int indent);
 }

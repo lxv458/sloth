@@ -19,7 +19,7 @@ public class Policy {
         this.statement = statement;
     }
 
-    public Result Check(SlothRequest input) {
+    public CheckResult Check(SlothRequest input) {
         return statement.Check(input);
     }
 
