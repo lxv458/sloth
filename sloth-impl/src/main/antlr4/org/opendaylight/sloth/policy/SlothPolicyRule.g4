@@ -18,13 +18,13 @@ statement
     ;
 
 expression
-    :   primary
-    |   '(' expression ')'
-    |   expression operator expression
-    ;
-
-operator
-    : '<=' | '>=' | '>' | '<' | '==' | '!=' | '&&' | '||' | 'REG'
+    :   '(' expression ')'
+    |   expression ('<=' | '>=' | '>' | '<') expression
+    |   expression ('==' | '!=') expression
+    |   expression '&&' expression
+    |   expression '||' expression
+    |   expression 'REG' expression
+    |   primary
     ;
 
 primary

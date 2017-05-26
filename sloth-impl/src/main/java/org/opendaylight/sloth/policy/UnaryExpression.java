@@ -129,6 +129,6 @@ public class UnaryExpression implements Expression {
 
     @Override
     public String toString() {
-        return value.toString();
+        return value instanceof SlothPredefined ? ((SlothPredefined) value).getName() : value.toString();
     }
 }

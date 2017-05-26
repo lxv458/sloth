@@ -136,10 +136,12 @@ public class SlothPolicyParser {
                 } else {
                     throw new IllegalArgumentException("unknown primary expression: " + ctx.getText());
                 }
-            } else if (ctx.expression().size() == 1) {
+            } else if (ctx.getChildCount() == 3 && ctx.expression().size() == 1) {
                 return parseExpression(ctx.expression(0));
+            } else if (ctx.getChildCount() == 3 && ctx.expression().size() == 2) {
+                return new BinaryExpression(parseExpression(ctx.expression(0)), parseExpression(ctx.expression(1)), Operator.parse(ctx.getChild(1).getText()));
             } else {
-                return new BinaryExpression(parseExpression(ctx.expression(0)), parseExpression(ctx.expression(1)), Operator.parse(ctx.operator().getText()));
+                throw new IllegalArgumentException("unable to parse: " + ctx.getText());
             }
         }
 
