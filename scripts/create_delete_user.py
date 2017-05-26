@@ -4,14 +4,20 @@ import json
 
 
 def main(argv):
-    if argv[1] == 'delete':
-        deleteusers()
-    if argv[1] == 'create':
-        createusers()
-    if argv[1] == 'clear':
-        clear()
-    if argv[1] == 'show':
-        show()
+    print 'python create_delete_user.py create|delete|clear|show'
+    if len(argv) > 1:
+        if argv[1] == 'delete':
+            deleteusers()
+        elif argv[1] == 'create':
+            createusers()
+        elif argv[1] == 'clear':
+            clear()
+        elif argv[1] == 'show':
+            show()
+
+def print_json_format(info, data):
+    print info
+    print json.dumps(json.loads(data), indent=4)
 
 
 def createusers():
@@ -36,10 +42,10 @@ def createusers():
     dur.create_grant(domainId, 'Tom@' + domainId, roleId)
     dur.create_grant(domainId, 'Jack@' + domainId, roleId)
 
-    print 'grants-Lily: ' + dur.get_grants(domainId, 'Lily@' + domainId).text
-    print 'grants-Gary: ' + dur.get_grants(domainId, 'Gary@' + domainId).text
-    print 'grants-Tom: ' + dur.get_grants(domainId, 'Tom@' + domainId).text
-    print 'grants-Jack: ' + dur.get_grants(domainId, 'Jack@' + domainId).text
+    print_json_format('grants-Lily:', dur.get_grants(domainId, 'Lily@' + domainId).text)
+    print_json_format('grants-Gary:', dur.get_grants(domainId, 'Gary@' + domainId).text)
+    print_json_format('grants-Tom:', dur.get_grants(domainId, 'Tom@' + domainId).text)
+    print_json_format('grants-Jack:', dur.get_grants(domainId, 'Jack@' + domainId).text)
 
     # validate user
     dur.validate_user(domainId, 'Lily', 'lily')
@@ -113,9 +119,9 @@ def clear():
 
 
 def show():
-    print 'domains: ' + dur.get_domains().text
-    print 'roles: ' + dur.get_roles().text
-    print 'users: ' + dur.get_users().text
+    print_json_format('domains:', dur.get_domains().text)
+    print_json_format('roles:', dur.get_roles().text)
+    print_json_format('users:', dur.get_users().text)
 
 
 if __name__ == "__main__":

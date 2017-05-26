@@ -55,7 +55,7 @@ class HttpAPI(object):
 
     @staticmethod
     def throughput_test(servername, username):
-    	raise Exception('throughput_test not implemented')
+        raise Exception('throughput_test not implemented')
 
     @staticmethod
     def perform_tests(servername, username, count):
