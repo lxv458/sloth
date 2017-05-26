@@ -165,11 +165,11 @@ GLOBAL_POLICY {
         }
     }
 
-	all_can_get {
-		if (sloth.action.method == "GET") {
+    all_can_get {
+        if (sloth.action.method == "GET") {
             ACCEPT
         }
-	}
+    }
 }
 
 
@@ -194,7 +194,7 @@ GLOBAL_POLICY {
 LOCAL_POLICY {
     user, Lily {
         only_get {
-			if (sloth.action.method == "GET") {
+            if (sloth.action.method == "GET") {
                     ACCEPT
                 } else if (sloth.action.method == "POST") {
                     REJECT
@@ -203,16 +203,16 @@ LOCAL_POLICY {
                 } else if (sloth.action.method == "DELETE") {
                     REJECT
                 }
-		}
+        }
     }
 
     user, Gary {
-		network_constraints {
+        network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.network.port_security_enabled == true ) {
-						ACCEPT
-					}
+                    if ($.network.port_security_enabled == true ) {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -221,10 +221,10 @@ LOCAL_POLICY {
             }
         }
 
-		port_constraints {
+        port_constraints {
             if (sloth.action.url REG "/v2[.]0/ports/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -233,14 +233,14 @@ LOCAL_POLICY {
             }
         }
 
-		trunk_constraints {
+        trunk_constraints {
             if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.trunk.name == null) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.trunk.name == null) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -249,10 +249,10 @@ LOCAL_POLICY {
             }
         }
 
-		floatingip_constraints {
+        floatingip_constraints {
             if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -261,14 +261,14 @@ LOCAL_POLICY {
             }
         }
 
-		router_constraints {
+        router_constraints {
             if (sloth.action.url REG "/v2[.]0/routers/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.router.external_gateway_info == null) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.router.external_gateway_info == null) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -277,12 +277,12 @@ LOCAL_POLICY {
             }
         }
 
-		subnet_constraints {
+        subnet_constraints {
             if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
                 if (sloth.action.method == "POST") {
-					if (($.subnet.ip_version == 6) && ($.subnet.ipv6_address_mode == "dhcpv6-stateful")) {
-						ACCEPT
-					}
+                    if (($.subnet.ip_version == 6) && ($.subnet.ipv6_address_mode == "dhcpv6-stateful")) {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -291,10 +291,10 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_policy_constraints {
+        firewall_policy_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -303,12 +303,12 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_rule_constraints {
+        firewall_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.firewall_rule.ip_version == 4 ) {
-						ACCEPT
-					}
+                    if ($.firewall_rule.ip_version == 4 ) {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -317,12 +317,12 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_constraints {
+        firewall_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.firewall.admin_state_up == true ) {
-						ACCEPT
-					}
+                    if ($.firewall.admin_state_up == true ) {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -331,12 +331,12 @@ LOCAL_POLICY {
             }
         }
 
-		security_group_rule_constraints {
+        security_group_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.security_group_rule.ethertype == "IPv6") {
-						ACCEPT
-					}
+                    if ($.security_group_rule.ethertype == "IPv6") {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -345,10 +345,10 @@ LOCAL_POLICY {
             }
         }
 
-		security_group_constraints {
+        security_group_constraints {
             if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -357,10 +357,10 @@ LOCAL_POLICY {
             }
         }
 
-		metering_label_constraints {
+        metering_label_constraints {
             if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -369,12 +369,12 @@ LOCAL_POLICY {
             }
         }
 
-		metering_label_rule_constraints {
+        metering_label_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.metering_label_rule.remote_ip_prefix == "10.0.1.0/24") {
-						ACCEPT
-					}
+                    if ($.metering_label_rule.remote_ip_prefix == "10.0.1.0/24") {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -383,10 +383,10 @@ LOCAL_POLICY {
             }
         }
 
-		qos_policy_constraints {
+        qos_policy_constraints {
             if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -395,10 +395,10 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_constraints {
+        loadbalancer_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -407,14 +407,14 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_pool_constraints {
+        loadbalancer_pool_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.pool.lb_algorithm == "LEAST_CONNECTIONS") {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.pool.lb_algorithm == "LEAST_CONNECTIONS") {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -423,12 +423,12 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_healthmonitor_constraints {
+        loadbalancer_healthmonitor_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.healthmonitor.http_method == "DELETE") {
-						ACCEPT
-					}
+                    if ($.healthmonitor.http_method == "DELETE") {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -437,10 +437,10 @@ LOCAL_POLICY {
             }
         }
 
-		bgpvpn_constraints {
+        bgpvpn_constraints {
             if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -449,10 +449,10 @@ LOCAL_POLICY {
             }
         }
 
-		gateway_constraints {
+        gateway_constraints {
             if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -461,10 +461,10 @@ LOCAL_POLICY {
             }
         }
 
-		gateway_connection_constraints {
+        gateway_connection_constraints {
             if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -473,10 +473,10 @@ LOCAL_POLICY {
             }
         }
 
-		vpnservice_constraints {
+        vpnservice_constraints {
             if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -485,10 +485,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCFlowClassifier_constraints {
+        SFCFlowClassifier_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -497,10 +497,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortChain_constraints {
+        SFCPortChain_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -509,10 +509,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortPair_constraints {
+        SFCPortPair_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -521,10 +521,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortPairGroup_constraints {
+        SFCPortPairGroup_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -534,11 +534,11 @@ LOCAL_POLICY {
         }
     }
 
-	user, Tom {
+    user, Tom {
         network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -547,10 +547,10 @@ LOCAL_POLICY {
             }
         }
 
-		port_constraints {
+        port_constraints {
             if (sloth.action.url REG "/v2[.]0/ports/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -559,14 +559,14 @@ LOCAL_POLICY {
             }
         }
 
-		trunk_constraints {
+        trunk_constraints {
             if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.trunk.admin_state_up == false) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.trunk.admin_state_up == false) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -575,14 +575,14 @@ LOCAL_POLICY {
             }
         }
 
-		floatingip_constraints {
+        floatingip_constraints {
             if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.floatingip.floating_ip_address == null) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.floatingip.floating_ip_address == null) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -591,10 +591,10 @@ LOCAL_POLICY {
             }
         }
 
-		router_constraints {
+        router_constraints {
             if (sloth.action.url REG "/v2[.]0/routers/?.*") {
                 if (sloth.action.method == "POST") {
-					REJECT
+                    REJECT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -603,12 +603,12 @@ LOCAL_POLICY {
             }
         }
 
-		subnet_constraints {
+        subnet_constraints {
             if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.subnet.ip_version == 4) {
-						ACCEPT
-					}
+                    if ($.subnet.ip_version == 4) {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -617,10 +617,10 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_policy_constraints {
+        firewall_policy_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -629,10 +629,10 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_rule_constraints {
+        firewall_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -641,10 +641,10 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_constraints {
+        firewall_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -653,12 +653,12 @@ LOCAL_POLICY {
             }
         }
 
-		security_group_rule_constraints {
+        security_group_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
                 if (sloth.action.method == "POST") {
-					if (($.security_group_rule.protocol == "tcp") && ($.security_group_rule.ethertype == "IPv4")) {
-						ACCEPT
-					}
+                    if (($.security_group_rule.protocol == "tcp") && ($.security_group_rule.ethertype == "IPv4")) {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -667,10 +667,10 @@ LOCAL_POLICY {
             }
         }
 
-		security_group_constraints {
+        security_group_constraints {
             if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -679,10 +679,10 @@ LOCAL_POLICY {
             }
         }
 
-		metering_label_constraints {
+        metering_label_constraints {
             if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -691,10 +691,10 @@ LOCAL_POLICY {
             }
         }
 
-		metering_label_rule_constraints {
+        metering_label_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -703,10 +703,10 @@ LOCAL_POLICY {
             }
         }
 
-		qos_policy_constraints {
+        qos_policy_constraints {
             if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -715,12 +715,12 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_constraints {
+        loadbalancer_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.loadbalancer.operating_status == "ONLINE") {
-						ACCEPT
-					}
+                    if ($.loadbalancer.operating_status == "ONLINE") {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -729,14 +729,14 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_listener_constraints {
+        loadbalancer_listener_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/listeners/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.listener.protocol == "tcp") {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.listener.protocol == "tcp") {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -745,12 +745,12 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_pool_constraints {
+        loadbalancer_pool_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.pool.lb_algorithm == "ROUND_ROBIN") {
-						ACCEPT
-					}
+                    if ($.pool.lb_algorithm == "ROUND_ROBIN") {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -759,12 +759,12 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_healthmonitor_constraints {
+        loadbalancer_healthmonitor_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
                 if (sloth.action.method == "POST") {
-					if (($.healthmonitor.http_method == "GET") && ($.healthmonitor.type == "HTTP")) {
-						ACCEPT
-					}
+                    if (($.healthmonitor.http_method == "GET") && ($.healthmonitor.type == "HTTP")) {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -773,12 +773,12 @@ LOCAL_POLICY {
             }
         }
 
-		bgpvpn_constraints {
+        bgpvpn_constraints {
             if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.bgpvpn.type == "l3") {
-						ACCEPT
-					}
+                    if ($.bgpvpn.type == "l3") {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -787,10 +787,10 @@ LOCAL_POLICY {
             }
         }
 
-		gateway_constraints {
+        gateway_constraints {
             if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -799,10 +799,10 @@ LOCAL_POLICY {
             }
         }
 
-		gateway_connection_constraints {
+        gateway_connection_constraints {
             if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -811,10 +811,10 @@ LOCAL_POLICY {
             }
         }
 
-		vpnservice_constraints {
+        vpnservice_constraints {
             if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -823,10 +823,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCFlowClassifier_constraints {
+        SFCFlowClassifier_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -835,10 +835,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortChain_constraints {
+        SFCPortChain_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -847,10 +847,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortPair_constraints {
+        SFCPortPair_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -859,10 +859,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortPairGroup_constraints {
+        SFCPortPairGroup_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -872,11 +872,11 @@ LOCAL_POLICY {
         }
     }
 
-	user, Jack {
+    user, Jack {
         network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -885,10 +885,10 @@ LOCAL_POLICY {
             }
         }
 
-		port_constraints {
+        port_constraints {
             if (sloth.action.url REG "/v2[.]0/ports/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -897,14 +897,14 @@ LOCAL_POLICY {
             }
         }
 
-		trunk_constraints {
+        trunk_constraints {
             if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.trunk.name == null) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.trunk.name == null) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -913,10 +913,10 @@ LOCAL_POLICY {
             }
         }
 
-		floatingip_constraints {
+        floatingip_constraints {
             if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -925,10 +925,10 @@ LOCAL_POLICY {
             }
         }
 
-		router_constraints {
+        router_constraints {
             if (sloth.action.url REG "/v2[.]0/routers/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -937,14 +937,14 @@ LOCAL_POLICY {
             }
         }
 
-		subnet_constraints {
+        subnet_constraints {
             if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.subnet.ip_version == 6) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.subnet.ip_version == 6) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -953,14 +953,14 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_policy_constraints {
+        firewall_policy_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.firewall_policy.name == null) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.firewall_policy.name == null) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -969,12 +969,12 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_rule_constraints {
+        firewall_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.firewall_rule.protocol == "icmp" ) {
-						ACCEPT
-					}
+                    if ($.firewall_rule.protocol == "icmp" ) {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -983,10 +983,10 @@ LOCAL_POLICY {
             }
         }
 
-		firewall_constraints {
+        firewall_constraints {
             if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -995,14 +995,14 @@ LOCAL_POLICY {
             }
         }
 
-		security_group_rule_constraints {
+        security_group_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.security_group_rule.protocol == "icmp" ) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.security_group_rule.protocol == "icmp" ) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1011,10 +1011,10 @@ LOCAL_POLICY {
             }
         }
 
-		security_group_constraints {
+        security_group_constraints {
             if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
                 if (sloth.action.method == "POST") {
-					REJECT
+                    REJECT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -1023,10 +1023,10 @@ LOCAL_POLICY {
             }
         }
 
-		metering_label_constraints {
+        metering_label_constraints {
             if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1035,10 +1035,10 @@ LOCAL_POLICY {
             }
         }
 
-		metering_label_rule_constraints {
+        metering_label_rule_constraints {
             if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1047,14 +1047,14 @@ LOCAL_POLICY {
             }
         }
 
-		qos_policy_constraints {
+        qos_policy_constraints {
             if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.policy.name == null ) {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.policy.name == null ) {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1063,14 +1063,14 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_constraints {
+        loadbalancer_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.loadbalancer.vip_address == "10.0.0.4") {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.loadbalancer.vip_address == "10.0.0.4") {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1079,10 +1079,10 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_listener_constraints {
+        loadbalancer_listener_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/listeners/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     REJECT
                 } else if (sloth.action.method == "DELETE") {
@@ -1091,14 +1091,14 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_pool_constraints {
+        loadbalancer_pool_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.pool.protocol == "tcp") {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.pool.protocol == "tcp") {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1107,14 +1107,14 @@ LOCAL_POLICY {
             }
         }
 
-		loadbalancer_healthmonitor_constraints {
+        loadbalancer_healthmonitor_constraints {
             if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.healthmonitor.type == "HTTP") {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.healthmonitor.type == "HTTP") {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1123,14 +1123,14 @@ LOCAL_POLICY {
             }
         }
 
-		bgpvpn_constraints {
+        bgpvpn_constraints {
             if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
                 if (sloth.action.method == "POST") {
-					if ($.bgpvpn.type == "l2") {
-						REJECT
-					} else {
-						ACCEPT
-					}
+                    if ($.bgpvpn.type == "l2") {
+                        REJECT
+                    } else {
+                        ACCEPT
+                    }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1139,10 +1139,10 @@ LOCAL_POLICY {
             }
         }
 
-		gateway_constraints {
+        gateway_constraints {
             if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1151,10 +1151,10 @@ LOCAL_POLICY {
             }
         }
 
-		gateway_connection_constraints {
+        gateway_connection_constraints {
             if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1163,10 +1163,10 @@ LOCAL_POLICY {
             }
         }
 
-		vpnservice_constraints {
+        vpnservice_constraints {
             if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1175,10 +1175,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCFlowClassifier_constraints {
+        SFCFlowClassifier_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1187,10 +1187,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortChain_constraints {
+        SFCPortChain_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1199,10 +1199,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortPair_constraints {
+        SFCPortPair_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
@@ -1211,10 +1211,10 @@ LOCAL_POLICY {
             }
         }
 
-		SFCPortPairGroup_constraints {
+        SFCPortPairGroup_constraints {
             if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
                 if (sloth.action.method == "POST") {
-					ACCEPT
+                    ACCEPT
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
