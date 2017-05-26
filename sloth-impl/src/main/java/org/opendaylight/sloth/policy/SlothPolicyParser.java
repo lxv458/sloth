@@ -129,7 +129,7 @@ public class SlothPolicyParser {
                     } else if (ctx.primary().literal().BooleanLiteral() != null) {
                         return new UnaryExpression(Boolean.parseBoolean(ctx.getText()), ElementType.BOOLEAN);
                     } else if (ctx.primary().literal().NullLiteral() != null) {
-                        return new UnaryExpression(null, ElementType.NULL);
+                        return new UnaryExpression("null", ElementType.NULL);
                     } else {
                         throw new IllegalArgumentException("unknown primary literal expression: " + ctx.getText());
                     }

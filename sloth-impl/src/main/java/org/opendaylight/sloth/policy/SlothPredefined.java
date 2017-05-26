@@ -18,11 +18,11 @@ public enum SlothPredefined {
     SLOTH_ACTION_QUERY_STRING(4, "sloth.action.query_string"), SLOTH_ENVIRONMENT_DATE(5, "sloth.environment.date"),
     SLOTH_ENVIRONMENT_TIME(6, "sloth.environment.time"),
     SLOTH_ENVIRONMENT_DAY_OF_WEEK(7, "sloth.environment.day_of_week");
-    private static final Map<Integer, Operator> VALUE_MAP;
+    private static final Map<Integer, SlothPredefined> VALUE_MAP;
 
     static {
         VALUE_MAP = new HashMap<>();
-        for (Operator result : Operator.values()) {
+        for (SlothPredefined result : SlothPredefined.values()) {
             VALUE_MAP.put(result.getIntValue(), result);
         }
     }
@@ -35,17 +35,17 @@ public enum SlothPredefined {
         this.name = name;
     }
 
-    public static Operator forValue(int value) {
+    public static SlothPredefined forValue(int value) {
         return VALUE_MAP.get(value);
     }
 
-    public static Operator parse(String name) {
-        for (Operator v : VALUE_MAP.values()) {
+    public static SlothPredefined parse(String name) {
+        for (SlothPredefined v : VALUE_MAP.values()) {
             if (Objects.equals(v.getName(), name)) {
                 return v;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(name);
     }
 
     public String getName() {
