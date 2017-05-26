@@ -27,4 +27,8 @@ public class Policy {
     public String toString() {
         return name + "\n" + statement.toString();
     }
+
+    public String getName() {
+        return name;
+    }
 }

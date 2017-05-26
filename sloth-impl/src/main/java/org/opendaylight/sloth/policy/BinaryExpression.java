@@ -28,13 +28,20 @@ public class BinaryExpression implements Expression {
         ExprValue leftExprVal = leftExpression.Evaluate(input), rightExprVal = rightExpression.Evaluate(input);
         ExprValue evalResult = null;
         if (operator == Operator.LT || operator == Operator.LE || operator == Operator.GT || operator == Operator.GE) {
-            if (leftExprVal.getType() != ElementType.FLOAT || rightExprVal.getType() != ElementType.FLOAT) {
-                throw new IllegalArgumentException(operator.getName() + ": left/right side type not integer or float");
+            if (leftExprVal.getType() == ElementType.FLOAT && rightExprVal.getType() == ElementType.FLOAT) {
+                Float left = (Float) leftExprVal.getValue(), right = (Float) rightExprVal.getValue();
+                evalResult = new ExprValue(operator == Operator.LT ? left < right :
+                        (operator == Operator.LE ? left <= right :
+                                (operator == Operator.GT ? left > right : left >= right)), ElementType.BOOLEAN);
+            } else if (leftExprVal.getType() == ElementType.STRING && rightExprVal.getType() == ElementType.STRING) {
+                String left = (String) leftExprVal.getValue(), right = (String) rightExprVal.getValue();
+                int r = left.compareTo(right);
+                evalResult = new ExprValue(operator == Operator.LT ? r < 0 :
+                        (operator == Operator.LE ? r <= 0 :
+                                (operator == Operator.GT ? r > 0 : r >= 0)), ElementType.BOOLEAN);
+            } else {
+                throw new IllegalArgumentException(operator.getName() + ": left/right side type not integer, float or string");
             }
-            Float left = (Float) leftExprVal.getValue(), right = (Float) rightExprVal.getValue();
-            evalResult = new ExprValue(operator == Operator.LT ? left < right :
-                    (operator == Operator.LE ? left <= right :
-                            (operator == Operator.GT ? left > right : left >= right)), ElementType.BOOLEAN);
         } else if (operator == Operator.AND || operator == Operator.OR) {
             if (leftExprVal.getType() != ElementType.BOOLEAN || rightExprVal.getType() != ElementType.BOOLEAN) {
                 throw new IllegalArgumentException(operator.getName() + ": left/right side not boolean");

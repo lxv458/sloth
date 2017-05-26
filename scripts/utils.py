@@ -39,4 +39,5 @@ def assert_status(response, status_code):
         return True
     else:
         logging.error('fail, expected: %d, but got: %d' % (status_code, response.status_code))
+        logging.error(response.text)
         return False

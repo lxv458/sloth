@@ -98,12 +98,12 @@ public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> i
             try {
                 CheckResult r = entry.getValue().Check(input);
                 if (r == CheckResult.ACCEPT) {
-                    return new SlothPolicyCheckResult(true, "request is permitted by policy: " + entry.getKey());
+                    return new SlothPolicyCheckResult(true, "request is permitted by policy: " + entry.getValue().getName());
                 } else if (r == CheckResult.REJECT) {
-                    return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getKey());
+                    return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getValue().getName());
                 }
             } catch (Exception e) {
-                LOG.info("global policy check exception of policy: " + entry.getKey());
+                LOG.info("global policy check exception of policy: " + entry.getValue().getName());
                 LOG.info(e.getMessage());
             }
         }
