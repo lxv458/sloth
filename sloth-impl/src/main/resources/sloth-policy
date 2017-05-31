@@ -147,20 +147,20 @@
  */
 GLOBAL_POLICY {
     admin_accept_all {
-        if (sloth.subject.role == "admin") {
+        if (sloth.subject.role == "admin@sdn") {
             ACCEPT
         }
     }
 
     block_after_10pm {
-        if (sloth.subject.role != "admin" &&
+        if (sloth.subject.role != "admin@sdn" &&
             (sloth.environment.time > "23:00:00" || sloth.environment.time < "00:30:00")) {
             REJECT
         }
     }
 
     scheduled_maintenance {
-        if (sloth.subject.role != "admin" && sloth.environment.day_of_week == "sun") {
+        if (sloth.subject.role != "admin@sdn" && sloth.environment.day_of_week == "sun") {
             REJECT
         }
     }
@@ -192,7 +192,7 @@ GLOBAL_POLICY {
  */
 
 LOCAL_POLICY {
-    user, Lily {
+    user, Lily@sdn {
         only_get {
             if (sloth.action.method == "GET") {
                     ACCEPT
@@ -206,7 +206,7 @@ LOCAL_POLICY {
         }
     }
 
-    user, Gary {
+    user, Gary@sdn {
         network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
@@ -534,7 +534,7 @@ LOCAL_POLICY {
         }
     }
 
-    user, Tom {
+    user, Tom@sdn {
         network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
@@ -872,7 +872,7 @@ LOCAL_POLICY {
         }
     }
 
-    user, Jack {
+    user, Jack@sdn {
         network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
