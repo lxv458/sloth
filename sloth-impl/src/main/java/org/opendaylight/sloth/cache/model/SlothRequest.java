@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class SlothRequest {
     private final String userId;
+    private final String userName;
     private final List<String> roles;
     private final String requestUrl;
     private final HttpType method;
@@ -28,6 +29,7 @@ public class SlothRequest {
 
     public SlothRequest(CheckPermissionInput input) {
         userId = input.getPrincipal().getUserId();
+        userName = input.getPrincipal().getUserName();
         roles = input.getPrincipal().getRoles();
         requestUrl = input.getRequest().getRequestUrl();
         method = input.getRequest().getMethod();
@@ -49,6 +51,10 @@ public class SlothRequest {
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public List<String> getRoles() {

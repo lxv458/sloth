@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -125,9 +126,11 @@ public class SlothSecurityFilter implements Filter {
         LOG.info(String.format("create principal, user-id: %s, user-name: %s, domain: %s, roles: %s",
                 odlPrincipal.getUserId(), odlPrincipal.getUsername(), odlPrincipal.getDomain(),
                 String.join(", ", odlPrincipal.getRoles())));
+        ArrayList<String> roles = new ArrayList<>(odlPrincipal.getRoles());
+        Collections.sort(roles);
         PrincipalBuilder principalBuilder = new PrincipalBuilder();
         principalBuilder.setUserName(odlPrincipal.getUsername()).setUserId(odlPrincipal.getUserId())
-                .setDomain(odlPrincipal.getDomain()).setRoles(new ArrayList<>(odlPrincipal.getRoles()));
+                .setDomain(odlPrincipal.getDomain()).setRoles(roles);
         return principalBuilder.build();
     }
 
@@ -150,7 +153,6 @@ public class SlothSecurityFilter implements Filter {
         } else {
             requestBuilder.setJsonBody(externalJson);
         }
-
         return requestBuilder.build();
     }
 }

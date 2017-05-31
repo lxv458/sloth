@@ -6,9 +6,9 @@
  * are intended for all requests. When a request comes in, it will be
  * checked against all of the global policies. While local policies
  * are intended for individual user only. Local policy has user-related
- * attributes: role and user_id. When a request from a certain user
+ * attributes: role and user_name. When a request from a certain user
  * comes in, only the related local policies of that matching role and
- * user_id will be checked.
+ * user_name will be checked.
  *
  * There are two reasons for designing these two separated policy set.
  * One is for performance, permission engine will only check global
@@ -34,7 +34,7 @@
  *     "sloth": {
  *         "subject": {
  *             "role": "user",
- *             "user_id": "bob"
+ *             "user_name": "bob"
  *         },
  *         "action": {
  *             "method": "POST",
@@ -101,7 +101,7 @@
  *             return false
  *         }
  *     }
- *     for (policy in local_policy[request.role][request.user_id]) {
+ *     for (policy in local_policy[request.role][request.user_name]) {
  *         result = policy.eval(request)
  *         if (result == accept) {
  *             return true
@@ -147,20 +147,20 @@
  */
 GLOBAL_POLICY {
     admin_accept_all {
-        if (sloth.subject.role == "admin@sdn") {
+        if (sloth.subject.role == "admin") {
             ACCEPT
         }
     }
 
     block_after_10pm {
-        if (sloth.subject.role != "admin@sdn" &&
+        if (sloth.subject.role != "admin" &&
             (sloth.environment.time > "23:00:00" || sloth.environment.time < "00:30:00")) {
             REJECT
         }
     }
 
     scheduled_maintenance {
-        if (sloth.subject.role != "admin@sdn" && sloth.environment.day_of_week == "sun") {
+        if (sloth.subject.role != "admin" && sloth.environment.day_of_week == "sun") {
             REJECT
         }
     }
@@ -177,7 +177,7 @@ GLOBAL_POLICY {
 
 /*
  * LOCAL_POLICY {
- *     ${role}, ${user_id} {
+ *     ${role}, ${user_name} {
  *         ${policy_name} {
  *             if (${condition_statement}) {
  *                 ACCEPT | REJECT | ${if_statement}
@@ -192,7 +192,13 @@ GLOBAL_POLICY {
  */
 
 LOCAL_POLICY {
-    user, Lily@sdn {
+    admin, admin {
+        no_local_policy {
+            ACCEPT
+        }
+    }
+
+    user, Lily {
         only_get {
             if (sloth.action.method == "GET") {
                     ACCEPT
@@ -206,7 +212,7 @@ LOCAL_POLICY {
         }
     }
 
-    user, Gary@sdn {
+    user, Gary {
         network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
@@ -534,7 +540,7 @@ LOCAL_POLICY {
         }
     }
 
-    user, Tom@sdn {
+    user, Tom {
         network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {
@@ -872,7 +878,7 @@ LOCAL_POLICY {
         }
     }
 
-    user, Jack@sdn {
+    user, Jack {
         network_constraints {
             if (sloth.action.url REG "/v2[.]0/networks/?.*") {
                 if (sloth.action.method == "POST") {

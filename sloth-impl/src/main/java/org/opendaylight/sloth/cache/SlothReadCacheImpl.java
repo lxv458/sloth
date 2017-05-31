@@ -92,6 +92,6 @@ public class SlothReadCacheImpl implements SlothReadCache {
     @Override
     public String toString() {
         return "Global Policy Cache\n" + globalPolicyCache.toString() +
-                "\nLocal Policy Cache" + localPolicyCache.toString();
+                "\nLocal Policy Cache\n" + localPolicyCache.toString();
     }
 }

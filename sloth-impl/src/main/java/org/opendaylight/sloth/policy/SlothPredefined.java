@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public enum SlothPredefined {
-    SLOTH_SUBJECT_ROLE(0, "sloth.subject.role"), SLOTH_SUBJECT_USER_ID(1, "sloth.subject.user_id"),
+    SLOTH_SUBJECT_ROLE(0, "sloth.subject.role"), SLOTH_SUBJECT_USER_NAME(1, "sloth.subject.user_name"),
     SLOTH_ACTION_METHOD(2, "sloth.action.method"), SLOTH_ACTION_URL(3, "sloth.action.url"),
     SLOTH_ACTION_QUERY_STRING(4, "sloth.action.query_string"), SLOTH_ENVIRONMENT_DATE(5, "sloth.environment.date"),
     SLOTH_ENVIRONMENT_TIME(6, "sloth.environment.time"),

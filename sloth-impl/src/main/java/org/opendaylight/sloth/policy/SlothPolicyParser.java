@@ -125,7 +125,7 @@ public class SlothPolicyParser {
                     if (ctx.primary().literal().IntegerLiteral() != null || ctx.primary().literal().FloatLiteral() != null) {
                         return new UnaryExpression(Float.valueOf(ctx.getText()), ElementType.FLOAT);
                     } else if (ctx.primary().literal().StringLiteral() != null) {
-                        return new UnaryExpression(ctx.getText(), ElementType.STRING);
+                        return new UnaryExpression(ctx.getText().replaceAll("\"", ""), ElementType.STRING);
                     } else if (ctx.primary().literal().BooleanLiteral() != null) {
                         return new UnaryExpression(Boolean.parseBoolean(ctx.getText()), ElementType.BOOLEAN);
                     } else if (ctx.primary().literal().NullLiteral() != null) {

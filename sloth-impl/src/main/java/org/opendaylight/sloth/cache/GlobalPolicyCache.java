@@ -96,6 +96,7 @@ public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> i
     public SlothPolicyCheckResult policyCheck(SlothRequest input) {
         for (Map.Entry<String, Policy> entry : globalPolicyCache.asMap().entrySet()) {
             try {
+                LOG.info("checking global policy: " + entry.getValue().getName());
                 CheckResult r = entry.getValue().Check(input);
                 if (r == CheckResult.ACCEPT) {
                     return new SlothPolicyCheckResult(true, "request is permitted by policy: " + entry.getValue().getName());

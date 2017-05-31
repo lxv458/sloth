@@ -9,6 +9,8 @@ package org.opendaylight.sloth.policy;
 
 
 import org.opendaylight.sloth.cache.model.SlothRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +30,7 @@ public class UnaryExpression implements Expression {
     *
     * SlothPredefined is for extensibility.
     * */
+    private static final Logger LOG = LoggerFactory.getLogger(UnaryExpression.class);
     private final Object value;
     private final ElementType elementType;
 
@@ -93,8 +96,8 @@ public class UnaryExpression implements Expression {
                         //TODO: a user can have multiple roles, now we only use one of them
                         v = input.getRoles().get(0);
                         break;
-                    case SLOTH_SUBJECT_USER_ID:
-                        v = input.getUserId();
+                    case SLOTH_SUBJECT_USER_NAME:
+                        v = input.getUserName();
                         break;
                     case SLOTH_ACTION_URL:
                         v = input.getRequestUrl();
@@ -124,6 +127,7 @@ public class UnaryExpression implements Expression {
                 t = elementType;
                 break;
         }
+        LOG.info(v.toString());
         return new ExprValue(v, t);
     }
 

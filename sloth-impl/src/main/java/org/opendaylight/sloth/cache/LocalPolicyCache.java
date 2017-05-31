@@ -110,7 +110,7 @@ public class LocalPolicyCache extends FilteredClusteredDTCListener<LocalPolicySe
     @Override
     public SlothPolicyCheckResult policyCheck(SlothRequest input) {
         //TODO: a user may have multiple roles at the same time, currently we only use one of them
-        String key = input.getRoles().get(0) + ":" + input.getUserId();
+        String key = input.getRoles().get(0) + ":" + input.getUserName();
         Cache<String, Policy> value = localPolicyCache.getIfPresent(key);
         if (value != null) {
             for (Map.Entry<String, Policy> entry : value.asMap().entrySet()) {

@@ -24,8 +24,8 @@ public class BinaryStatement implements Statement {
     public CheckResult Check(SlothRequest input) {
         ExprValue exprValue = expression.Evaluate(input);
         if (exprValue.getType() == ElementType.BOOLEAN) {
-            return (Boolean)exprValue.getValue() ? thenStatement.Check(input) :
-            (elseStatement != null ? elseStatement.Check(input) : CheckResult.UNKNOWN);
+            return (Boolean) exprValue.getValue() ? thenStatement.Check(input) :
+                    (elseStatement != null ? elseStatement.Check(input) : CheckResult.UNKNOWN);
         } else {
             throw new IllegalArgumentException("expression type not boolean");
         }
