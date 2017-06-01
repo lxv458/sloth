@@ -91,17 +91,19 @@ class LoadbalancerListener(HttpAPI):
         loadbalancer_listener_one = tester.create_loadbalancer_listener(change_id(LOAD_BALANCER_LISTENER_ONE, count))
         utils.assert_status(loadbalancer_listener_one, 201)
 
-        loadbalancer_listener_one_id = json.loads(loadbalancer_listener_one.text)['listener']['id']
-
-        utils.assert_status(tester.get_loadbalancer_listener(loadbalancer_listener_one_id), 200)
+        if loadbalancer_listener_one.status_code == 201:
+            loadbalancer_listener_one_id = json.loads(loadbalancer_listener_one.text)['listener']['id']
+            utils.assert_status(tester.get_loadbalancer_listener(loadbalancer_listener_one_id), 200)
 
         utils.assert_status(tester.update_loadbalancer_listener(
             change_id(LOAD_BALANCER_LISTENER_UPDATE['listener'], count)['listener']['id'],
             change_id(LOAD_BALANCER_LISTENER_UPDATE['listener'], count)), 200)
 
-        utils.assert_status(tester.delete_loadbalancer_listener(loadbalancer_listener_one_id), 204)
+        utils.assert_status(tester.delete_loadbalancer_listener(
+            change_id(LOAD_BALANCER_LISTENER_ONE, count)['listener']['id']), 204)
 
-        utils.assert_status(tester.get_loadbalancer_listener(loadbalancer_listener_one_id), 404)
+        utils.assert_status(tester.get_loadbalancer_listener(
+            change_id(LOAD_BALANCER_LISTENER_ONE, count)['listener']['id']), 404)
 
 
 if __name__ == '__main__':

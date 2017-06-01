@@ -74,17 +74,19 @@ class SFCPortPairGroup(HttpAPI):
         sfc_port_pair_group_one = tester.create_sfc_port_pair_group(change_id(SFC_PORT_PAIR_GROUP_ONE, count))
         utils.assert_status(sfc_port_pair_group_one, 201)
 
-        sfc_port_pair_group_one_id = json.loads(sfc_port_pair_group_one.text)['portpairgroup']['id']
-
-        utils.assert_status(tester.get_sfc_port_pair_group(sfc_port_pair_group_one_id), 200)
+        if sfc_port_pair_group_one.status_code == 201:
+            sfc_port_pair_group_one_id = json.loads(sfc_port_pair_group_one.text)['portpairgroup']['id']
+            utils.assert_status(tester.get_sfc_port_pair_group(sfc_port_pair_group_one_id), 200)
 
         utils.assert_status(tester.update_sfc_port_pair_group(
             change_id(SFC_PORT_PAIR_GROUP_UPDATE['portpairgroup'], count)['portpairgroup']['id'],
             change_id(SFC_PORT_PAIR_GROUP_UPDATE['portpairgroup'], count)), 200)
 
-        utils.assert_status(tester.delete_sfc_port_pair_group(sfc_port_pair_group_one_id), 204)
+        utils.assert_status(tester.delete_sfc_port_pair_group(
+            change_id(SFC_PORT_PAIR_GROUP_ONE, count)['portpairgroup']['id']), 204)
 
-        utils.assert_status(tester.get_sfc_port_pair_group(sfc_port_pair_group_one_id), 404)
+        utils.assert_status(tester.get_sfc_port_pair_group(
+            change_id(SFC_PORT_PAIR_GROUP_ONE, count)['portpairgroup']['id']), 404)
 
 
 if __name__ == '__main__':

@@ -99,17 +99,19 @@ class SFCFlowClassifier(HttpAPI):
         sfc_flow_classifier_one = tester.create_sfc_flow_classifier(change_id(SFC_FLOW_CLASSIFIER_ONE, count))
         utils.assert_status(sfc_flow_classifier_one, 201)
 
-        sfc_flow_classifier_one_id = json.loads(sfc_flow_classifier_one.text)['flowclassifier']['id']
-
-        utils.assert_status(tester.get_sfc_flow_classifier(sfc_flow_classifier_one_id), 200)
+        if sfc_flow_classifier_one.status_code == 201:
+            sfc_flow_classifier_one_id = json.loads(sfc_flow_classifier_one.text)['flowclassifier']['id']
+            utils.assert_status(tester.get_sfc_flow_classifier(sfc_flow_classifier_one_id), 200)
 
         utils.assert_status(tester.update_sfc_flow_classifier(
             change_id(SFC_FLOW_CLASSIFIER_UPDATE['flowclassifier'], count)['flowclassifier']['id'],
             change_id(SFC_FLOW_CLASSIFIER_UPDATE['flowclassifier'], count)), 200)
 
-        utils.assert_status(tester.delete_sfc_flow_classifier(sfc_flow_classifier_one_id), 204)
+        utils.assert_status(tester.delete_sfc_flow_classifier(
+            change_id(SFC_FLOW_CLASSIFIER_ONE, count)['flowclassifier']['id']), 204)
 
-        utils.assert_status(tester.get_sfc_flow_classifier(sfc_flow_classifier_one_id), 404)
+        utils.assert_status(tester.get_sfc_flow_classifier(
+            change_id(SFC_FLOW_CLASSIFIER_ONE, count)['flowclassifier']['id']), 404)
 
 if __name__ == '__main__':
     SFCFlowClassifier.perform_tests('server', 'admin')

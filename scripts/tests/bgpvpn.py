@@ -109,9 +109,9 @@ class Bgpvpn(HttpAPI):
         bgpvpn_one = tester.create_bgpvpn(change_id(BGPVPN_ONE, count))
         utils.assert_status(bgpvpn_one, 201)
 
-        bgpvpn_one_id = json.loads(bgpvpn_one.text)['bgpvpn']['id']
-
-        utils.assert_status(tester.get_bgpvpn(bgpvpn_one_id), 200)
+        if bgpvpn_one.status_code == 201:
+            bgpvpn_one_id = json.loads(bgpvpn_one.text)['bgpvpn']['id']
+            utils.assert_status(tester.get_bgpvpn(bgpvpn_one_id), 200)
 
         utils.assert_status(tester.update_bgpvpn(change_id(BGPVPN_UPDATE['bgpvpn'], count)['bgpvpn']['id'],
                                                  change_id(BGPVPN_UPDATE['bgpvpn'], count)), 200)

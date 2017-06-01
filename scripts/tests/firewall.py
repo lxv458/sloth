@@ -77,16 +77,15 @@ class Firewall(HttpAPI):
         firewall_one = tester.create_firewall(change_id(FIREWALL_ONE, count))
         utils.assert_status(firewall_one, 201)
 
-        firewall_one_id = json.loads(firewall_one.text)['firewall']['id']
-
-        utils.assert_status(tester.get_firewall(firewall_one_id), 200)
+        if firewall_one.status_code == 201:
+            firewall_one_id = json.loads(firewall_one.text)['firewall']['id']
+            utils.assert_status(tester.get_firewall(firewall_one_id), 200)
 
         utils.assert_status(tester.update_firewall(change_id(FIREWALL_UPDATE['firewall'], count)['firewall']['id'],
                                                    change_id(FIREWALL_UPDATE['firewall'], count)), 200)
 
-        utils.assert_status(tester.delete_firewall(firewall_one_id), 204)
-
-        utils.assert_status(tester.get_firewall(firewall_one_id), 404)
+        utils.assert_status(tester.delete_firewall(change_id(FIREWALL_ONE, count)['firewall']['id']), 204)
+        utils.assert_status(tester.get_firewall(change_id(FIREWALL_ONE, count)['firewall']['id']), 404)
 
 if __name__ == '__main__':
     Firewall.perform_tests('server', 'admin')

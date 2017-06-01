@@ -99,17 +99,18 @@ class LoadbalancerPool(HttpAPI):
         loadbalancer_pool_one = tester.create_loadbalancer_pool(change_id(LOAD_BALANCER_POOL_ONE, count))
         utils.assert_status(loadbalancer_pool_one, 201)
 
-        loadbalancer_pool_one_id = json.loads(loadbalancer_pool_one.text)['pool']['id']
-
-        utils.assert_status(tester.get_loadbalancer_pool(loadbalancer_pool_one_id), 200)
+        if loadbalancer_pool_one.status_code == 201:
+            loadbalancer_pool_one_id = json.loads(loadbalancer_pool_one.text)['pool']['id']
+            utils.assert_status(tester.get_loadbalancer_pool(loadbalancer_pool_one_id), 200)
 
         utils.assert_status(tester.update_loadbalancer_pool(
             change_id(LOAD_BALANCER_POOL_UPDATE['pool'], count)['pool']['id'],
             change_id(LOAD_BALANCER_POOL_UPDATE['pool'], count)), 200)
 
-        utils.assert_status(tester.delete_loadbalancer_pool(loadbalancer_pool_one_id), 204)
+        utils.assert_status(tester.delete_loadbalancer_pool(change_id(LOAD_BALANCER_POOL_ONE, count)['pool']['id']),
+                            204)
 
-        utils.assert_status(tester.get_loadbalancer_pool(loadbalancer_pool_one_id), 404)
+        utils.assert_status(tester.get_loadbalancer_pool(change_id(LOAD_BALANCER_POOL_ONE, count)['pool']['id']), 404)
 
 if __name__ == '__main__':
     LoadbalancerPool.perform_tests('server', 'admin')

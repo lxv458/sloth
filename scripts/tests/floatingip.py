@@ -93,21 +93,21 @@ class FloatingIP(HttpAPI):
         floating_ip_one = tester.create_floating_ip(change_id(FLOATING_IP_ONE, count))
         utils.assert_status(floating_ip_one, 201)
 
-        floating_ip_one_id = json.loads(floating_ip_one.text)['floatingip']['id']
-
-        utils.assert_status(tester.get_floating_ip(floating_ip_one_id), 200)
-
-        utils.assert_status(tester.update_floating_ip(
-            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)['floatingip']['id'],
-            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 200)
+        if floating_ip_one.status_code == 201:
+            floating_ip_one_id = json.loads(floating_ip_one.text)['floatingip']['id']
+            utils.assert_status(tester.get_floating_ip(floating_ip_one_id), 200)
 
         utils.assert_status(tester.update_floating_ip(
             change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)['floatingip']['id'],
             change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 200)
 
-        utils.assert_status(tester.delete_floating_ip(floating_ip_one_id), 204)
+        utils.assert_status(tester.update_floating_ip(
+            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)['floatingip']['id'],
+            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 200)
 
-        utils.assert_status(tester.get_floating_ip(floating_ip_one_id), 404)
+        utils.assert_status(tester.delete_floating_ip(change_id(FLOATING_IP_ONE, count)['floatingip']['id']), 204)
+
+        utils.assert_status(tester.get_floating_ip(change_id(FLOATING_IP_ONE, count)['floatingip']['id']), 404)
 
 
 if __name__ == '__main__':

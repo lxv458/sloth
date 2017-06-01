@@ -234,9 +234,9 @@ class Port(HttpAPI):
         port_one = tester.create_port(change_id(PORT_ONE, count))
         utils.assert_status(port_one, 201)
 
-        port_one_id = json.loads(port_one.text)['port']['id']
-
-        utils.assert_status(tester.get_port(port_one_id), 200)
+        if port_one.status_code == 201:
+            port_one_id = json.loads(port_one.text)['port']['id']
+            utils.assert_status(tester.get_port(port_one_id), 200)
 
         utils.assert_status(tester.create_port(change_id(PORT_DEFAULT, count)), 201)
 

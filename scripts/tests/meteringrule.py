@@ -56,13 +56,15 @@ class MeteringLabelRule(HttpAPI):
         metering_label_rule_one = tester.create_metering_label_rule(change_id(METERING_LABEL_RULE_ONE, count))
         utils.assert_status(metering_label_rule_one, 201)
 
-        metering_label_rule_one_id = json.loads(metering_label_rule_one.text)['metering_label_rule']['id']
+        if metering_label_rule_one.status_code == 201:
+            metering_label_rule_one_id = json.loads(metering_label_rule_one.text)['metering_label_rule']['id']
+            utils.assert_status(tester.get_metering_label_rule(metering_label_rule_one_id), 200)
 
-        utils.assert_status(tester.get_metering_label_rule(metering_label_rule_one_id), 200)
+        utils.assert_status(tester.delete_metering_label_rule(
+            change_id(METERING_LABEL_RULE_ONE, count)['metering_label_rule']['id']), 204)
 
-        utils.assert_status(tester.delete_metering_label_rule(metering_label_rule_one_id), 204)
-
-        utils.assert_status(tester.get_metering_label_rule(metering_label_rule_one_id), 404)
+        utils.assert_status(tester.get_metering_label_rule(
+            change_id(METERING_LABEL_RULE_ONE, count)['metering_label_rule']['id']), 404)
 
 if __name__ == '__main__':
     MeteringLabelRule.perform_tests('server', 'admin')

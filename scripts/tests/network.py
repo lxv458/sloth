@@ -175,9 +175,9 @@ class Network(HttpAPI):
         network_one = tester.create_network(change_id(NETWORK_ONE, count))
         utils.assert_status(network_one, 201)
 
-        network_one_id = json.loads(network_one.text)['network']['id']
-
-        utils.assert_status(tester.get_network(network_one_id), 200)
+        if network_one.status_code == 201:
+            network_one_id = json.loads(network_one.text)['network']['id']
+            utils.assert_status(tester.get_network(network_one_id), 200)
 
         utils.assert_status(tester.create_network(change_id(NETWORK_DEFAULT, count)), 201)
 

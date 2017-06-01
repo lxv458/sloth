@@ -173,9 +173,9 @@ class Trunk(HttpAPI):
         trunk_one = tester.create_trunk(change_id(TRUNK_ONE, count))
         utils.assert_status(trunk_one, 201)
 
-        trunk_one_id = json.loads(trunk_one.text)['trunk']['id']
-
-        utils.assert_status(tester.get_trunk(trunk_one_id), 200)
+        if trunk_one.status_code == 201:
+            trunk_one_id = json.loads(trunk_one.text)['trunk']['id']
+            utils.assert_status(tester.get_trunk(trunk_one_id), 200)
 
         utils.assert_status(tester.create_trunk(change_id(TRUNK_DEFAULT, count)), 201)
 

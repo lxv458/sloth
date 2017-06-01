@@ -95,17 +95,18 @@ class FirewallRule(HttpAPI):
         firewall_rule_one = tester.create_firewall_rule(change_id(FIREWALL_RULE_ONE, count))
         utils.assert_status(firewall_rule_one, 201)
 
-        firewall_rule_one_id = json.loads(firewall_rule_one.text)['firewall_rule']['id']
-
-        utils.assert_status(tester.get_firewall_rule(firewall_rule_one_id), 200)
+        if firewall_rule_one.status_code == 201:
+            firewall_rule_one_id = json.loads(firewall_rule_one.text)['firewall_rule']['id']
+            utils.assert_status(tester.get_firewall_rule(firewall_rule_one_id), 200)
 
         utils.assert_status(tester.update_firewall_rule(
             change_id(FIREWALL_RULE_UPDATE['firewall_rule'], count)['firewall_rule']['id'],
             change_id(FIREWALL_RULE_UPDATE['firewall_rule'], count)), 200)
 
-        utils.assert_status(tester.delete_firewall_rule(firewall_rule_one_id), 204)
+        utils.assert_status(tester.delete_firewall_rule(change_id(FIREWALL_RULE_ONE, count)['firewall_rule']['id']),
+                            204)
 
-        utils.assert_status(tester.get_firewall_rule(firewall_rule_one_id), 404)
+        utils.assert_status(tester.get_firewall_rule(change_id(FIREWALL_RULE_ONE, count)['firewall_rule']['id']), 404)
 
 if __name__ == '__main__':
     FirewallRule.perform_tests('server', 'admin')

@@ -83,17 +83,17 @@ class SFCPortPair(HttpAPI):
         sfc_port_pair_one = tester.create_sfc_port_pair(change_id(SFC_PORT_PAIR_ONE, count))
         utils.assert_status(sfc_port_pair_one, 201)
 
-        sfc_port_pair_one_id = json.loads(sfc_port_pair_one.text)['portpair']['id']
-
-        utils.assert_status(tester.get_sfc_port_pair(sfc_port_pair_one_id), 200)
+        if sfc_port_pair_one.status_code == 201:
+            sfc_port_pair_one_id = json.loads(sfc_port_pair_one.text)['portpair']['id']
+            utils.assert_status(tester.get_sfc_port_pair(sfc_port_pair_one_id), 200)
 
         utils.assert_status(tester.update_sfc_port_pair(
             change_id(SFC_PORT_PAIR_UPDATE['portpair'], count)['portpair']['id'],
             change_id(SFC_PORT_PAIR_UPDATE['portpair'], count)), 200)
 
-        utils.assert_status(tester.delete_sfc_port_pair(sfc_port_pair_one_id), 204)
+        utils.assert_status(tester.delete_sfc_port_pair(change_id(SFC_PORT_PAIR_ONE, count)['portpair']['id']), 204)
 
-        utils.assert_status(tester.get_sfc_port_pair(sfc_port_pair_one_id), 404)
+        utils.assert_status(tester.get_sfc_port_pair(change_id(SFC_PORT_PAIR_ONE, count)['portpair']['id']), 404)
 
 if __name__ == '__main__':
     SFCPortPair.perform_tests('server', 'admin')

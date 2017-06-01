@@ -67,24 +67,28 @@ class GatewayConnection(HttpAPI):
         gateway_connection_one = tester.create_gateway_connection(change_id(GATEWAY_CONNECTION_ONE, count))
         utils.assert_status(gateway_connection_one, 201)
 
-        gateway_connection_one_id = json.loads(gateway_connection_one.text)['l2gateway_connection']['id']
-
-        utils.assert_status(tester.get_gateway_connection(gateway_connection_one_id), 200)
+        if gateway_connection_one.status_code == 201:
+            gateway_connection_one_id = json.loads(gateway_connection_one.text)['l2gateway_connection']['id']
+            utils.assert_status(tester.get_gateway_connection(gateway_connection_one_id), 200)
 
         gateway_connection_two = tester.create_gateway_connection(change_id(GATEWAY_CONNECTION_TWO, count))
         utils.assert_status(gateway_connection_two, 201)
 
-        gateway_connection_two_id = json.loads(gateway_connection_two.text)['l2gateway_connection']['id']
+        if gateway_connection_two.status_code == 201:
+            gateway_connection_two_id = json.loads(gateway_connection_two.text)['l2gateway_connection']['id']
+            utils.assert_status(tester.get_gateway_connection(gateway_connection_two_id), 200)
 
-        utils.assert_status(tester.get_gateway_connection(gateway_connection_two_id), 200)
+        utils.assert_status(tester.delete_gateway_connection(
+            change_id(GATEWAY_CONNECTION_ONE, count)['l2gateway_connection']['id']), 204)
 
-        utils.assert_status(tester.delete_gateway_connection(gateway_connection_one_id), 204)
+        utils.assert_status(tester.get_gateway_connection(
+            change_id(GATEWAY_CONNECTION_ONE, count)['l2gateway_connection']['id']), 404)
 
-        utils.assert_status(tester.get_gateway_connection(gateway_connection_one_id), 404)
+        utils.assert_status(tester.delete_gateway_connection(
+            change_id(GATEWAY_CONNECTION_TWO, count)['l2gateway_connection']['id']), 204)
 
-        utils.assert_status(tester.delete_gateway_connection(gateway_connection_two_id), 204)
-
-        utils.assert_status(tester.get_gateway_connection(gateway_connection_two_id), 404)
+        utils.assert_status(tester.get_gateway_connection(
+            change_id(GATEWAY_CONNECTION_TWO, count)['l2gateway_connection']['id']), 404)
 
 if __name__ == '__main__':
     GatewayConnection.perform_tests('server', 'admin')

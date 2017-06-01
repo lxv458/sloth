@@ -86,16 +86,16 @@ class QosPolicy(HttpAPI):
         qos_policy_one = tester.create_qos_policy(change_id(QOS_POLICY_ONE, count))
         utils.assert_status(qos_policy_one, 201)
 
-        qos_policy_one_id = json.loads(qos_policy_one.text)['policy']['id']
-
-        utils.assert_status(tester.get_qos_policy(qos_policy_one_id), 200)
+        if qos_policy_one.status_code == 201:
+            qos_policy_one_id = json.loads(qos_policy_one.text)['policy']['id']
+            utils.assert_status(tester.get_qos_policy(qos_policy_one_id), 200)
 
         utils.assert_status(tester.update_qos_policy(change_id(QOS_POLICY_UPDATE['policy'], count)['policy']['id'],
                                                      change_id(QOS_POLICY_UPDATE['policy'], count)), 200)
 
-        utils.assert_status(tester.delete_qos_policy(qos_policy_one_id), 204)
+        utils.assert_status(tester.delete_qos_policy(change_id(QOS_POLICY_ONE, count)['policy']['id']), 204)
 
-        utils.assert_status(tester.get_qos_policy(qos_policy_one_id), 404)
+        utils.assert_status(tester.get_qos_policy(change_id(QOS_POLICY_ONE, count)['policy']['id']), 404)
 
 if __name__ == '__main__':
     QosPolicy.perform_tests('server', 'admin')

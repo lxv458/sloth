@@ -154,7 +154,7 @@ GLOBAL_POLICY {
 
     block_after_10pm {
         if (sloth.subject.role != "admin" &&
-            (sloth.environment.time > "23:00:00" || sloth.environment.time < "00:30:00")) {
+            (sloth.environment.time > "23:59:00" || sloth.environment.time < "00:10:00")) {
             REJECT
         }
     }

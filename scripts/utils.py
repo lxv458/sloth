@@ -38,6 +38,6 @@ def assert_status(response, status_code):
         logging.info('pass')
         return True
     else:
-        logging.error('fail, expected: %d, but got: %d' % (status_code, response.status_code))
-        logging.error(response.text)
+        logging.warning('fail, expected: %d, but got: %d' % (status_code, response.status_code))
+        logging.warning(response.text)
         return False

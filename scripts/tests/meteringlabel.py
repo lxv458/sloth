@@ -55,13 +55,15 @@ class MeteringLabel(HttpAPI):
         metering_label_one = tester.create_metering_label(change_id(METERING_LABEL_ONE, count))
         utils.assert_status(metering_label_one, 201)
 
-        metering_label_one_id = json.loads(metering_label_one.text)['metering_label']['id']
+        if metering_label_one.status_code == 201:
+            metering_label_one_id = json.loads(metering_label_one.text)['metering_label']['id']
+            utils.assert_status(tester.get_metering_label(metering_label_one_id), 200)
 
-        utils.assert_status(tester.get_metering_label(metering_label_one_id), 200)
+        utils.assert_status(tester.delete_metering_label(change_id(METERING_LABEL_ONE, count)['metering_label']['id']),
+                            204)
 
-        utils.assert_status(tester.delete_metering_label(metering_label_one_id), 204)
-
-        utils.assert_status(tester.get_metering_label(metering_label_one_id), 404)
+        utils.assert_status(tester.get_metering_label(change_id(METERING_LABEL_ONE, count)['metering_label']['id']),
+                            404)
 
 
 if __name__ == '__main__':

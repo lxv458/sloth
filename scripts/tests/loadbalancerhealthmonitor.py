@@ -94,17 +94,19 @@ class LoadbalancerHealthMonitor(HttpAPI):
             change_id(LOAD_BALANCER_HEALTH_MONITOR_ONE, count))
         utils.assert_status(loadbalancer_health_monitor_one, 201)
 
-        loadbalancer_health_monitor_one_id = json.loads(loadbalancer_health_monitor_one.text)['healthmonitor']['id']
-
-        utils.assert_status(tester.get_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 200)
+        if loadbalancer_health_monitor_one.status_code == 201:
+            loadbalancer_health_monitor_one_id = json.loads(loadbalancer_health_monitor_one.text)['healthmonitor']['id']
+            utils.assert_status(tester.get_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 200)
 
         utils.assert_status(tester.update_loadbalancer_health_monitor(
             change_id(LOAD_BALANCER_HEALTH_MONITOR_UPDATE['healthmonitor'], count)['healthmonitor']['id'],
             change_id(LOAD_BALANCER_HEALTH_MONITOR_UPDATE['healthmonitor'], count)), 200)
 
-        utils.assert_status(tester.delete_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 204)
+        utils.assert_status(tester.delete_loadbalancer_health_monitor(
+            change_id(LOAD_BALANCER_HEALTH_MONITOR_ONE, count)['healthmonitor']['id']), 204)
 
-        utils.assert_status(tester.get_loadbalancer_health_monitor(loadbalancer_health_monitor_one_id), 404)
+        utils.assert_status(tester.get_loadbalancer_health_monitor(
+            change_id(LOAD_BALANCER_HEALTH_MONITOR_ONE, count)['healthmonitor']['id']), 404)
 
 
 if __name__ == '__main__':

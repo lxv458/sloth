@@ -83,17 +83,17 @@ class Loadbalancer(HttpAPI):
         loadbalancer_one = tester.create_loadbalancer(change_id(LOAD_BALANCER_ONE, count))
         utils.assert_status(loadbalancer_one, 201)
 
-        loadbalancer_one_id = json.loads(loadbalancer_one.text)['loadbalancer']['id']
-
-        utils.assert_status(tester.get_loadbalancer(loadbalancer_one_id), 200)
+        if loadbalancer_one.status_code == 201:
+            loadbalancer_one_id = json.loads(loadbalancer_one.text)['loadbalancer']['id']
+            utils.assert_status(tester.get_loadbalancer(loadbalancer_one_id), 200)
 
         utils.assert_status(tester.update_loadbalancer(
             change_id(LOAD_BALANCER_UPDATE['loadbalancer'], count)['loadbalancer']['id'],
             change_id(LOAD_BALANCER_UPDATE['loadbalancer'], count)), 200)
 
-        utils.assert_status(tester.delete_loadbalancer(loadbalancer_one_id), 204)
+        utils.assert_status(tester.delete_loadbalancer(change_id(LOAD_BALANCER_ONE, count)['loadbalancer']['id']), 204)
 
-        utils.assert_status(tester.get_loadbalancer(loadbalancer_one_id), 404)
+        utils.assert_status(tester.get_loadbalancer(change_id(LOAD_BALANCER_ONE, count)['loadbalancer']['id']), 404)
 
 if __name__ == '__main__':
     Loadbalancer.perform_tests('server', 'admin')

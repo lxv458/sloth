@@ -79,17 +79,17 @@ class VpnService(HttpAPI):
         vpn_service_one = tester.create_vpn_service(change_id(VPN_SERVICE_ONE, count))
         utils.assert_status(vpn_service_one, 201)
 
-        vpn_service_one_id = json.loads(vpn_service_one.text)['vpnservice']['id']
-
-        utils.assert_status(tester.get_vpn_service(vpn_service_one_id), 200)
+        if vpn_service_one.status_code == 201:
+            vpn_service_one_id = json.loads(vpn_service_one.text)['vpnservice']['id']
+            utils.assert_status(tester.get_vpn_service(vpn_service_one_id), 200)
 
         utils.assert_status(tester.update_vpn_service(
             change_id(VPN_SERVICE_UPDATE['vpnservice'], count)['vpnservice']['id'],
             change_id(VPN_SERVICE_UPDATE['vpnservice'], count)), 200)
 
-        utils.assert_status(tester.delete_vpn_service(vpn_service_one_id), 204)
+        utils.assert_status(tester.delete_vpn_service(change_id(VPN_SERVICE_ONE, count)['vpnservice']['id']), 204)
 
-        utils.assert_status(tester.get_vpn_service(vpn_service_one_id), 404)
+        utils.assert_status(tester.get_vpn_service(change_id(VPN_SERVICE_ONE, count)['vpnservice']['id']), 404)
 
 if __name__ == '__main__':
     VpnService.perform_tests('server', 'admin')

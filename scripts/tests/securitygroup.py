@@ -122,17 +122,19 @@ class SecurityGroup(HttpAPI):
         security_group_one = tester.create_security_group(change_id(SECURITY_GROUP_ONE, count))
         utils.assert_status(security_group_one, 201)
 
-        security_group_one_id = json.loads(security_group_one.text)['security_group']['id']
-
-        utils.assert_status(tester.get_security_group(security_group_one_id), 200)
+        if security_group_one.status_code == 201:
+            security_group_one_id = json.loads(security_group_one.text)['security_group']['id']
+            utils.assert_status(tester.get_security_group(security_group_one_id), 200)
 
         utils.assert_status(tester.update_security_group
                             (change_id(SECURITY_GROUP_UPDATE['security_group'], count)['security_group']['id'],
                              change_id(SECURITY_GROUP_UPDATE['security_group'], count)), 200)
 
-        utils.assert_status(tester.delete_security_group(security_group_one_id), 204)
+        utils.assert_status(tester.delete_security_group(change_id(SECURITY_GROUP_ONE, count)['security_group']['id']),
+                            204)
 
-        utils.assert_status(tester.get_security_group(security_group_one_id), 404)
+        utils.assert_status(tester.get_security_group(change_id(SECURITY_GROUP_ONE, count)['security_group']['id']),
+                            404)
 
 if __name__ == '__main__':
     SecurityGroup.perform_tests('server', 'admin')

@@ -113,8 +113,9 @@ class Router(HttpAPI):
         router_one = tester.create_router(change_id(ROUTER_ONE, count))
         utils.assert_status(router_one, 201)
 
-        router_one_id = json.loads(router_one.text)['router']['id']
-        utils.assert_status(tester.get_router(router_one_id), 200)
+        if router_one.status_code == 201:
+            router_one_id = json.loads(router_one.text)['router']['id']
+            utils.assert_status(tester.get_router(router_one_id), 200)
 
         if count == 0:
             utils.assert_status(tester.add_interface(ROUTER_ADD_INTERFACE['id'], ROUTER_ADD_INTERFACE['interface']),

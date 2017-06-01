@@ -204,9 +204,9 @@ class Subnet(HttpAPI):
         subnet = tester.create_subnet(change_id(SUBNET, count))
         utils.assert_status(subnet, 201)
 
-        subnet_id = json.loads(subnet.text)['subnet']['id']
-
-        utils.assert_status(tester.get_subnet(subnet_id), 200)
+        if subnet.status_code == 201:
+            subnet_id = json.loads(subnet.text)['subnet']['id']
+            utils.assert_status(tester.get_subnet(subnet_id), 200)
 
         utils.assert_status(tester.create_subnet(change_id(SUBNET_EXTERNAL, count)), 201)
 

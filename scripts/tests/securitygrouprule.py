@@ -126,9 +126,9 @@ class SecurityGroupRule(HttpAPI):
         security_group_rule_one = tester.create_security_group_rule(change_id(SECURITY_GROUP_RULE_ONE, count))
         utils.assert_status(security_group_rule_one, 201)
 
-        security_group_rule_one_id = json.loads(security_group_rule_one.text)['security_group_rule']['id']
-
-        utils.assert_status(tester.get_security_group_rule(security_group_rule_one_id), 200)
+        if security_group_rule_one.status_code == 201:
+            security_group_rule_one_id = json.loads(security_group_rule_one.text)['security_group_rule']['id']
+            utils.assert_status(tester.get_security_group_rule(security_group_rule_one_id), 200)
 
         utils.assert_status(tester.update_security_group_rule(
             change_id(SECURITY_GROUP_RULE_UPDATE['security_group_rule'], count)['security_group_rule']['id'],

@@ -82,17 +82,19 @@ class FirewallPolicy(HttpAPI):
         firewall_policy_one = tester.create_firewall_policy(change_id(FIREWALL_POLICY_ONE, count))
         utils.assert_status(firewall_policy_one, 201)
 
-        firewall_policy_one_id = json.loads(firewall_policy_one.text)['firewall_policy']['id']
-
-        utils.assert_status(tester.get_firewall_policy(firewall_policy_one_id), 200)
+        if firewall_policy_one.status_code == 201:
+            firewall_policy_one_id = json.loads(firewall_policy_one.text)['firewall_policy']['id']
+            utils.assert_status(tester.get_firewall_policy(firewall_policy_one_id), 200)
 
         utils.assert_status(tester.update_firewall_policy(
             change_id(FIREWALL_POLICY_UPDATE['firewall_policy'], count)['firewall_policy']['id'],
             change_id(FIREWALL_POLICY_UPDATE['firewall_policy'], count)), 200)
 
-        utils.assert_status(tester.delete_firewall_policy(firewall_policy_one_id), 204)
+        utils.assert_status(tester.delete_firewall_policy(
+            change_id(FIREWALL_POLICY_ONE, count)['firewall_policy']['id']), 204)
 
-        utils.assert_status(tester.get_firewall_policy(firewall_policy_one_id), 404)
+        utils.assert_status(tester.get_firewall_policy(
+            change_id(FIREWALL_POLICY_ONE, count)['firewall_policy']['id']), 404)
 
 if __name__ == '__main__':
     FirewallPolicy.perform_tests('server', 'admin')
