@@ -214,10 +214,12 @@ LOCAL_POLICY {
 
     user, Gary {
         network_constraints {
-            if (sloth.action.url REG "/v2[.]0/networks/?.*") {
+            if (sloth.action.url REG ".*/networks/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.network.port_security_enabled == true ) {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -228,7 +230,7 @@ LOCAL_POLICY {
         }
 
         port_constraints {
-            if (sloth.action.url REG "/v2[.]0/ports/?.*") {
+            if (sloth.action.url REG ".*/ports/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -240,7 +242,7 @@ LOCAL_POLICY {
         }
 
         trunk_constraints {
-            if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
+            if (sloth.action.url REG ".*/trunks/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.trunk.name == null) {
                         REJECT
@@ -256,7 +258,7 @@ LOCAL_POLICY {
         }
 
         floatingip_constraints {
-            if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
+            if (sloth.action.url REG ".*/floatingips/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -268,7 +270,7 @@ LOCAL_POLICY {
         }
 
         router_constraints {
-            if (sloth.action.url REG "/v2[.]0/routers/?.*") {
+            if (sloth.action.url REG ".*/routers/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.router.external_gateway_info == null) {
                         REJECT
@@ -284,10 +286,12 @@ LOCAL_POLICY {
         }
 
         subnet_constraints {
-            if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
+            if (sloth.action.url REG ".*/subnets/?.*") {
                 if (sloth.action.method == "POST") {
                     if (($.subnet.ip_version == 6) && ($.subnet.ipv6_address_mode == "dhcpv6-stateful")) {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -298,7 +302,7 @@ LOCAL_POLICY {
         }
 
         firewall_policy_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
+            if (sloth.action.url REG ".*/fw/firewall_policies/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -310,10 +314,12 @@ LOCAL_POLICY {
         }
 
         firewall_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
+            if (sloth.action.url REG ".*/fw/firewall_rules/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.firewall_rule.ip_version == 4 ) {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -324,10 +330,12 @@ LOCAL_POLICY {
         }
 
         firewall_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
+            if (sloth.action.url REG ".*/fw/firewals/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.firewall.admin_state_up == true ) {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -338,10 +346,12 @@ LOCAL_POLICY {
         }
 
         security_group_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
+            if (sloth.action.url REG ".*/security-group-rules/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.security_group_rule.ethertype == "IPv6") {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -352,7 +362,7 @@ LOCAL_POLICY {
         }
 
         security_group_constraints {
-            if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
+            if (sloth.action.url REG ".*/security-groups/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -364,7 +374,7 @@ LOCAL_POLICY {
         }
 
         metering_label_constraints {
-            if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
+            if (sloth.action.url REG ".*/metering/metering-labels/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -376,10 +386,12 @@ LOCAL_POLICY {
         }
 
         metering_label_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
+            if (sloth.action.url REG ".*/metering/metering-label-rules/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.metering_label_rule.remote_ip_prefix == "10.0.1.0/24") {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -390,7 +402,7 @@ LOCAL_POLICY {
         }
 
         qos_policy_constraints {
-            if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
+            if (sloth.action.url REG ".*/qos/policies/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -402,7 +414,7 @@ LOCAL_POLICY {
         }
 
         loadbalancer_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
+            if (sloth.action.url REG ".*/lbaas/loadbalancers/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -414,7 +426,7 @@ LOCAL_POLICY {
         }
 
         loadbalancer_pool_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
+            if (sloth.action.url REG ".*/lbaas/pools/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.pool.lb_algorithm == "LEAST_CONNECTIONS") {
                         REJECT
@@ -430,10 +442,12 @@ LOCAL_POLICY {
         }
 
         loadbalancer_healthmonitor_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
+            if (sloth.action.url REG ".*/lbaas/healthmonitors/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.healthmonitor.http_method == "DELETE") {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -444,7 +458,7 @@ LOCAL_POLICY {
         }
 
         bgpvpn_constraints {
-            if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
+            if (sloth.action.url REG ".*/bgpvpns/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -456,7 +470,7 @@ LOCAL_POLICY {
         }
 
         gateway_constraints {
-            if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
+            if (sloth.action.url REG ".*/l2-gateways/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -468,7 +482,7 @@ LOCAL_POLICY {
         }
 
         gateway_connection_constraints {
-            if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
+            if (sloth.action.url REG ".*/l2gateway-connections/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -480,7 +494,7 @@ LOCAL_POLICY {
         }
 
         vpnservice_constraints {
-            if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
+            if (sloth.action.url REG ".*/vpn/vpnservices/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -492,7 +506,7 @@ LOCAL_POLICY {
         }
 
         SFCFlowClassifier_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
+            if (sloth.action.url REG ".*/sfc/flowclassifiers/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -504,7 +518,7 @@ LOCAL_POLICY {
         }
 
         SFCPortChain_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
+            if (sloth.action.url REG ".*/sfc/portchains/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -516,7 +530,7 @@ LOCAL_POLICY {
         }
 
         SFCPortPair_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
+            if (sloth.action.url REG ".*/sfc/portpairs/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -528,7 +542,7 @@ LOCAL_POLICY {
         }
 
         SFCPortPairGroup_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
+            if (sloth.action.url REG ".*/sfc/portpairgroups/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -542,7 +556,7 @@ LOCAL_POLICY {
 
     user, Tom {
         network_constraints {
-            if (sloth.action.url REG "/v2[.]0/networks/?.*") {
+            if (sloth.action.url REG ".*/networks/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -554,7 +568,7 @@ LOCAL_POLICY {
         }
 
         port_constraints {
-            if (sloth.action.url REG "/v2[.]0/ports/?.*") {
+            if (sloth.action.url REG ".*/ports/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -566,7 +580,7 @@ LOCAL_POLICY {
         }
 
         trunk_constraints {
-            if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
+            if (sloth.action.url REG ".*/trunks/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.trunk.admin_state_up == false) {
                         REJECT
@@ -582,7 +596,7 @@ LOCAL_POLICY {
         }
 
         floatingip_constraints {
-            if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
+            if (sloth.action.url REG ".*/floatingips/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.floatingip.floating_ip_address == null) {
                         REJECT
@@ -598,7 +612,7 @@ LOCAL_POLICY {
         }
 
         router_constraints {
-            if (sloth.action.url REG "/v2[.]0/routers/?.*") {
+            if (sloth.action.url REG ".*/routers/?.*") {
                 if (sloth.action.method == "POST") {
                     REJECT
                 } else if (sloth.action.method == "PUT") {
@@ -610,10 +624,12 @@ LOCAL_POLICY {
         }
 
         subnet_constraints {
-            if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
+            if (sloth.action.url REG ".*/subnets/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.subnet.ip_version == 4) {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -624,7 +640,7 @@ LOCAL_POLICY {
         }
 
         firewall_policy_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
+            if (sloth.action.url REG ".*/fw/firewall_policies/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -636,7 +652,7 @@ LOCAL_POLICY {
         }
 
         firewall_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
+            if (sloth.action.url REG ".*/fw/firewall_rules/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -648,7 +664,7 @@ LOCAL_POLICY {
         }
 
         firewall_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
+            if (sloth.action.url REG ".*/fw/firewals/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -660,10 +676,12 @@ LOCAL_POLICY {
         }
 
         security_group_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
+            if (sloth.action.url REG ".*/security-group-rules/?.*") {
                 if (sloth.action.method == "POST") {
                     if (($.security_group_rule.protocol == "tcp") && ($.security_group_rule.ethertype == "IPv4")) {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -674,7 +692,7 @@ LOCAL_POLICY {
         }
 
         security_group_constraints {
-            if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
+            if (sloth.action.url REG ".*/security-groups/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -686,7 +704,7 @@ LOCAL_POLICY {
         }
 
         metering_label_constraints {
-            if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
+            if (sloth.action.url REG ".*/metering/metering-labels/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -698,7 +716,7 @@ LOCAL_POLICY {
         }
 
         metering_label_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
+            if (sloth.action.url REG ".*/metering/metering-label-rules/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -710,7 +728,7 @@ LOCAL_POLICY {
         }
 
         qos_policy_constraints {
-            if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
+            if (sloth.action.url REG ".*/qos/policies/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -722,10 +740,12 @@ LOCAL_POLICY {
         }
 
         loadbalancer_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
+            if (sloth.action.url REG ".*/lbaas/loadbalancers/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.loadbalancer.operating_status == "ONLINE") {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -736,7 +756,7 @@ LOCAL_POLICY {
         }
 
         loadbalancer_listener_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/listeners/?.*") {
+            if (sloth.action.url REG ".*/lbaas/listeners/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.listener.protocol == "tcp") {
                         REJECT
@@ -752,10 +772,12 @@ LOCAL_POLICY {
         }
 
         loadbalancer_pool_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
+            if (sloth.action.url REG ".*/lbaas/pools/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.pool.lb_algorithm == "ROUND_ROBIN") {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -766,10 +788,12 @@ LOCAL_POLICY {
         }
 
         loadbalancer_healthmonitor_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
+            if (sloth.action.url REG ".*/lbaas/healthmonitors/?.*") {
                 if (sloth.action.method == "POST") {
                     if (($.healthmonitor.http_method == "GET") && ($.healthmonitor.type == "HTTP")) {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -780,10 +804,12 @@ LOCAL_POLICY {
         }
 
         bgpvpn_constraints {
-            if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
+            if (sloth.action.url REG ".*/bgpvpns/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.bgpvpn.type == "l3") {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -794,7 +820,7 @@ LOCAL_POLICY {
         }
 
         gateway_constraints {
-            if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
+            if (sloth.action.url REG ".*/l2-gateways/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -806,7 +832,7 @@ LOCAL_POLICY {
         }
 
         gateway_connection_constraints {
-            if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
+            if (sloth.action.url REG ".*/l2gateway-connections/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -818,7 +844,7 @@ LOCAL_POLICY {
         }
 
         vpnservice_constraints {
-            if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
+            if (sloth.action.url REG ".*/vpn/vpnservices/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -830,7 +856,7 @@ LOCAL_POLICY {
         }
 
         SFCFlowClassifier_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
+            if (sloth.action.url REG ".*/sfc/flowclassifiers/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -842,7 +868,7 @@ LOCAL_POLICY {
         }
 
         SFCPortChain_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
+            if (sloth.action.url REG ".*/sfc/portchains/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -854,7 +880,7 @@ LOCAL_POLICY {
         }
 
         SFCPortPair_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
+            if (sloth.action.url REG ".*/sfc/portpairs/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -866,7 +892,7 @@ LOCAL_POLICY {
         }
 
         SFCPortPairGroup_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
+            if (sloth.action.url REG ".*/sfc/portpairgroups/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -880,7 +906,7 @@ LOCAL_POLICY {
 
     user, Jack {
         network_constraints {
-            if (sloth.action.url REG "/v2[.]0/networks/?.*") {
+            if (sloth.action.url REG ".*/networks/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -892,7 +918,7 @@ LOCAL_POLICY {
         }
 
         port_constraints {
-            if (sloth.action.url REG "/v2[.]0/ports/?.*") {
+            if (sloth.action.url REG ".*/ports/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -904,7 +930,7 @@ LOCAL_POLICY {
         }
 
         trunk_constraints {
-            if (sloth.action.url REG "/v2[.]0/trunks/?.*") {
+            if (sloth.action.url REG ".*/trunks/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.trunk.name == null) {
                         REJECT
@@ -920,7 +946,7 @@ LOCAL_POLICY {
         }
 
         floatingip_constraints {
-            if (sloth.action.url REG "/v2[.]0/floatingips/?.*") {
+            if (sloth.action.url REG ".*/floatingips/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -932,7 +958,7 @@ LOCAL_POLICY {
         }
 
         router_constraints {
-            if (sloth.action.url REG "/v2[.]0/routers/?.*") {
+            if (sloth.action.url REG ".*/routers/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -944,7 +970,7 @@ LOCAL_POLICY {
         }
 
         subnet_constraints {
-            if (sloth.action.url REG "/v2[.]0/subnets/?.*") {
+            if (sloth.action.url REG ".*/subnets/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.subnet.ip_version == 6) {
                         REJECT
@@ -960,7 +986,7 @@ LOCAL_POLICY {
         }
 
         firewall_policy_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewall_policies/?.*") {
+            if (sloth.action.url REG ".*/fw/firewall_policies/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.firewall_policy.name == null) {
                         REJECT
@@ -976,10 +1002,12 @@ LOCAL_POLICY {
         }
 
         firewall_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewall_rules/?.*") {
+            if (sloth.action.url REG ".*/fw/firewall_rules/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.firewall_rule.protocol == "icmp" ) {
                         ACCEPT
+                    } else {
+                        REJECT
                     }
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
@@ -990,7 +1018,7 @@ LOCAL_POLICY {
         }
 
         firewall_constraints {
-            if (sloth.action.url REG "/v2[.]0/fw/firewals/?.*") {
+            if (sloth.action.url REG ".*/fw/firewals/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1002,7 +1030,7 @@ LOCAL_POLICY {
         }
 
         security_group_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/security-group-rules/?.*") {
+            if (sloth.action.url REG ".*/security-group-rules/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.security_group_rule.protocol == "icmp" ) {
                         REJECT
@@ -1018,7 +1046,7 @@ LOCAL_POLICY {
         }
 
         security_group_constraints {
-            if (sloth.action.url REG "/v2[.]0/security-groups/?.*") {
+            if (sloth.action.url REG ".*/security-groups/?.*") {
                 if (sloth.action.method == "POST") {
                     REJECT
                 } else if (sloth.action.method == "PUT") {
@@ -1030,7 +1058,7 @@ LOCAL_POLICY {
         }
 
         metering_label_constraints {
-            if (sloth.action.url REG "/v2[.]0/metering/metering-labels/?.*") {
+            if (sloth.action.url REG ".*/metering/metering-labels/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1042,7 +1070,7 @@ LOCAL_POLICY {
         }
 
         metering_label_rule_constraints {
-            if (sloth.action.url REG "/v2[.]0/metering/metering-label-rules/?.*") {
+            if (sloth.action.url REG ".*/metering/metering-label-rules/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1054,7 +1082,7 @@ LOCAL_POLICY {
         }
 
         qos_policy_constraints {
-            if (sloth.action.url REG "/v2[.]0/qos/policies/?.*") {
+            if (sloth.action.url REG ".*/qos/policies/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.policy.name == null ) {
                         REJECT
@@ -1070,7 +1098,7 @@ LOCAL_POLICY {
         }
 
         loadbalancer_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/loadbalancers/?.*") {
+            if (sloth.action.url REG ".*/lbaas/loadbalancers/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.loadbalancer.vip_address == "10.0.0.4") {
                         REJECT
@@ -1086,7 +1114,7 @@ LOCAL_POLICY {
         }
 
         loadbalancer_listener_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/listeners/?.*") {
+            if (sloth.action.url REG ".*/lbaas/listeners/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1098,7 +1126,7 @@ LOCAL_POLICY {
         }
 
         loadbalancer_pool_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/pools/?.*") {
+            if (sloth.action.url REG ".*/lbaas/pools/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.pool.protocol == "tcp") {
                         REJECT
@@ -1114,7 +1142,7 @@ LOCAL_POLICY {
         }
 
         loadbalancer_healthmonitor_constraints {
-            if (sloth.action.url REG "/v2[.]0/lbaas/healthmonitors/?.*") {
+            if (sloth.action.url REG ".*/lbaas/healthmonitors/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.healthmonitor.type == "HTTP") {
                         REJECT
@@ -1130,7 +1158,7 @@ LOCAL_POLICY {
         }
 
         bgpvpn_constraints {
-            if (sloth.action.url REG "/v2[.]0/bgpvpns/?.*") {
+            if (sloth.action.url REG ".*/bgpvpns/?.*") {
                 if (sloth.action.method == "POST") {
                     if ($.bgpvpn.type == "l2") {
                         REJECT
@@ -1146,7 +1174,7 @@ LOCAL_POLICY {
         }
 
         gateway_constraints {
-            if (sloth.action.url REG "/v2[.]0/l2-gateways/?.*") {
+            if (sloth.action.url REG ".*/l2-gateways/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1158,7 +1186,7 @@ LOCAL_POLICY {
         }
 
         gateway_connection_constraints {
-            if (sloth.action.url REG "/v2[.]0/l2gateway-connections/?.*") {
+            if (sloth.action.url REG ".*/l2gateway-connections/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1170,7 +1198,7 @@ LOCAL_POLICY {
         }
 
         vpnservice_constraints {
-            if (sloth.action.url REG "/v2[.]0/vpn/vpnservices/?.*") {
+            if (sloth.action.url REG ".*/vpn/vpnservices/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1182,7 +1210,7 @@ LOCAL_POLICY {
         }
 
         SFCFlowClassifier_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/flowclassifiers/?.*") {
+            if (sloth.action.url REG ".*/sfc/flowclassifiers/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1194,7 +1222,7 @@ LOCAL_POLICY {
         }
 
         SFCPortChain_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portchains/?.*") {
+            if (sloth.action.url REG ".*/sfc/portchains/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1206,7 +1234,7 @@ LOCAL_POLICY {
         }
 
         SFCPortPair_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portpairs/?.*") {
+            if (sloth.action.url REG ".*/sfc/portpairs/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
@@ -1218,7 +1246,7 @@ LOCAL_POLICY {
         }
 
         SFCPortPairGroup_constraints {
-            if (sloth.action.url REG "/v2[.]0/sfc/portpairgroups/?.*") {
+            if (sloth.action.url REG ".*/sfc/portpairgroups/?.*") {
                 if (sloth.action.method == "POST") {
                     ACCEPT
                 } else if (sloth.action.method == "PUT") {
