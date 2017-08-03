@@ -1,8 +1,8 @@
 import xlwt
 
 
-def latency_data_transform():
-    input = open('sloth-test.log', 'r')
+def latency_data_transform(filename):
+    input = open(filename, 'r')
     wb = xlwt.Workbook()
     ws = wb.add_sheet('HTTP request cost time')
 
@@ -28,16 +28,20 @@ def latency_data_transform():
     ws.write(0, 2, 'time consuming (ms)', style)
 
     row_index = 1
+    column_index = -3
     for line in input:
         if 'perform' in line:
-            ws.write(row_index, 0, line.split(':')[2].split(' ')[1], style)
+            ws.write(row_index, 0 + column_index, line.split(':')[2].split(' ')[1], style)
         if 'cost' in line:
             l = line.split(':')
-            ws.write(row_index, 1, l[2].split(' ')[0], style)
-            ws.write(row_index, 2, l[3].split(' ')[1], style)
+            ws.write(row_index, 1 + column_index, l[2].split(' ')[0], style)
+            ws.write(row_index, 2 + column_index, l[3].split(' ')[1], style)
             row_index += 1
+        if 'Test Round' in line:
+            row_index = 1
+            column_index += 3
 
-    wb.save('latency_data.xls')
+    wb.save(filename + '.xls')
 
 if __name__ == "__main__":
     latency_data_transform()
