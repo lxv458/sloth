@@ -2,6 +2,8 @@ import threading
 import logging
 import time
 import utils
+import os
+
 from scripts.tests.network import Network
 from scripts.tests.network import NETWORK_ONE
 from scripts.tests.router import Router
@@ -84,12 +86,6 @@ def test_delete(network_tester, num):
             logging.info('count_delete = %d' % count_delete)
             lock.release()
 
-
-def log_config():
-    logging_config = utils.get_logging_config('logging')
-    logging.basicConfig(filename=logging_config['filename'], level=logging_config['level'])
-
-
 def throughput_get_test():
     log_config()
     network_tester = Network.throughput_test('server', 'admin')
@@ -156,7 +152,7 @@ def test_API(API, num):
 
 
 def throughput_mix():
-    log_config()
+    # log_config()
     logging.info('start sending requests')
     task = []
     task.append(threading.Thread(target=test_API, args=(Network, 8)))

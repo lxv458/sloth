@@ -1,7 +1,7 @@
 import xlwt
 
 
-def latency_data_transform(filename):
+def latency_data_transform(filename, xls_filename):
     input = open(filename, 'r')
     wb = xlwt.Workbook()
     ws = wb.add_sheet('HTTP request cost time')
@@ -41,7 +41,7 @@ def latency_data_transform(filename):
             row_index = 1
             column_index += 3
 
-    wb.save(filename + '.xls')
+    wb.save(xls_filename + '.xls')
 
 if __name__ == "__main__":
     latency_data_transform()

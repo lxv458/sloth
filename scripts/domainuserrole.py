@@ -51,12 +51,12 @@ class DomainUserRole(HttpAPI):
     def create_user(self, name, domainid, password='changeme', description='', email='', userId=''):
         payload = {
             'name': name,
-            'userid': userId,
             'password': password,
             'domainid': domainid,
             'description': description,
             'email': email
         }
+#        'userid': userId,
         return self.post(config.AUTH_USERS, payload)
 
     def delete_user(self, userid):
@@ -65,13 +65,13 @@ class DomainUserRole(HttpAPI):
     def get_grants(self, domainId, userId):
         return self.get(config.AUTH_DOMAINS + '/' + domainId + '/users/' + userId + '/roles')
 
-    def create_grant(self, domainId, userId, roleId, grantId=''):
+    def create_grant(self, domainId, userId, roleId, grantId=None):
         payload = {
             'domainid': domainId,
             'userid': userId,
-            'roleid': roleId,
-            'grantid': grantId
+            'roleid': roleId
         }
+#       'grantid': grantId
         return self.post(config.AUTH_DOMAINS + '/' + domainId + '/users/' + userId + '/roles', payload)
 
     def delete_grant(self, domainId, userId, roleId):
@@ -82,4 +82,5 @@ class DomainUserRole(HttpAPI):
             'username': username,
             'userpwd': password
         }
+        #userpwd
         return self.post(config.AUTH_DOMAINS + '/' + domainId + '/users/roles', payload)

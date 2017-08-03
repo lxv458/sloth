@@ -4,11 +4,15 @@ import logging
 import sys
 import time
 import threading
+import os
+
+from scripts import utils
 
 
 def main(argv):
     if argv[1] == 'mix':
         for i in range(5):
+            print('Round ' + str(i))
             logging.info("new round: %d" % (i+1))
             throughput_test_mix()
     else:
@@ -78,7 +82,7 @@ def throughput_data_transform():
             ws.write(row_index, 2, l[3].split(' ')[1], style)
             row_index += 1
 
-    wb.save('throughput_data.xls')
+    wb.save('throughput_data_neutron_5_8-3.xls')
 
 
 def throughput_test_mix():
@@ -116,7 +120,18 @@ def throughput_test_separate():
         throughput_test.throughput_delete_test()
 
 
+def log_config():
+
+    logging_config = utils.get_logging_config('logging')
+    filename = logging_config['filename']
+
+    if os.path.exists(filename):
+        os.remove(filename)
+
+    logging.basicConfig(filename=filename, level=logging_config['level'])
+
+
 if __name__ == "__main__":
-    throughput_test.log_config()
+    log_config()
     main(sys.argv)
     throughput_data_transform()
