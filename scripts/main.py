@@ -71,6 +71,6 @@ if __name__ == '__main__':
         SFCPortChain.perform_tests('server', 'admin')
         SFCPortPair.perform_tests('server', 'admin')
         SFCPortPairGroup.perform_tests('server', 'admin')
-        latency.latency_data_transform(filename, 'Latency_sloth_5_8-3')
+        latency.latency_data_transform(filename, 'Latency_neutron_5_8-3')
 
 
