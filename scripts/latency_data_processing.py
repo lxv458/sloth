@@ -2,6 +2,16 @@ import xlrd
 import xlwt
 import openpyxl
 import os
+import sys
+
+def main(argv):
+	print 'python latency_data_processing.py sloth|neutron'
+	if argv[1] == 'sloth':
+		scope = 'sloth'
+	elif argv[1] == 'neutron':
+		scope = 'neutron'
+	return scope
+
 
 def average_time(sheet, col_num):
 	get_time = 0
@@ -62,7 +72,7 @@ def specific_method_average(sheet, col_num, method):
 	return cost_time
 
 def read_xl(round_num):
-	file_name = './Latency_neutron_' + str(round_num) + '_8-3.xls'
+	file_name = './Latency_' + scope + '_' +  str(round_num) + '_8-6.xls'
 	workbook = xlrd.open_workbook(file_name)
 	sheet1 = workbook.sheet_by_index(0)
 	return sheet1
@@ -79,19 +89,20 @@ def write_xl(cost_time, row, col, ws):
 
 
 if __name__ == '__main__':
+	scope = main(sys.argv)
 	wb = xlwt.Workbook()
 	sheet_name = 'average_time'
 	ws = wb.add_sheet(sheet_name)
 	for r_num in range(1, 6):
-		round_num = r_num # round number, each round has 5 groups, total is 5 round
+		round_num = r_num # round number, each round has 11 groups, total is 5 round
 		row = 6 * round_num - 5
 		ws.write(row, 0, 'Round ' + str(round_num))
-		for g_num in range(1, 6):
+		for g_num in range(1, 12):
 			group_num = g_num # group number in each round
 			col = 3 * group_num - 2
 			sheet = read_xl(round_num)
-			cost_time = average_time(sheet, col) # first group data
+			cost_time = average_time(sheet, col)
 			write_xl(cost_time, row, col, ws) # row, col, round number of file
 
-	wb.save('average_time.xls')
+	wb.save(scope + '_average_time_80.xls')
 	print 'Done!'
