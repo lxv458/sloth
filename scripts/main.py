@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(filename=filename, level=logging_config['level'])
 
-    for i in range(5):
+    for i in range(11):
         print('Test Round ' + str(i) + ' ' + time.strftime('%Y-%m-%d', time.localtime(time.time())))
         logging.info('Test Round ' + str(i) + ' ' + time.strftime('%Y-%m-%d', time.localtime(time.time())))
 
@@ -71,6 +71,6 @@ if __name__ == '__main__':
         SFCPortChain.perform_tests('server', 'admin')
         SFCPortPair.perform_tests('server', 'admin')
         SFCPortPairGroup.perform_tests('server', 'admin')
-        latency.latency_data_transform(filename, 'Latency_neutron_5_8-3')
+        latency.latency_data_transform(filename, 'Results_LXPC_8-6/latency/Latency_sloth_5_8-6')
 
 

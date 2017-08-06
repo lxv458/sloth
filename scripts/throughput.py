@@ -11,7 +11,7 @@ from scripts import utils
 
 def main(argv):
     if argv[1] == 'mix':
-        for i in range(5):
+        for i in range(11):
             print('Round ' + str(i))
             logging.info("new round: %d" % (i+1))
             throughput_test_mix()
@@ -82,7 +82,7 @@ def throughput_data_transform():
             ws.write(row_index, 2, l[3].split(' ')[1], style)
             row_index += 1
 
-    wb.save('throughput_data_neutron_5_8-3.xls')
+    wb.save('Results_LXPC_8-6/throughput/throughput_data_sloth_5_8-6.xls')
 
 
 def throughput_test_mix():
