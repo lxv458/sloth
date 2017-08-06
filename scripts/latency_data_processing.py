@@ -86,6 +86,8 @@ def write_xl(cost_time, row, col, ws):
 	ws.write(row+2, col+1, cost_time[2])
 	ws.write(row+3, col, 'DELETE time:')
 	ws.write(row+3, col+1, cost_time[3])
+	
+	
 
 
 if __name__ == '__main__':
@@ -93,16 +95,44 @@ if __name__ == '__main__':
 	wb = xlwt.Workbook()
 	sheet_name = 'average_time'
 	ws = wb.add_sheet(sheet_name)
+	get_agv_sum = 0
+	post_agv_sum = 0
+	put_agv_sum = 0
+	del_agv_sum = 0
 	for r_num in range(1, 6):
 		round_num = r_num # round number, each round has 11 groups, total is 5 round
 		row = 6 * round_num - 5
 		ws.write(row, 0, 'Round ' + str(round_num))
+		get_sum = 0
+		post_sum = 0
+		put_sum = 0
+		del_sum = 0
 		for g_num in range(1, 12):
 			group_num = g_num # group number in each round
 			col = 3 * group_num - 2
 			sheet = read_xl(round_num)
 			cost_time = average_time(sheet, col)
 			write_xl(cost_time, row, col, ws) # row, col, round number of file
+			get_sum += cost_time[0]
+			post_sum += cost_time[1]
+			put_sum += cost_time[2]
+			del_sum += cost_time[3]
+		get_agv = get_sum / 11
+		post_agv = post_sum / 11
+		put_agv = put_sum / 11
+		del_agv = del_sum /11
+		ws.write(row, 34, get_agv)
+		ws.write(row+1, 34, post_agv)
+		ws.write(row+2, 34, put_agv)
+		ws.write(row+3, 34, del_agv)
+		get_agv_sum += get_agv
+		post_agv_sum += post_agv
+		put_agv_sum += put_agv
+		del_agv_sum += del_agv
+	ws.write(31, 2, get_agv_sum / 5)
+	ws.write(32, 2, post_agv_sum / 5)
+	ws.write(33, 2, put_agv_sum / 5)
+	ws.write(34, 2, del_agv_sum / 5)
 
 	wb.save(scope + '_average_time_80.xls')
 	print 'Done!'
