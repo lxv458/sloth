@@ -340,7 +340,7 @@ LOCAL_POLICY {
                 } else if (sloth.action.method == "PUT") {
                     ACCEPT
                 } else if (sloth.action.method == "DELETE") {
-                    RACCEPT
+                    ACCEPT
                 }
             }
         }
