@@ -37,12 +37,16 @@ public class SlothPermissionEngine implements SlothPermissionService, AutoClosea
     private ActorSystem actorSystem;
     private final ActorRef permissionRouter;
 
+    // used by service.SlothServiceFactoryImpl
+    // numOfRoutees is set to 10 by SlothServiceProvider
     public SlothPermissionEngine(final DataBroker dataBroker, final BundleContext bundleContext, final int numOfRoutees) {
         this.dataBroker = dataBroker;
         actorSystem = SlothActorSystem.createActorSystem(bundleContext);
         permissionRouter = actorSystem.actorOf(SlothPermissionRouter.props(numOfRoutees));
     }
 
+    // I just feel the permission check is not processed here
+    // Or it is just processed by some third-part library. akka?
     @Override
     public Future<RpcResult<CheckPermissionOutput>> checkPermission(CheckPermissionInput input) {
         scala.concurrent.Future<Object> result = Patterns.ask(permissionRouter, input, 5000);
