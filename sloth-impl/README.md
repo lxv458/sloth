@@ -14,3 +14,10 @@
 
 - SlothPermissionActor.onReceive ->slothReadCache.policyCheck(input)
 
+- ##修改这里##
+
+- slothReadCache.policyCheck
+
+-- globalPolicyCache.policyCheck(slothRequest)
+
+-- localPolicyCache.policyCheck(slothRequest)
