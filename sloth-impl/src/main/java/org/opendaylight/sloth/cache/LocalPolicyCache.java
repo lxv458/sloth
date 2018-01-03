@@ -111,23 +111,31 @@ public class LocalPolicyCache extends FilteredClusteredDTCListener<LocalPolicySe
     public SlothPolicyCheckResult policyCheck(SlothRequest input) {
         //TODO: a user may have multiple roles at the same time, currently we only use one of them
         String key = input.getRoles().get(0) + ":" + input.getUserName();
+        Boolean isChecked = false;
+        StringBuffer sb = new StringBuffer("");
+
+
         Cache<String, Policy> value = localPolicyCache.getIfPresent(key);
-        if (value != null) {
-            for (Map.Entry<String, Policy> entry : value.asMap().entrySet()) {
-                try {
-                    CheckResult r = entry.getValue().Check(input);
-                    if (r == CheckResult.ACCEPT) {
-                        return new SlothPolicyCheckResult(true, "request is permitted by policy: " + entry.getValue().getName());
-                    } else if (r == CheckResult.REJECT) {
-                        return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getValue().getName());
-                    }
-                } catch (Exception e) {
-                    LOG.info("local policy check exception of policy: " + entry.getValue().getName());
-                    LOG.info(e.getMessage());
-                }
-            }
-            return new SlothPolicyCheckResult(false, "request matches no local policy");
+        if (value == null) {
+            return new SlothPolicyCheckResult(null, key + " has no local policy", false);
         }
-        return new SlothPolicyCheckResult(false, key + " has no local policy");
+
+        for (Map.Entry<String, Policy> entry : value.asMap().entrySet()) {
+            try {
+                CheckResult r = entry.getValue().Check(input);
+                if (r == CheckResult.ACCEPT) {
+                    isChecked = true;
+                    sb.append(" request is permitted by policy: " + entry.getValue().getName());
+                } else if (r == CheckResult.REJECT) {
+                    return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getValue().getName(), true);
+                }
+            } catch (Exception e) {
+                LOG.info("local policy check exception of policy: " + entry.getValue().getName());
+                LOG.info(e.getMessage());
+            }
+        }
+
+        if (isChecked) return new SlothPolicyCheckResult(true, sb.toString(), true);
+        else return new SlothPolicyCheckResult(null, "request matches no local policy", false);
     }
 }

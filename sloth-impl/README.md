@@ -20,4 +20,17 @@
 
 -- globalPolicyCache.policyCheck(slothRequest)
 
+---- Map.Entry<String, Policy> entry : globalPolicyCache.asMap().entrySet()
+---- CheckResult r = entry.getValue().Check(input);
+
 -- localPolicyCache.policyCheck(slothRequest)
+
+---- Cache<String, Policy> value = localPolicyCache.getIfPresent(key);
+---- Map.Entry<String, Policy> entry : value.asMap().entrySet()
+---- CheckResult r = entry.getValue().Check(input);
+
+- Then, we got a result at slothReadCache.policyCheck
+
+- Return to SlothPermissionEngine.checkPermission
+
+- Build a RpcResult and Return to SlothSecurityFilter

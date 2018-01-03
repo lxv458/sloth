@@ -10,10 +10,14 @@ package org.opendaylight.sloth.cache.model;
 
 public class SlothPolicyCheckResult {
     private final Boolean success;
+    private final Boolean check;
     private final String message;
-    public SlothPolicyCheckResult(Boolean success, String message) {
+
+
+    public SlothPolicyCheckResult(Boolean success, String message, Boolean check) {
         this.success = success;
         this.message = message;
+        this.check = check;
     }
 
     public String getMessage() {
@@ -23,4 +27,6 @@ public class SlothPolicyCheckResult {
     public Boolean isSuccess() {
         return success;
     }
+
+    public Boolean isCheck() { return check; }
 }

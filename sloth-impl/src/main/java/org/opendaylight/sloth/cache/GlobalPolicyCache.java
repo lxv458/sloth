@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.lang.StringBuffer;
 
 
 public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> implements PolicyChecker {
@@ -94,20 +95,30 @@ public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> i
 
     @Override
     public SlothPolicyCheckResult policyCheck(SlothRequest input) {
+        Boolean isChecked = false;
+        StringBuffer sb = new StringBuffer("");
+
         for (Map.Entry<String, Policy> entry : globalPolicyCache.asMap().entrySet()) {
             try {
                 LOG.info("checking global policy: " + entry.getValue().getName());
                 CheckResult r = entry.getValue().Check(input);
                 if (r == CheckResult.ACCEPT) {
-                    return new SlothPolicyCheckResult(true, "request is permitted by policy: " + entry.getValue().getName());
+                    isChecked = true;
+                    sb.append(" request is permitted by policy: " + entry.getValue().getName());
                 } else if (r == CheckResult.REJECT) {
-                    return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getValue().getName());
+                    return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getValue().getName(), true);
                 }
             } catch (Exception e) {
                 LOG.info("global policy check exception of policy: " + entry.getValue().getName());
                 LOG.info(e.getMessage());
             }
         }
-        return new SlothPolicyCheckResult(null, "request matches none of the policies");
+
+        if (isChecked) {
+            return new SlothPolicyCheckResult(true, sb.toString(), true);
+        } else {
+            return new SlothPolicyCheckResult(null, "no policy matched in global_set", false);
+        }
+
     }
 }

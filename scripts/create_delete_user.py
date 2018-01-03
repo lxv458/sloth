@@ -5,6 +5,9 @@ import json
 
 def main(argv):
     print 'python create_delete_user.py create|delete|clear|show'
+    if len(argv) == 1:
+        createusers()
+
     if len(argv) > 1:
         if argv[1] == 'delete':
             deleteusers()
@@ -21,6 +24,7 @@ def print_json_format(info, data):
 
 
 def createusers():
+    print('create user')
     # create domain named sloth
     # domainId = 'sloth'
     # dur.create_domain('sloth', 'create a domain for sloth', True)

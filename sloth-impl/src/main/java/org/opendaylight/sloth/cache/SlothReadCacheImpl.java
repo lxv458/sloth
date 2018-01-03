@@ -51,41 +51,54 @@ public class SlothReadCacheImpl implements SlothReadCache {
 
     @Override
     public SlothPolicyCheckResult checkPermission(CheckPermissionInput input) {
-        LOG.info("Check permission for input: " + input.getRequest().getRequestUrl() + ", Method: " + input.getRequest().getMethod().getName());
-        SlothRequest slothRequest = new SlothRequest(input);
-        List<Role> roleList = slothDomainCache.getRelatedRoleList(input.getPrincipal().getDomain(), input.getPrincipal().getRoles());
-        if (roleList != null && !roleList.isEmpty()) {
-            for (Role role : roleList) {
-                List<String> permissionIdList = role.getPermissionId();
-                if (permissionIdList != null && !permissionIdList.isEmpty()) {
-                    for (String permissionId : role.getPermissionId()) {
-                        SlothCachedPermission slothCachedPermission = slothPermissionCache.getSlothCachedPermission(permissionId);
-                        if (!slothCachedPermission.isDisabled()) {
-                            SlothPolicyCheckResult result = slothCachedPermission.isContradictory(slothRequest);
-                            if (!result.isSuccess()) {
-                                return result;
-                            }
-                        }
-                    }
-                } else {
-                    return new SlothPolicyCheckResult(false, "no related permissions for role: " + role.getName());
-                }
-            }
-            return new SlothPolicyCheckResult(true, null);
-        } else {
-            return new SlothPolicyCheckResult(false, "no related domain/roles. domain: " +
-                    input.getPrincipal().getDomain() + "roles: " + String.join(", ", input.getPrincipal().getRoles()));
-        }
+        return new SlothPolicyCheckResult(false, "I should not be called !!!! SlothReadCacheImpl.checkPermission()", false);
     }
+
+//    public SlothPolicyCheckResult checkPermission(CheckPermissionInput input) {
+//        LOG.info("Check permission for input: " + input.getRequest().getRequestUrl() + ", Method: " + input.getRequest().getMethod().getName());
+//        SlothRequest slothRequest = new SlothRequest(input);
+//        List<Role> roleList = slothDomainCache.getRelatedRoleList(input.getPrincipal().getDomain(), input.getPrincipal().getRoles());
+//        if (roleList != null && !roleList.isEmpty()) {
+//            for (Role role : roleList) {
+//                List<String> permissionIdList = role.getPermissionId();
+//                if (permissionIdList != null && !permissionIdList.isEmpty()) {
+//                    for (String permissionId : role.getPermissionId()) {
+//                        SlothCachedPermission slothCachedPermission = slothPermissionCache.getSlothCachedPermission(permissionId);
+//                        if (!slothCachedPermission.isDisabled()) {
+//                            SlothPolicyCheckResult result = slothCachedPermission.isContradictory(slothRequest);
+//                            if (!result.isSuccess()) {
+//                                return result;
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    return new SlothPolicyCheckResult(false, "no related permissions for role: " + role.getName());
+//                }
+//            }
+//            return new SlothPolicyCheckResult(true, null);
+//        } else {
+//            return new SlothPolicyCheckResult(false, "no related domain/roles. domain: " +
+//                    input.getPrincipal().getDomain() + "roles: " + String.join(", ", input.getPrincipal().getRoles()));
+//        }
+//    }
 
     @Override
     public SlothPolicyCheckResult policyCheck(CheckPermissionInput input) {
         SlothRequest slothRequest = new SlothRequest(input);
+
         SlothPolicyCheckResult globalResult = globalPolicyCache.policyCheck(slothRequest);
-        if (globalResult.isSuccess() == null) {
-            return localPolicyCache.policyCheck(slothRequest);
-        } else {
+
+        if (globalResult.isCheck() && !globalResult.isSuccess()){
             return globalResult;
+        }
+
+        SlothPolicyCheckResult localResult = localPolicyCache.policyCheck(slothRequest);
+
+        if (localResult.isCheck()){
+            return localResult;
+        } else {
+            if (globalResult.isCheck()) return globalResult;
+            else return new SlothPolicyCheckResult(false, "No matched policy", false);
         }
     }
 
