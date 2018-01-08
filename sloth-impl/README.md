@@ -18,16 +18,16 @@
 
 - slothReadCache.policyCheck
 
--- globalPolicyCache.policyCheck(slothRequest)
+  - globalPolicyCache.policyCheck(slothRequest)
 
----- Map.Entry<String, Policy> entry : globalPolicyCache.asMap().entrySet()
----- CheckResult r = entry.getValue().Check(input);
+    - Map.Entry<String, Policy> entry : globalPolicyCache.asMap().entrySet()
+    - CheckResult r = entry.getValue().Check(input);
 
--- localPolicyCache.policyCheck(slothRequest)
+  - localPolicyCache.policyCheck(slothRequest)
 
----- Cache<String, Policy> value = localPolicyCache.getIfPresent(key);
----- Map.Entry<String, Policy> entry : value.asMap().entrySet()
----- CheckResult r = entry.getValue().Check(input);
+    - Cache<String, Policy> value = localPolicyCache.getIfPresent(key);
+    - Map.Entry<String, Policy> entry : value.asMap().entrySet()
+    - CheckResult r = entry.getValue().Check(input);
 
 - Then, we got a result at slothReadCache.policyCheck
 

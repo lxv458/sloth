@@ -51,6 +51,7 @@ public class SlothReadCacheImpl implements SlothReadCache {
 
     @Override
     public SlothPolicyCheckResult checkPermission(CheckPermissionInput input) {
+        LOG.info("A wired Check permission is called!" );
         return new SlothPolicyCheckResult(false, "I should not be called !!!! SlothReadCacheImpl.checkPermission()", false);
     }
 
@@ -86,19 +87,32 @@ public class SlothReadCacheImpl implements SlothReadCache {
     public SlothPolicyCheckResult policyCheck(CheckPermissionInput input) {
         SlothRequest slothRequest = new SlothRequest(input);
 
+        LOG.info("Check Global Policy" );
         SlothPolicyCheckResult globalResult = globalPolicyCache.policyCheck(slothRequest);
 
+
+        // If input is reject by global_set
         if (globalResult.isCheck() && !globalResult.isSuccess()){
+            LOG.info("Request is reject by Global Policy" );
             return globalResult;
         }
 
+
+        LOG.info("Request is not reject by Global Policy, Check Local Policy" );
         SlothPolicyCheckResult localResult = localPolicyCache.policyCheck(slothRequest);
 
+        // 1. input have not been rejected by global_set
+        // 2. If we have any result in local_set
         if (localResult.isCheck()){
+            LOG.info("Request matches a Local Policy");
             return localResult;
-        } else {
+        }
+        // else no policy is matched in local_set
+        else {
+            // Then we use result in global_set
             if (globalResult.isCheck()) return globalResult;
-            else return new SlothPolicyCheckResult(false, "No matched policy", false);
+            LOG.info("No Policy Matched" );
+            return new SlothPolicyCheckResult(false, "No matched policy", false);
         }
     }
 

@@ -96,10 +96,14 @@ public class SlothSecurityFilter implements Filter {
                                 LOG.warn("SlothSecurityFilter, unknown exception during permission checking, GET check");
                                 response.getWriter().write("unknown exception during permission checking, GET check");
                             }
-                        } else {
+                        } //if (multiReadHttpServletRequest.getMethod().equals("GET"))
+
+                        else {
                             chain.doFilter(multiReadHttpServletRequest, response);
                         }
-                    } else {
+                    } // if (rpcResult.getResult().getStatusCode() / 100 == 2)
+
+                    else {
                         response.getWriter().write(String.format("status code: %s, response: %s",
                                 rpcResult.getResult().getStatusCode(), rpcResult.getResult().getResponse()));
                     }
