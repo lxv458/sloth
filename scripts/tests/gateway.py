@@ -103,7 +103,7 @@ class Gateway(HttpAPI):
             utils.assert_status(tester.get_gateway(gateway_one_id), 200)
 
         utils.assert_status(tester.update_gateway(change_id(GATEWAY_UPDATE['l2_gateway'], count)['l2_gateway']['id'],
-                                                  change_id(GATEWAY_UPDATE['l2_gateway'], count)), 200)
+                                                  change_id(GATEWAY_UPDATE['l2_gateway'], count)), 201)
 
         utils.assert_status(tester.delete_gateway(change_id(GATEWAY_ONE, count)['l2_gateway']['id']), 204)
 

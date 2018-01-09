@@ -89,7 +89,7 @@ class SFCPortPair(HttpAPI):
 
         utils.assert_status(tester.update_sfc_port_pair(
             change_id(SFC_PORT_PAIR_UPDATE['portpair'], count)['portpair']['id'],
-            change_id(SFC_PORT_PAIR_UPDATE['portpair'], count)), 200)
+            change_id(SFC_PORT_PAIR_UPDATE['portpair'], count)), 201)
 
         utils.assert_status(tester.delete_sfc_port_pair(change_id(SFC_PORT_PAIR_ONE, count)['portpair']['id']), 204)
 

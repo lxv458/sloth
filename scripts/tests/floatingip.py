@@ -99,11 +99,11 @@ class FloatingIP(HttpAPI):
 
         utils.assert_status(tester.update_floating_ip(
             change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)['floatingip']['id'],
-            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 200)
+            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 201)
 
         utils.assert_status(tester.update_floating_ip(
             change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)['floatingip']['id'],
-            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 200)
+            change_id(FLOATING_IP_UPDATE_ONE['floatingip'], count)), 201)
 
         utils.assert_status(tester.delete_floating_ip(change_id(FLOATING_IP_ONE, count)['floatingip']['id']), 204)
 

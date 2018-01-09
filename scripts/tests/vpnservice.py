@@ -85,7 +85,7 @@ class VpnService(HttpAPI):
 
         utils.assert_status(tester.update_vpn_service(
             change_id(VPN_SERVICE_UPDATE['vpnservice'], count)['vpnservice']['id'],
-            change_id(VPN_SERVICE_UPDATE['vpnservice'], count)), 200)
+            change_id(VPN_SERVICE_UPDATE['vpnservice'], count)), 201)
 
         utils.assert_status(tester.delete_vpn_service(change_id(VPN_SERVICE_ONE, count)['vpnservice']['id']), 204)
 

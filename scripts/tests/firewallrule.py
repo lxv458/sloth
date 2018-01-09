@@ -101,7 +101,7 @@ class FirewallRule(HttpAPI):
 
         utils.assert_status(tester.update_firewall_rule(
             change_id(FIREWALL_RULE_UPDATE['firewall_rule'], count)['firewall_rule']['id'],
-            change_id(FIREWALL_RULE_UPDATE['firewall_rule'], count)), 200)
+            change_id(FIREWALL_RULE_UPDATE['firewall_rule'], count)), 201)
 
         utils.assert_status(tester.delete_firewall_rule(change_id(FIREWALL_RULE_ONE, count)['firewall_rule']['id']),
                             204)

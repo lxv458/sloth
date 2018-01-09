@@ -97,7 +97,7 @@ class LoadbalancerListener(HttpAPI):
 
         utils.assert_status(tester.update_loadbalancer_listener(
             change_id(LOAD_BALANCER_LISTENER_UPDATE['listener'], count)['listener']['id'],
-            change_id(LOAD_BALANCER_LISTENER_UPDATE['listener'], count)), 200)
+            change_id(LOAD_BALANCER_LISTENER_UPDATE['listener'], count)), 201)
 
         utils.assert_status(tester.delete_loadbalancer_listener(
             change_id(LOAD_BALANCER_LISTENER_ONE, count)['listener']['id']), 204)

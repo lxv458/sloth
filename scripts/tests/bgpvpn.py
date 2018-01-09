@@ -114,7 +114,7 @@ class Bgpvpn(HttpAPI):
             utils.assert_status(tester.get_bgpvpn(bgpvpn_one_id), 200)
 
         utils.assert_status(tester.update_bgpvpn(change_id(BGPVPN_UPDATE['bgpvpn'], count)['bgpvpn']['id'],
-                                                 change_id(BGPVPN_UPDATE['bgpvpn'], count)), 200)
+                                                 change_id(BGPVPN_UPDATE['bgpvpn'], count)), 201)
 
         if count == 0:
             utils.assert_status(tester.create_bgpvpn(BGPVPNS_BULK), 201)

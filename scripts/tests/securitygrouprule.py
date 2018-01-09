@@ -132,7 +132,7 @@ class SecurityGroupRule(HttpAPI):
 
         utils.assert_status(tester.update_security_group_rule(
             change_id(SECURITY_GROUP_RULE_UPDATE['security_group_rule'], count)['security_group_rule']['id'],
-            change_id(SECURITY_GROUP_RULE_UPDATE['security_group_rule'], count)), 200)
+            change_id(SECURITY_GROUP_RULE_UPDATE['security_group_rule'], count)), 201)
 
         if count == 0:
             utils.assert_status(tester.create_security_group_rule(SECURITY_GROUP_RULES_BULK), 201)

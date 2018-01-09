@@ -102,7 +102,7 @@ class SFCPortChain(HttpAPI):
 
         utils.assert_status(tester.update_sfc_port_chain(
             change_id(SFC_PORT_CHAIN_UPDATE['portchain'], count)['portchain']['id'],
-            change_id(SFC_PORT_CHAIN_UPDATE['portchain'], count)), 200)
+            change_id(SFC_PORT_CHAIN_UPDATE['portchain'], count)), 201)
 
         utils.assert_status(tester.delete_sfc_port_chain(change_id(SFC_PORT_CHAIN_ONE, count)['portchain']['id']), 204)
 

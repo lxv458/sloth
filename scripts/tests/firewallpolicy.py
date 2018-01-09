@@ -88,7 +88,7 @@ class FirewallPolicy(HttpAPI):
 
         utils.assert_status(tester.update_firewall_policy(
             change_id(FIREWALL_POLICY_UPDATE['firewall_policy'], count)['firewall_policy']['id'],
-            change_id(FIREWALL_POLICY_UPDATE['firewall_policy'], count)), 200)
+            change_id(FIREWALL_POLICY_UPDATE['firewall_policy'], count)), 201)
 
         utils.assert_status(tester.delete_firewall_policy(
             change_id(FIREWALL_POLICY_ONE, count)['firewall_policy']['id']), 204)

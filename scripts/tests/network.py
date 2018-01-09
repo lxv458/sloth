@@ -184,7 +184,7 @@ class Network(HttpAPI):
         utils.assert_status(tester.update_network(change_id(NETWORK_UPDATE['network'], count)['network']['id'],
                                                   change_id(NETWORK_UPDATE['network'], count)), 201)
 
-        if count == 1:
+        if count == 0:
             # utils.assert_status(tester.create_network(change_id(NETWORK_EXTERNAL, count)), 201)
             utils.assert_status(tester.create_network(NETWORKS_BULK), 201)
             utils.assert_status(tester.delete_network(NETWORKS_BULK['networks'][0]['id']), 204)

@@ -180,7 +180,7 @@ class Trunk(HttpAPI):
         utils.assert_status(tester.create_trunk(change_id(TRUNK_DEFAULT, count)), 201)
 
         utils.assert_status(tester.update_trunk(change_id(TRUNK_UPDATE['trunk'], count)['trunk']['id'],
-                                                change_id(TRUNK_UPDATE['trunk'], count)), 200)
+                                                change_id(TRUNK_UPDATE['trunk'], count)), 201)
 
         if count == 0:
             utils.assert_status(tester.create_trunk(TRUNKS_BULK), 201)

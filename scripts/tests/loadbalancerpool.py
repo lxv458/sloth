@@ -105,7 +105,7 @@ class LoadbalancerPool(HttpAPI):
 
         utils.assert_status(tester.update_loadbalancer_pool(
             change_id(LOAD_BALANCER_POOL_UPDATE['pool'], count)['pool']['id'],
-            change_id(LOAD_BALANCER_POOL_UPDATE['pool'], count)), 200)
+            change_id(LOAD_BALANCER_POOL_UPDATE['pool'], count)), 201)
 
         utils.assert_status(tester.delete_loadbalancer_pool(change_id(LOAD_BALANCER_POOL_ONE, count)['pool']['id']),
                             204)

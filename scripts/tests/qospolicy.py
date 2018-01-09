@@ -91,7 +91,7 @@ class QosPolicy(HttpAPI):
             utils.assert_status(tester.get_qos_policy(qos_policy_one_id), 200)
 
         utils.assert_status(tester.update_qos_policy(change_id(QOS_POLICY_UPDATE['policy'], count)['policy']['id'],
-                                                     change_id(QOS_POLICY_UPDATE['policy'], count)), 200)
+                                                     change_id(QOS_POLICY_UPDATE['policy'], count)), 201)
 
         utils.assert_status(tester.delete_qos_policy(change_id(QOS_POLICY_ONE, count)['policy']['id']), 204)
 

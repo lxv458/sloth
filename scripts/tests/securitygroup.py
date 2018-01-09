@@ -128,7 +128,7 @@ class SecurityGroup(HttpAPI):
 
         utils.assert_status(tester.update_security_group
                             (change_id(SECURITY_GROUP_UPDATE['security_group'], count)['security_group']['id'],
-                             change_id(SECURITY_GROUP_UPDATE['security_group'], count)), 200)
+                             change_id(SECURITY_GROUP_UPDATE['security_group'], count)), 201)
 
         utils.assert_status(tester.delete_security_group(change_id(SECURITY_GROUP_ONE, count)['security_group']['id']),
                             204)

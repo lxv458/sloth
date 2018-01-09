@@ -126,7 +126,7 @@ class Router(HttpAPI):
                                 , 200)
 
         utils.assert_status(tester.update_router(change_id(ROUTER_UPDATE, count)['router']['id'],
-                                                 change_id(ROUTER_UPDATE, count)), 200)
+                                                 change_id(ROUTER_UPDATE, count)), 201)
 
         utils.assert_status(tester.create_router(change_id(ROUTER_CREATED, count)), 201)
 

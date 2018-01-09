@@ -80,7 +80,7 @@ class SFCPortPairGroup(HttpAPI):
 
         utils.assert_status(tester.update_sfc_port_pair_group(
             change_id(SFC_PORT_PAIR_GROUP_UPDATE['portpairgroup'], count)['portpairgroup']['id'],
-            change_id(SFC_PORT_PAIR_GROUP_UPDATE['portpairgroup'], count)), 200)
+            change_id(SFC_PORT_PAIR_GROUP_UPDATE['portpairgroup'], count)), 201)
 
         utils.assert_status(tester.delete_sfc_port_pair_group(
             change_id(SFC_PORT_PAIR_GROUP_ONE, count)['portpairgroup']['id']), 204)

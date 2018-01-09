@@ -105,7 +105,7 @@ class SFCFlowClassifier(HttpAPI):
 
         utils.assert_status(tester.update_sfc_flow_classifier(
             change_id(SFC_FLOW_CLASSIFIER_UPDATE['flowclassifier'], count)['flowclassifier']['id'],
-            change_id(SFC_FLOW_CLASSIFIER_UPDATE['flowclassifier'], count)), 200)
+            change_id(SFC_FLOW_CLASSIFIER_UPDATE['flowclassifier'], count)), 201)
 
         utils.assert_status(tester.delete_sfc_flow_classifier(
             change_id(SFC_FLOW_CLASSIFIER_ONE, count)['flowclassifier']['id']), 204)

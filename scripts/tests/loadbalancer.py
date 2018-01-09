@@ -89,7 +89,7 @@ class Loadbalancer(HttpAPI):
 
         utils.assert_status(tester.update_loadbalancer(
             change_id(LOAD_BALANCER_UPDATE['loadbalancer'], count)['loadbalancer']['id'],
-            change_id(LOAD_BALANCER_UPDATE['loadbalancer'], count)), 200)
+            change_id(LOAD_BALANCER_UPDATE['loadbalancer'], count)), 201)
 
         utils.assert_status(tester.delete_loadbalancer(change_id(LOAD_BALANCER_ONE, count)['loadbalancer']['id']), 204)
 

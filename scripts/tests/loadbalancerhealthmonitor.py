@@ -100,7 +100,7 @@ class LoadbalancerHealthMonitor(HttpAPI):
 
         utils.assert_status(tester.update_loadbalancer_health_monitor(
             change_id(LOAD_BALANCER_HEALTH_MONITOR_UPDATE['healthmonitor'], count)['healthmonitor']['id'],
-            change_id(LOAD_BALANCER_HEALTH_MONITOR_UPDATE['healthmonitor'], count)), 200)
+            change_id(LOAD_BALANCER_HEALTH_MONITOR_UPDATE['healthmonitor'], count)), 201)
 
         utils.assert_status(tester.delete_loadbalancer_health_monitor(
             change_id(LOAD_BALANCER_HEALTH_MONITOR_ONE, count)['healthmonitor']['id']), 204)

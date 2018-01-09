@@ -211,7 +211,7 @@ class Subnet(HttpAPI):
         utils.assert_status(tester.create_subnet(change_id(SUBNET_EXTERNAL, count)), 201)
 
         utils.assert_status(tester.update_subnet(change_id(SUBNET_UPDATE['subnet'], count)['subnet']['id'],
-                                                 change_id(SUBNET_UPDATE['subnet'], count)), 200)
+                                                 change_id(SUBNET_UPDATE['subnet'], count)), 201)
         if count == 0:
             utils.assert_status(tester.create_subnet(SUBNETS_BULK), 201)
             utils.assert_status(tester.delete_subnet(SUBNETS_BULK['subnets'][0]['id']), 204)

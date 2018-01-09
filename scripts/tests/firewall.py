@@ -82,7 +82,7 @@ class Firewall(HttpAPI):
             utils.assert_status(tester.get_firewall(firewall_one_id), 200)
 
         utils.assert_status(tester.update_firewall(change_id(FIREWALL_UPDATE['firewall'], count)['firewall']['id'],
-                                                   change_id(FIREWALL_UPDATE['firewall'], count)), 200)
+                                                   change_id(FIREWALL_UPDATE['firewall'], count)), 201)
 
         utils.assert_status(tester.delete_firewall(change_id(FIREWALL_ONE, count)['firewall']['id']), 204)
         utils.assert_status(tester.get_firewall(change_id(FIREWALL_ONE, count)['firewall']['id']), 404)

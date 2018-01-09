@@ -247,7 +247,7 @@ class Port(HttpAPI):
             utils.assert_status(tester.get_port(PORTS_BULK['ports'][0]['id']), 404)
 
         utils.assert_status(tester.update_port(change_id(PORT_UPDATE['port'], count)['port']['id'],
-                                               change_id(PORT_UPDATE['port'], count)), 200)
+                                               change_id(PORT_UPDATE['port'], count)), 201)
 
         ports = tester.get_ports()
 
