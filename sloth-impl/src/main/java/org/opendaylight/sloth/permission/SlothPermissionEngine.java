@@ -49,6 +49,7 @@ public class SlothPermissionEngine implements SlothPermissionService, AutoClosea
     // Or it is just processed by some third-part library. akka?
     @Override
     public Future<RpcResult<CheckPermissionOutput>> checkPermission(CheckPermissionInput input) {
+        LOG.info("Come into PermissionEngine.checkPermission, next execute actor");
         scala.concurrent.Future<Object> result = Patterns.ask(permissionRouter, input, 5000);
         CheckPermissionOutputBuilder checkPermissionOutputBuilder = new CheckPermissionOutputBuilder();
         RpcResultBuilder<CheckPermissionOutput> resultBuilder;
@@ -56,8 +57,10 @@ public class SlothPermissionEngine implements SlothPermissionService, AutoClosea
             SlothPolicyCheckResult slothPolicyCheckResult = (SlothPolicyCheckResult) Await.result(result, Duration.create(5, TimeUnit.SECONDS));
             if (slothPolicyCheckResult.isSuccess()) {
                 checkPermissionOutputBuilder.setStatusCode(200).setResponse(slothPolicyCheckResult.getMessage());
+                LOG.info("accept status_code is 200");
             } else {
                 checkPermissionOutputBuilder.setStatusCode(401).setResponse(slothPolicyCheckResult.getMessage());
+                LOG.info("reject status_code is 401");
             }
             resultBuilder = RpcResultBuilder.success(checkPermissionOutputBuilder.build());
             LOG.info("SlothPermissionEngine success process permission check");

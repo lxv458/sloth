@@ -104,9 +104,11 @@ public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> i
                 CheckResult r = entry.getValue().Check(input);
                 if (r == CheckResult.ACCEPT) {
                     isChecked = true;
-                    sb.append(" request is permitted by policy: " + entry.getValue().getName());
+                    sb.append(" request is permitted by global policy: " + entry.getValue().getName());
+                    LOG.info("request is permitted by global policy" + entry.getValue().getName());
                 } else if (r == CheckResult.REJECT) {
-                    return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getValue().getName(), true);
+                    LOG.info("request is rejected by global policy" + entry.getValue().getName());
+                    return new SlothPolicyCheckResult(false, "request is rejected by global policy: " + entry.getValue().getName(), true);
                 }
             } catch (Exception e) {
                 LOG.info("global policy check exception of policy: " + entry.getValue().getName());
@@ -115,9 +117,11 @@ public class GlobalPolicyCache extends FilteredClusteredDTCListener<PolicySet> i
         }
 
         if (isChecked) {
+            LOG.info("request has been checked by global policy");
             return new SlothPolicyCheckResult(true, sb.toString(), true);
         } else {
-            return new SlothPolicyCheckResult(null, "no policy matched in global_set", false);
+            LOG.info("no policy matched in global_set");
+            return new SlothPolicyCheckResult(false, "no policy matched in global_set", false);
         }
 
     }

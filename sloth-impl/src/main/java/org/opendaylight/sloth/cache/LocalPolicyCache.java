@@ -117,6 +117,7 @@ public class LocalPolicyCache extends FilteredClusteredDTCListener<LocalPolicySe
 
         Cache<String, Policy> value = localPolicyCache.getIfPresent(key);
         if (value == null) {
+            LOG.info("Has no local policy for " + input.getUserName());
             return new SlothPolicyCheckResult(null, key + " has no local policy", false);
         }
 
@@ -125,9 +126,11 @@ public class LocalPolicyCache extends FilteredClusteredDTCListener<LocalPolicySe
                 CheckResult r = entry.getValue().Check(input);
                 if (r == CheckResult.ACCEPT) {
                     isChecked = true;
-                    sb.append(" request is permitted by policy: " + entry.getValue().getName());
+                    sb.append(" request is permitted by local policy: " + entry.getValue().getName());
+                    LOG.info("request is permitted by local policy" + entry.getValue().getName());
                 } else if (r == CheckResult.REJECT) {
-                    return new SlothPolicyCheckResult(false, "request is rejected by policy: " + entry.getValue().getName(), true);
+                    LOG.info("request is rejected by local policy" + entry.getValue().getName());
+                    return new SlothPolicyCheckResult(false, "request is rejected by local policy: " + entry.getValue().getName(), true);
                 }
             } catch (Exception e) {
                 LOG.info("local policy check exception of policy: " + entry.getValue().getName());
@@ -135,7 +138,12 @@ public class LocalPolicyCache extends FilteredClusteredDTCListener<LocalPolicySe
             }
         }
 
-        if (isChecked) return new SlothPolicyCheckResult(true, sb.toString(), true);
-        else return new SlothPolicyCheckResult(null, "request matches no local policy", false);
+        if (isChecked) {
+            LOG.info("request has been checked by local policy");
+            return new SlothPolicyCheckResult(true, sb.toString(), true);
+        } else {
+            LOG.info("no policy matched in local_set");
+            return new SlothPolicyCheckResult(false, "request matches no local policy", false);
+        }
     }
 }

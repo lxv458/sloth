@@ -41,11 +41,12 @@ if __name__ == '__main__':
 
     logging.basicConfig(filename=filename, level=logging_config['level'])
 
-    for i in range(2):
+    for i in range(1):
         print('Test Round ' + str(i) + ' ' + time.strftime('%Y-%m-%d', time.localtime(time.time())))
         logging.info('Test Round ' + str(i) + ' ' + time.strftime('%Y-%m-%d', time.localtime(time.time())))
 
         Network.perform_tests('server', 'Lily')
+        Network.perform_tests('server', 'admin')
         # Router.perform_tests('server', 'Lily')
         # Subnet.perform_tests('server', 'Tom')
         # Port.perform_tests('server', 'Tom')

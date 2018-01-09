@@ -66,45 +66,45 @@ public class SlothCachedPermission {
     }
 
 //    @TODO: I don't know the why we need this method.
-//    public SlothPolicyCheckResult isContradictory(SlothRequest request) {
-//        LOG.info("checking with permission: " + id + ", " + name);
-//        for (Pattern resource : resourceList) {
-//            if (actionList.contains(request.getMethod()) && resource.matcher(request.getRequestUrl()).matches()) {
-//                if (paramQueryList != null && !paramQueryList.isEmpty() && !request.getQueryString().isEmpty()) {
-//                    for (SlothParamCheck paramQuery : paramQueryList) {
-//                        if (request.getQueryString().containsKey(paramQuery.getParam())) {
-//                            boolean flag = false;
-//                            for (Pattern value : paramQuery.getValue()) {
-//                                if (value.matcher(request.getQueryString().get(paramQuery.getParam())).matches()) {
-//                                    flag = true;
-//                                    break;
-//                                }
-//                            }
-//                            if (!flag) {
-//                                return new SlothPolicyCheckResult(false, "query string check failure: " + request.getQueryString());
-//                            }
-//                        }
-//                    }
-//                }
-//                if (paramJsonList != null && !paramJsonList.isEmpty() && request.getReadContext() != null) {
-//                    for (SlothParamCheck paramJson : paramJsonList) {
-//                        boolean flag = false;
-//                        String v = request.getReadContext().read(paramJson.getParam());
-//                        for (Pattern value : paramJson.getValue()) {
-//                            if (value.matcher(v).matches()) {
-//                                flag = true;
-//                                break;
-//                            }
-//                        }
-//                        if (!flag) {
-//                            return new SlothPolicyCheckResult(false, "json data check failure: " + paramJson.getParam());
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return new SlothPolicyCheckResult(true, null);
-//    }
+    public SlothPolicyCheckResult isContradictory(SlothRequest request) {
+        LOG.info("checking with permission: " + id + ", " + name);
+        for (Pattern resource : resourceList) {
+            if (actionList.contains(request.getMethod()) && resource.matcher(request.getRequestUrl()).matches()) {
+                if (paramQueryList != null && !paramQueryList.isEmpty() && !request.getQueryString().isEmpty()) {
+                    for (SlothParamCheck paramQuery : paramQueryList) {
+                        if (request.getQueryString().containsKey(paramQuery.getParam())) {
+                            boolean flag = false;
+                            for (Pattern value : paramQuery.getValue()) {
+                                if (value.matcher(request.getQueryString().get(paramQuery.getParam())).matches()) {
+                                    flag = true;
+                                    break;
+                                }
+                            }
+                            if (!flag) {
+                                return new SlothPolicyCheckResult(false, "query string check failure: " + request.getQueryString(), true);
+                            }
+                        }
+                    }
+                }
+                if (paramJsonList != null && !paramJsonList.isEmpty() && request.getReadContext() != null) {
+                    for (SlothParamCheck paramJson : paramJsonList) {
+                        boolean flag = false;
+                        String v = request.getReadContext().read(paramJson.getParam());
+                        for (Pattern value : paramJson.getValue()) {
+                            if (value.matcher(v).matches()) {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (!flag) {
+                            return new SlothPolicyCheckResult(false, "json data check failure: " + paramJson.getParam(), true);
+                        }
+                    }
+                }
+            }
+        }
+        return new SlothPolicyCheckResult(true, null, false);
+    }
 
     public boolean isDisabled() {
         return disabled;

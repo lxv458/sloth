@@ -146,26 +146,27 @@
  * }
  */
 GLOBAL_POLICY {
-/*    admin_accept_all {
- *       if (sloth.subject.role == "admin") {
- *           ACCEPT
- *       }
- *   }
-*/
+    admin_accept_all {
+        if (sloth.subject.role == "admin") {
+            ACCEPT
+        }
+    }
+
+    block_after_10pm {
+        if (sloth.subject.role != "admin" &&
+            (sloth.environment.time > "23:59:00" || sloth.environment.time < "00:10:00")) {
+            REJECT
+        }
+    }
+
+    scheduled_maintenance {
+        if (sloth.subject.role != "admin" && sloth.environment.day_of_week == "sun") {
+            REJECT
+        }
+    }
+
     all_can_get {
         if (sloth.action.method == "GET") {
-            ACCEPT
-        }
-    }
-
-    all_can_post {
-        if (sloth.action.method == "POST") {
-            ACCEPT
-        }
-    }
-
-    all_can_delete {
-        if (sloth.action.method == "DELETE") {
             ACCEPT
         }
     }
@@ -191,21 +192,23 @@ GLOBAL_POLICY {
  */
 
 LOCAL_POLICY {
-/*    admin, admin {
- *      no_local_policy {
- *         ACCEPT
- *       }
- *   }
-*/
+    admin, admin {
+        no_local_policy {
+            ACCEPT
+        }
+    }
+
     user, Lily {
-        lily_can_get_post {
+        only_get {
             if (sloth.action.method == "GET") {
-                ACCEPT
-            } else if (sloth.action.method == "POST") {
-                ACCEPT
-            } else if (sloth.action.method == "DELETE") {
-                REJECT
-            }
+                    ACCEPT
+                } else if (sloth.action.method == "POST") {
+                    REJECT
+                } else if (sloth.action.method == "PUT") {
+                    REJECT
+                } else if (sloth.action.method == "DELETE") {
+                    REJECT
+                }
         }
     }
 }
