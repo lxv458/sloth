@@ -15,7 +15,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <repository>mvn:org.opendaylight.controller/features-mdsal/{{VERSION}}/xml/features</repository>
   <repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/{{VERSION}}/xml/features</repository>
   <repository>mvn:org.opendaylight.netconf/features-restconf/{{VERSION}}/xml/features</repository>
-  <repository>mvn:org.opendaylight.dluxapps/features-dluxapps/{{VERSION}}/xml/features</repository>
+  <!-- <repository>mvn:org.opendaylight.dluxapps/features-dluxapps/{{VERSION}}/xml/features</repository> -->
   <feature name='odl-sloth-api' version='${project.version}' description='OpenDaylight :: sloth :: api'>
     <feature version='${mdsal.model.version}'>odl-mdsal-models</feature>
     <bundle>mvn:org.opendaylight.sloth/sloth-api/{{VERSION}}</bundle>
@@ -41,7 +41,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <feature version="${project.version}">odl-sloth-rest</feature>
     <feature version="${restconf.version}">odl-mdsal-apidocs</feature>
     <feature version="${mdsal.version}">odl-mdsal-xsql</feature>
-    <feature version="${dluxapps.version}">odl-dluxapps-yangman</feature>
+    <!-- <feature version="${dluxapps.version}">odl-dluxapps-yangman</feature> -->
   </feature>
   <feature name='odl-sloth-cli' version='${project.version}' description='OpenDaylight :: sloth :: CLI'>
     <feature version="${project.version}">odl-sloth</feature>
