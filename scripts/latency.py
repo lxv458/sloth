@@ -43,5 +43,37 @@ def latency_data_transform(filename, xls_filename):
 
     wb.save(xls_filename + '.xls')
 
+
+def log_to_xls(filename,xls_filename,filter):
+    input = open(filename, 'r')
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('HTTP request cost time')
+
+    row_index = 0
+    column_index = -2
+    for line in input:
+        if filter == 0:
+            if 'cost' in line:
+                l = line.split(':')
+                if column_index == 0:
+                    ws.write(row_index, column_index, l[2].split(' ')[0])
+                    ws.write(row_index, 1 + column_index, l[3].split(' ')[1])
+                else:
+                    ws.write(row_index, 1 + column_index, l[3].split(' ')[1])
+                row_index += 1
+            if 'Test Round' in line:
+                row_index = 0
+                if column_index == -2:
+                    column_index += 2
+                else:
+                    column_index += 1
+        else:
+            if 'Test End' in line:
+                filter -=1
+
+    wb.save('data/Latency/' + xls_filename + '.xls')
+
+
+
 if __name__ == "__main__":
     latency_data_transform()

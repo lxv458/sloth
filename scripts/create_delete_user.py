@@ -6,7 +6,8 @@ import json
 def main(argv):
     print 'python create_delete_user.py create|delete|clear|show'
     if len(argv) == 1:
-        createusers()
+        #createusers_by_dict()
+        show()
 
     if len(argv) > 1:
         if argv[1] == 'delete':
@@ -22,6 +23,35 @@ def print_json_format(info, data):
     print info
     print json.dumps(json.loads(data), indent=4)
 
+
+def get_user_dict(filename):
+    f = open(filename, 'r')
+    user_dict = {}
+    for line in f:
+        a = line.strip()
+        s = a.split(":")
+        if len(s) == 2:
+            user_dict[s[0]] = s[1][:-1]
+
+    f.close()
+    return user_dict
+
+
+def createusers_by_dict():
+    domainId = 'sdn'
+    user_dict = get_user_dict('user_dict.txt')
+
+    # create user Lily, Gary, Tom, Jack
+    print('create_user')
+    for [user, pwd] in user_dict.items():
+        dur.create_user(user, domainId, pwd)
+
+        roleId = 'user@' + domainId
+        dur.create_grant(domainId, user + '@' + domainId, roleId)
+
+        print_json_format('grants-' + user + ':', dur.get_grants(domainId, user + '@' + domainId).text)
+
+    show()
 
 def createusers():
     print('create user')

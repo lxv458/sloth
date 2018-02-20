@@ -1,0 +1,152 @@
+{
+        network_constraints {
+            if (sloth.action.url REG ".*/networks/?.*") {
+                REJECT
+            }
+        }
+
+        port_constraints {
+            if (sloth.action.url REG ".*/ports/?.*") {
+                REJECT
+            }
+        }
+
+        trunk_constraints {
+            if (sloth.action.url REG ".*/trunks/?.*") {
+                REJECT
+            }
+        }
+
+        floatingip_constraints {
+            if (sloth.action.url REG ".*/floatingips/?.*") {
+                REJECT
+            }
+        }
+
+        router_constraints {
+            if (sloth.action.url REG ".*/routers/?.*") {
+                REJECT
+            }
+        }
+
+        subnet_constraints {
+            if (sloth.action.url REG ".*/subnets/?.*") {
+                REJECT
+            }
+        }
+
+        firewall_policy_constraints {
+            if (sloth.action.url REG ".*/fw/firewall_policies/?.*") {
+                REJECT
+            }
+        }
+
+        firewall_rule_constraints {
+            if (sloth.action.url REG ".*/fw/firewall_rules/?.*") {
+                REJECT
+            }
+        }
+
+        firewall_constraints {
+            if (sloth.action.url REG ".*/fw/firewals/?.*") {
+                REJECT
+            }
+        }
+
+        security_group_rule_constraints {
+            if (sloth.action.url REG ".*/security-group-rules/?.*") {
+                REJECT
+            }
+        }
+
+        metering_label_constraints {
+            if (sloth.action.url REG ".*/metering/metering-labels/?.*") {
+                REJECT
+            }
+        }
+
+        metering_label_rule_constraints {
+            if (sloth.action.url REG ".*/metering/metering-label-rules/?.*") {
+                REJECT
+            }
+        }
+
+        qos_policy_constraints {
+            if (sloth.action.url REG ".*/qos/policies/?.*") {
+                REJECT
+            }
+        }
+
+        loadbalancer_constraints {
+            if (sloth.action.url REG ".*/lbaas/loadbalancers/?.*") {
+                REJECT
+            }
+        }
+
+        loadbalancer_listener_constraints {
+            if (sloth.action.url REG ".*/lbaas/listeners/?.*") {
+                REJECT
+            }
+        }
+
+        loadbalancer_pool_constraints {
+            if (sloth.action.url REG ".*/lbaas/pools/?.*") {
+                REJECT
+            }
+        }
+
+        loadbalancer_healthmonitor_constraints {
+            if (sloth.action.url REG ".*/lbaas/healthmonitors/?.*") {
+                REJECT
+            }
+        }
+
+        bgpvpn_constraints {
+            if (sloth.action.url REG ".*/bgpvpns/?.*") {
+                REJECT
+            }
+        }
+
+        gateway_constraints {
+            if (sloth.action.url REG ".*/l2-gateways/?.*") {
+                REJECT
+            }
+        }
+
+        gateway_connection_constraints {
+            if (sloth.action.url REG ".*/l2gateway-connections/?.*") {
+                REJECT
+            }
+        }
+
+        vpnservice_constraints {
+            if (sloth.action.url REG ".*/vpn/vpnservices/?.*") {
+                REJECT
+            }
+        }
+
+        SFCFlowClassifier_constraints {
+            if (sloth.action.url REG ".*/sfc/flowclassifiers/?.*") {
+                REJECT
+            }
+        }
+
+        SFCPortChain_constraints {
+            if (sloth.action.url REG ".*/sfc/portchains/?.*") {
+                REJECT
+            }
+        }
+
+        SFCPortPair_constraints {
+            if (sloth.action.url REG ".*/sfc/portpairs/?.*") {
+                REJECT
+            }
+        }
+
+
+        SFCPortPairGroup_constraints {
+            if (sloth.action.url REG ".*/sfc/portpairgroups/?.*") {
+                REJECT
+            }
+        }
+    }
