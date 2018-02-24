@@ -251,6 +251,10 @@ class Port(HttpAPI):
 
         ports = tester.get_ports()
 
+        if 'status code: 401' in ports.text:
+            utils.assert_status(tester.delete_port('0000'), 204)
+            return
+
         for port in json.loads(ports.text)['ports']:
             utils.assert_status(tester.delete_port(port['id']), 204)
 

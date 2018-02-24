@@ -103,6 +103,7 @@ def log_config():
 
 if __name__ == "__main__":
     log_config()
-    threadNum = 30
+    threadNum = 10
     main(threadNum)
-    throughput_data_transform('origin_test', 31)
+    throughput_data_transform('origin_test', 3)
+    # throughput_data_transform('sloth_100_ac', 2)

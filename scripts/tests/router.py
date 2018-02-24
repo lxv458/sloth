@@ -137,6 +137,11 @@ class Router(HttpAPI):
         utils.assert_status(tester.get_router(change_id(ROUTER_CREATED, count)['router']['id']), 404)
 
         routers = tester.get_routers()
+
+        if 'status code: 401' in routers.text:
+            utils.assert_status(tester.delete_router('0000'), 204)
+            return
+
         for r in json.loads(routers.text)['routers']:
             utils.assert_status(tester.delete_router(r['id']), 204)
 

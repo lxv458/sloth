@@ -69,6 +69,7 @@ public class SlothSecurityFilter implements Filter {
             final Future<RpcResult<CheckPermissionOutput>> rpcResultFuture = slothPermissionService
                     .checkPermission(new CheckPermissionInputBuilder().setPrincipal(principal)
                             .setRequest(getRequest(multiReadHttpServletRequest, null)).build());
+
             try {
                 RpcResult<CheckPermissionOutput> rpcResult = rpcResultFuture.get();
                 if (rpcResult.isSuccessful()) {
@@ -76,31 +77,35 @@ public class SlothSecurityFilter implements Filter {
                     LOG.info("Permission Checking Time: " + (endTime - startTime) + " nano seconds");
                     LOG.info("SlothSecurityFilter, check permission successful");
                     if (rpcResult.getResult().getStatusCode() / 100 == 2) {
-                        if (multiReadHttpServletRequest.getMethod().equals("GET")) {
-                            LOG.info("response content type: " + multiReadHttpServletRequest.getContentType());
-                            GenericResponseWrapper genericResponseWrapper = new GenericResponseWrapper((HttpServletResponse) response);
-                            chain.doFilter(multiReadHttpServletRequest, genericResponseWrapper);
-                            final Future<RpcResult<CheckPermissionOutput>> resultFuture = slothPermissionService
-                                    .checkPermission(new CheckPermissionInputBuilder().setPrincipal(principal)
-                                            .setRequest(getRequest(multiReadHttpServletRequest,
-                                                    new String(genericResponseWrapper.getData()))).build());
-                            RpcResult<CheckPermissionOutput> result = resultFuture.get();
-                            if (result.isSuccessful()) {
-                                if (result.getResult().getStatusCode() / 100 == 2) {
-                                    response.getOutputStream().write(genericResponseWrapper.getData());
-                                } else {
-                                    response.getWriter().write(String.format("status code: %s, response: %s",
-                                            result.getResult().getStatusCode(), result.getResult().getResponse()));
-                                }
-                            } else {
-                                LOG.warn("SlothSecurityFilter, unknown exception during permission checking, GET check");
-                                response.getWriter().write("unknown exception during permission checking, GET check");
-                            }
-                        } //if (multiReadHttpServletRequest.getMethod().equals("GET"))
+//                        if (multiReadHttpServletRequest.getMethod().equals("GET")) {
+//
+//
+//
+//
+//                            LOG.info("response content type: " + multiReadHttpServletRequest.getContentType());
+//                            GenericResponseWrapper genericResponseWrapper = new GenericResponseWrapper((HttpServletResponse) response);
+//                            chain.doFilter(multiReadHttpServletRequest, genericResponseWrapper);
+//                            final Future<RpcResult<CheckPermissionOutput>> resultFuture = slothPermissionService
+//                                    .checkPermission(new CheckPermissionInputBuilder().setPrincipal(principal)
+//                                            .setRequest(getRequest(multiReadHttpServletRequest,
+//                                                    new String(genericResponseWrapper.getData()))).build());
+//                            RpcResult<CheckPermissionOutput> result = resultFuture.get();
+//                            if (result.isSuccessful()) {
+//                                if (result.getResult().getStatusCode() / 100 == 2) {
+//                                    response.getOutputStream().write(genericResponseWrapper.getData());
+//                                } else {
+//                                    response.getWriter().write(String.format("status code: %s, response: %s",
+//                                            result.getResult().getStatusCode(), result.getResult().getResponse()));
+//                                }
+//                            } else {
+//                                LOG.warn("SlothSecurityFilter, unknown exception during permission checking, GET check");
+//                                response.getWriter().write("unknown exception during permission checking, GET check");
+//                            }
+//                        } //if (multiReadHttpServletRequest.getMethod().equals("GET"))
 
-                        else {
+//                        else { // which means is not GET
                             chain.doFilter(multiReadHttpServletRequest, response);
-                        }
+//                        }
                     } // if (rpcResult.getResult().getStatusCode() / 100 == 2)
 
                     else {

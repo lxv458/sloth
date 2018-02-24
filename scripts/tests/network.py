@@ -192,8 +192,11 @@ class Network(HttpAPI):
 
         networks = tester.get_networks()
 
-        for net in json.loads(networks.text)['networks']:
-            utils.assert_status(tester.delete_network(net['id']), 204)
+        if 'status code: 401' in networks.text:
+            utils.assert_status(tester.delete_network('null'), 204)
+        else:
+            for net in json.loads(networks.text)['networks']:
+                utils.assert_status(tester.delete_network(net['id']), 204)
 
 
 if __name__ == '__main__':

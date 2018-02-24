@@ -19,7 +19,7 @@ def create_user_file(n):
     f.close()
 
 
-def print_global_policy(f):
+def print_global_policy_ac(f):
     f.write(
         '''GLOBAL_POLICY {
     admin_accept_all {
@@ -43,6 +43,29 @@ LOCAL_POLICY {
 ''')
 
 
+def print_global_policy_rej(f):
+    f.write(
+        '''GLOBAL_POLICY {
+    admin_accept_all {
+        if (sloth.subject.role == "admin") {
+            REJECT
+        }
+    }
+    all_can_get {
+        if (sloth.action.method == "GET") {
+            REJECT
+        }
+    }
+}
+
+LOCAL_POLICY {    
+    admin, admin {
+        no_local_policy {
+            REJECT
+        }
+    }
+''')
+
 def create_policy_file(n):
     policy_25_file = 'policy/policy_gray_25_ac.txt'
     policy_1000_file = 'policy/policy_create.txt'
@@ -53,7 +76,7 @@ def create_policy_file(n):
 
     out_f = open(policy_1000_file, 'w')
 
-    print_global_policy(out_f)
+    print_global_policy_ac(out_f)
 
     out_f.write('    user, Lily')
     out_f.write(policy_25)

@@ -130,7 +130,7 @@ if __name__ == '__main__':
 
         logging.info('Test End')
 
-    latency.log_to_xls(filename, 'Sloth_100_5', 10)  # filter means the first 10 results are just erased
+    latency.log_to_xls(filename, 'Sloth_test', 10)  # filter means the first 10 results are just erased
 
     # new start: 3  4  6
 

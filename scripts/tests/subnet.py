@@ -219,6 +219,10 @@ class Subnet(HttpAPI):
 
         subnets = tester.get_subnets()
 
+        if 'status code: 401' in subnets.text:
+            utils.assert_status(tester.delete_subnet('0000'), 204)
+            return
+
         for sub in json.loads(subnets.text)['subnets']:
             utils.assert_status(tester.delete_subnet(sub['id']), 204)
 

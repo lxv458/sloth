@@ -253,13 +253,15 @@ if __name__ == '__main__':
     wb = xlwt.Workbook()
 
     high_threshold = 20
-    output_filename = 'data/Latency/AVE_sloth_100_T%d.xls' % high_threshold
+    output_filename = 'data/Latency/AVE_sloth_100_AC_T%d.xls' % high_threshold
     # output_filename = 'data/Latency/AVE_origin_T%d.xls' % high_threshold
 
     sheet_name = 'average_time'
     ws = wb.add_sheet(sheet_name)
-    file_list = ["Sloth_100_1", "Sloth_100_2", "Sloth_100_3", "Sloth_100_4"]
+    # file_list = ["Sloth_100_1", "Sloth_100_2", "Sloth_100_3", "Sloth_100_4"]
     # file_list = ['Origin1', 'Origin2', 'Origin3', 'Origin4', 'Origin5', 'Origin6', 'Origin7']
+    # file_list = ['Sloth_100_REJ_1', 'Sloth_100_REJ_2', 'Sloth_100_REJ_3', 'Sloth_100_REJ_4', 'Sloth_100_REJ_5', 'Sloth_100_REJ_6']
+    file_list = ['Sloth_100_AC_1', 'Sloth_100_AC_2', 'Sloth_100_AC_3', 'Sloth_100_AC_4']
     num_file = len(file_list)
 
     cost_list = []

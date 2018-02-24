@@ -124,6 +124,10 @@ class Bgpvpn(HttpAPI):
 
         bgpvpns = tester.get_bgpvpns()
 
+        if 'status code: 401' in bgpvpns.text:
+            utils.assert_status(tester.delete_bgpvpn('0000'), 204)
+            return
+
         for bgp in json.loads(bgpvpns.text)['bgpvpns']:
             utils.assert_status(tester.delete_bgpvpn(bgp['id']), 204)
 

@@ -144,6 +144,10 @@ class SecurityGroupRule(HttpAPI):
 
         security_group_rules = tester.get_security_group_rules()
 
+        if 'status code: 401' in security_group_rules.text:
+            utils.assert_status(tester.delete_security_group_rule('0000'), 204)
+            return
+
         for s in json.loads(security_group_rules.text)['security_group_rules']:
             utils.assert_status(tester.delete_security_group_rule(s['id']), 204)
 
