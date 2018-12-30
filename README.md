@@ -2,9 +2,7 @@
 
 ![Sloth](http://kids.nationalgeographic.com/content/dam/kids/photos/animals/Mammals/Q-Z/sloth-beach-upside-down.jpg.adapt.945.1.jpg)
 
-Author: Libin Song, Northwestern University
-
-`Sloth Security Filter` is a light weight Java Servlet Filter with backend data store support, designed for OpenDaylight controller. It provides fine grained role based access control on generic RESTful API services. It also support runtime configuration and can be deployed distributedly. And it is easy to install and 100% compatible with existing AAA project. You don't need to change any things on existing OpenDaylight projects.
+`Sloth Security Filter` is a light weight Java Servlet Filter with backend data store support, designed for OpenDaylight controller. It provides fine grained attribute based access control on generic RESTful API services. It also support runtime configuration and can be deployed distributedly. And it is easy to install and 100% compatible with existing AAA project. You don't need to change any things on existing OpenDaylight projects.
 
 ## Installation
 
